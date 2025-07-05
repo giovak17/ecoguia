@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html>
+{% extends "administradores/base.html" %}
 
-<head>
-  <title>Recicladoras</title>
-  <meta charset="UTF-8">
-</head>
+<title>{% block title %} Administradores {% endblock %}</title>
 
-<body>
-  <h1>Index Administradores</h1>
-</body>
-
-</html>
+<!-- Contentido apartir de aqui sera insertado en base.html -->
+{% block content %}
+<h1>Index administradores</h1>
+{% endblock %}

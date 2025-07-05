@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html>
+{% extends "recicladoras/base.html" %}
 
-<head>
-  <title>Recicladoras</title>
-  <meta charset="UTF-8">
-</head>
+<title>{% block title %} Recicladoras {% endblock %}</title>
 
-<body>
-  <h1>Index Recicladoras</h1>
-</body>
-
-</html>
+<!-- Contentido apartir de aqui sera insertado en base.html -->
+{% block content %}
+<h1>Index recicladoras</h1>
+{% endblock %}

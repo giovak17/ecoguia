@@ -1,17 +1,11 @@
-<!DOCTYPE html>
-<html>
+{% extends "usuarios/base.html" %}
 
-<head>
-  <title>Usuarios</title>
-  <meta charset="UTF-8">
-</head>
+<title>{% block title %} Index {% endblock %}</title>
 
-<body>
-  <h1>Index Usuarios</h1>
-  <a href="{% url 'recicladoras:index' %}">Recicladoras</a>
-  <br>
-  <a href="{% url 'administradores:index' %}">Administradores</a>
-
-</body>
-
-</html>
+<!-- Contentido apartir de aqui sera insertado en base.html -->
+{% block content %}
+<h1>Index Usuarios</h1>
+<a href="{% url 'recicladoras:index' %}">Recicladoras</a>
+<br>
+<a href="{% url 'administradores:index' %}">Administradores</a>
+{% endblock %}
