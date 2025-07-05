@@ -3,14 +3,15 @@
 <html>
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %} EcoGuia {% endblock %}</title>
     <link rel="stylesheet" href="{% static 'core/bootstrap/css/bootstrap.min.css' %}">
-    <meta charset="UTF-8">
 </head>
 
 <body>
     {% include "usuarios/partials/header.html" %}
-    <main>
+    <main class="container">
         {% block content %}
         <!-- Contenido de los templates que extiendan esta base sera insertado aqui -->
         {% endblock %}

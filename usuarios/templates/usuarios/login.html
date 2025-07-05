@@ -1,0 +1,41 @@
+{% extends "usuarios/base.html" %}
+
+<title>{% block title %} Inicio de sesion {% endblock %}</title>
+
+{% block content %}
+<div class="w-50 mx-auto my-5">
+    <!-- heading -->
+    <div class="py-4 my-2">
+        <h1 class="text-center fw-bold">Bienvenido de vuelta</h1>
+        <p class=" text-center">¿No tiene una cuenta?
+            <a href="#" class="text-decoration-none text-dark fw-bold">Registrarse.</a>
+        </p>
+    </div>
+    <!-- end heading -->
+    <div class="shadow p-5 mb-5 bg-body rounded rounded-lg">
+        <form method="post" action="" class="">
+            {% csrf_token %}
+            <div class="form-group ">
+                <label for="exampleInputEmail1" class="py-2 fw-bold">Correo electronico</label>
+                <input type="email" class="form-control p-3" id="exampleInputEmail1" aria-describedby="emailHelp"
+                    placeholder="Correo electronico" name="email" value="{% if email %} {{ email }} {% endif %}"
+                    required>
+            </div>
+            <div class="form-group py-4">
+                <label for="exampleInputPassword1" class="py-2 fw-bold">Contraseña</label>
+                <input type="password" class="form-control p-3" id="exampleInputPassword1" placeholder="Contraseña"
+                    name="password" required>
+            </div>
+            {% if message %}
+            <div class="alert alert-danger" role="alert">
+                {{ message }}
+            </div>
+            {% endif %}
+
+            <button type="submit" class="btn btn-success my-2 p-3 px-4 fw-bold">Iniciar sesión</button>
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}
