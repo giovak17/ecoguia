@@ -1,0 +1,32 @@
+{% extends 'usuarios/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Recicladoras Registradas</h1>
+
+    <div class="row">
+        {% for r in recicladoras %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ r.nombre }}</h5>
+                    <p class="card-text">
+                        <strong>Dirección:</strong> {{ r.calle }}, {{ r.colonia }}, {{ r.ciudad }}<br>
+                        <strong>Código Postal:</strong> {{ r.codigo_postal }}<br>
+                        <strong>Teléfono:</strong> {{ r.numero_telefonico }}
+                    </p>
+                    <hr>
+                    <p class="card-text">
+                        <strong>Propietario:</strong> {{ r.propietario.nombre }} {{ r.propietario.ap_paterno }} {{ r.propietario.ap_materno }}<br>
+                        <strong>Email:</strong> {{ r.propietario.correo }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>No hay recicladoras registradas.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
