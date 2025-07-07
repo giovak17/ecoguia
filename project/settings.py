@@ -86,9 +86,9 @@ WSGI_APPLICATION = "project.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ecoGuia",
+        "NAME": "ecoguia",
         "USER": "postgres",
-        "PASSWORD": "101258red",
+        "PASSWORD": "DBpass.1703",
         "HOST": "127.0.0.1",
         "PORT": "5432",
     }

@@ -6,28 +6,26 @@ from core.models import Usuarios,Entregas
 def index(request):
     return render(request, "usuarios/index.html")
 
-def login(request: HttpRequest): 
+
+def login(request: HttpRequest):
     if request.method == "GET":
         return render(request, "usuarios/login.html")
 
-    email = request.POST["email"]
-    password = request.POST["password"]
-
-    user = Usuarios.objects.filter(correo=email).first()
+    (email, password) = extract_credentials(request)
 
     # Si el correo y contrasena son correctos, permite el accesso
-    if user and user.contrasena == password:
-        return redirect("usuarios:index")
-    
-    if not user:
-        message = "Correo electronico no registrado."
-    else:
-        if user.contrasena != password: 
-            message = "Contrasena incorrecta."
+    (valid, message, user) = verify_crendentials(email, password)
 
+    if not valid:
+        return render(
+            request, "usuarios/login.html", {"message": message, "email": email}
+        )
 
-    return render(request, "usuarios/login.html", {"message": message, "email": email})
+    # Guardar datos relevantes en la sesion
+    request.session["user_id"] = user.id_usuario
 
+    # Redirecciona a la vista adecuada segun el tipo de usuario
+    return map_user_rol(user)
 
 def contenido_educativo(request):
 
@@ -91,3 +89,38 @@ def confirmar_entrega(request, clave):
 
     return redirect('usuarios:entregas_confirmadas')
 
+# Utilities, not views
+# Dependiendo del rol del usuario, redireccionar al area correspondiente
+def map_user_rol(user: Usuarios):
+    match user.id_rol.pk:  # type: ignore
+        # Admin
+        case 1:
+            return redirect(preserve_request=True, to="administradores:index")
+        # Usuario
+        case 2:
+            return redirect(preserve_request=True, to="usuarios:index")
+        # Recicladora
+        case 3:
+            return redirect(preserve_request=True, to="recicladoras:index")
+
+
+def extract_credentials(request: HttpRequest) -> tuple[str, str]:
+    email = ""
+    password = ""
+    if request.method == "POST":
+        email = request.POST["email"]
+        password = request.POST["password"]
+
+    return email, password
+
+
+# Verifica que el usuario y contrasena sean validos, retorna una tupla que indica si el valor es valido y un mensaje de error, junto con el usuario
+def verify_crendentials(email, password) -> tuple[bool, str, Usuarios]:
+    db_user = Usuarios.objects.filter(correo=email).first()
+
+    if not db_user:
+        return False, "Correo electonico no registrado.", Usuarios()
+    elif db_user.contrasena == password:
+        return True, "", db_user
+    else:
+        return False, "Contrasena incorrecta.", Usuarios()
