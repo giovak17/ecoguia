@@ -1,0 +1,35 @@
+{% extends 'usuarios/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Lista de Entregas</h1>
+    <div class="row">
+        {% for entrega in entregas %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Entrega #{{ entrega.id_entrega }}</h5>
+                    <p class="card-text">
+                        <strong>Fecha:</strong> {{ entrega.fecha_entrega|date:"d M Y H:i" }}<br>
+                        <strong>Usuario:</strong> {{ entrega.usuario.nombre_pila }} {{ entrega.usuario.ap_paterno }}
+                    </p>
+                    {% if entrega.confirmacion %}
+                        <span class="badge bg-success">✅ Confirmada</span>
+                    {% else %}
+                        <a href="{% url 'usuarios:confirmar_entrega' entrega.clave %}" 
+                           class="btn btn-primary">Confirmar</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info" role="alert">
+                No hay entregas registradas.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

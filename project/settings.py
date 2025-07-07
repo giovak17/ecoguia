@@ -86,9 +86,9 @@ WSGI_APPLICATION = "project.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ecoguia",
+        "NAME": "ecoGuia",
         "USER": "postgres",
-        "PASSWORD": "DBpass.1703",
+        "PASSWORD": "101258red",
         "HOST": "127.0.0.1",
         "PORT": "5432",
     }
@@ -130,8 +130,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Media files (uploads de imágenes, videos, etc.)
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'

@@ -78,6 +78,8 @@ class AuthUserUserPermissions(models.Model):
 
 
 class ContenidoEducativo(models.Model):
+
+   
     id_publicacion = models.AutoField(primary_key=True)
     titulo = models.CharField(max_length=50, blank=True, null=True)
     contenido = models.CharField(max_length=500, blank=True, null=True)
@@ -155,9 +157,9 @@ class Empresas(models.Model):
 
 
 class Entregas(models.Model):
-    clave = models.AutoField(primary_key=True)
+    id_entrega = models.AutoField(primary_key=True)
     fecha_entrega = models.DateTimeField(blank=True, null=True)
-    usuario = models.ForeignKey('Usuarios', models.DO_NOTHING, db_column='usuario')
+    usuario = models.ForeignKey('Usuarios', models.DO_NOTHING, db_column='id_usuario_e')
     confirmacion = models.BooleanField(blank=True, null=True)
 
     class Meta:

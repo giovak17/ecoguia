@@ -5,4 +5,5 @@ from . import views
 app_name = "recicladoras"
 urlpatterns = [
     path("", views.index, name="index"),
+    
 ]
