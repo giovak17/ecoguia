@@ -21,17 +21,7 @@ else
     echo "Por favor, resuelve los conflictos manualmente y luego haz git add y git commit."
     exit 1
 fi
-
 echo "📦 Instalando dependencias del backend (Django)..."
-cd backend
 source venv/bin/activate
 pip install -r requirements.txt
 deactivate
-cd ..
-
-echo "📦 Instalando dependencias del frontend (React)..."
-cd frontend
-npm install
-cd ..
-
-echo "✅ Proyecto actualizado y listo!"
