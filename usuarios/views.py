@@ -13,7 +13,7 @@ def login(request: HttpRequest):
     email = request.POST["email"]
     password = request.POST["password"]
 
-    user = Usuarios.objects.filter(correo_electronico=email).first()
+    user = Usuarios.objects.filter(correo=email).first()
 
     # Si el correo y contrasena son correctos, permite el accesso
     if user and user.contrasena == password:
