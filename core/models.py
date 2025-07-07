@@ -36,6 +36,7 @@ class Entregas(models.Model):
     fecha_entrega = models.DateTimeField(blank=True, null=True)
     id_usuario_e = models.ForeignKey('Usuarios', models.DO_NOTHING, db_column='id_usuario_e', blank=True, null=True)
     punto_entrega = models.ForeignKey('PuntosReciclaje', models.DO_NOTHING, db_column='punto_entrega', blank=True, null=True)
+    confirmada = models.BooleanField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -88,6 +89,7 @@ class Recicladoras(models.Model):
     numero_int = models.IntegerField(blank=True, null=True)
     ciudad = models.CharField(max_length=30, blank=True, null=True)
     numero_telefonico = models.CharField(max_length=20, blank=True, null=True)
+    aprobada = models.BooleanField(blank=True, null=True)
 
     class Meta:
         managed = False

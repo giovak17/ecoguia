@@ -21,7 +21,7 @@ def login(request: HttpRequest):
             request, "usuarios/login.html", {"message": message, "email": email}
         )
 
-    # Guardar datos relevantes en la sesion
+    # Guarda el id del usuario en la session
     request.session["user_id"] = user.id_usuario
 
     # Redirecciona a la vista adecuada segun el tipo de usuario
