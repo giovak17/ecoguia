@@ -1,0 +1,54 @@
+{% extends "usuarios/base.html" %}
+{% load static %}
+
+{% block title %}Registro de Usuario{% endblock %}
+
+{% block extra_css %}
+<!-- Si quieres agregar CSS extra personalizado, aquí -->
+{% endblock %}
+
+{% block content %}
+<div class="w-50 mx-auto my-5">
+  <h1 class="text-center fw-bold mb-4">Únete a la comunidad de EcoGuía</h1>
+  <p class="text-center mb-4">
+    ¿Ya tienes una cuenta? 
+    <a href="{% url 'usuarios:login' %}" class="text-decoration-none text-success fw-bold">Inicia sesión</a>
+  </p>
+
+  <form method="POST" action="{% url 'usuarios:registro' %}" novalidate>
+    {% csrf_token %}
+    
+    <div class="mb-3">
+      <label class="form-label fw-bold">Nombre(s)</label>
+      <input type="text" class="form-control" name="nombre" placeholder="Nombre" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-bold">Apellido paterno</label>
+      <input type="text" class="form-control" name="ap_paterno" placeholder="Apellido paterno" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-bold">Apellido materno</label>
+      <input type="text" class="form-control" name="ap_materno" placeholder="Apellido materno" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-bold">Correo electrónico</label>
+      <input type="email" class="form-control" name="correo" placeholder="correo electrónico" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-bold">Contraseña</label>
+      <input type="password" class="form-control" name="contrasena" placeholder="••••••••" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-bold">Fecha de nacimiento</label>
+      <input type="date" class="form-control" name="fecha_nacimiento" required>
+    </div>
+
+    <button type="submit" class="btn btn-success w-100 py-3 fw-bold">Registrarse</button>
+  </form>
+</div>
+{% endblock %}

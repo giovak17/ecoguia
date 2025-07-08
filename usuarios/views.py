@@ -1,7 +1,7 @@
 from django.http import HttpRequest
 from django.shortcuts import redirect, render
 from core.models import Usuarios,Entregas
-
+from django.utils.timezone import now
 
 def index(request):
     return render(request, "usuarios/index.html")
@@ -124,3 +124,34 @@ def verify_crendentials(email, password) -> tuple[bool, str, Usuarios]:
         return True, "", db_user
     else:
         return False, "Contrasena incorrecta.", Usuarios()
+    
+def usuariosregistro(request):
+    if request.method == "POST":
+        try:
+            
+            nombre = request.POST.get("nombre")
+            ap_paterno = request.POST.get("ap_paterno")
+            ap_materno = request.POST.get("ap_materno")
+            correo = request.POST.get("correo")
+            contrasena = request.POST.get("contrasena")
+            fecha_nacimiento = request.POST.get("fecha_nacimiento")
+
+            Usuarios.objects.create(
+                nombre=nombre,
+                ap_paterno=ap_paterno,
+                ap_materno=ap_materno,
+                correo=correo,
+                contrasena=contrasena,
+                fecha_nacimiento=fecha_nacimiento,
+                fecha_registro=now(),
+                total_recompensas=0,
+                id_rol_id=2 
+            )
+
+            print("✅ Usuario insertado con éxito.")
+            return redirect("usuarios:index")
+
+        except Exception as e:
+            print("❌ Error al insertar:", e)
+
+    return render(request, "usuarios/registro.html")
