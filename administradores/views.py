@@ -1,6 +1,7 @@
 from django.http import HttpRequest
 from django.shortcuts import render
 from core.models import Recicladoras
+from core.models import Usuarios
 
 # Create your views here.
 def index(request):
@@ -9,6 +10,10 @@ def index(request):
 def ver_recicladoras(request):
     recicladoras = Recicladoras.objects.select_related('propietario').all()
     return render(request, 'administradores/recicladoras.html', {'recicladoras': recicladoras})
+
+def listar_usuarios(request):
+    usuarios = Usuarios.objects.all()
+    return render(request, 'administradores/listado_usuarios.html', {'usuarios': usuarios})
   
 def aprobar_recicladoras(request: HttpRequest):
 
