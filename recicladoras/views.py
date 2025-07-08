@@ -17,4 +17,13 @@ def confirmar_entregas(request: HttpRequest):
 
     # return render(request, "recicladoras/confirmar_entregas.html")
 
+def solicitud_registro_view(request):
+    if request.method == 'POST':
+        form = SolicitudRegistroForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('registro_exitoso')  # redirige a una vista de éxito
+    else:
+        form = SolicitudRegistroForm()
+    return render(request, 'recicladoras/solicitud_registro.html', {'form': form})
 

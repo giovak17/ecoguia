@@ -73,7 +73,9 @@ class PuntosReciclaje(models.Model):
     horario_entrada = models.TimeField(blank=True, null=True)
     horario_salida = models.TimeField(blank=True, null=True)
     id_recicladora = models.ForeignKey('Recicladoras', models.DO_NOTHING, db_column='id_recicladora', blank=True, null=True)
-
+    #se usaran para que funcione google maps 
+    latitud = models.FloatField(blank=True, null=True)
+    longitud = models.FloatField(blank=True, null=True)
     class Meta:
         managed = False
         db_table = 'puntos_reciclaje'

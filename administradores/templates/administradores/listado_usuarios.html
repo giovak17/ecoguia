@@ -1,0 +1,21 @@
+<h2>Listado de Usuarios Registrados</h2>
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>Nombre</th>
+    <th>Correo</th>
+    <th>Fecha de Registro</th>
+    <th>Total Recompensas</th>
+    <th>Rol</th>
+  </tr>
+  {% for usuario in usuarios %}
+  <tr>
+    <td>{{ usuario.id_usuario }}</td>
+    <td>{{ usuario.nombre }} {{ usuario.ap_paterno }}</td>
+    <td>{{ usuario.correo }}</td>
+    <td>{{ usuario.fecha_registro }}</td>
+    <td>{{ usuario.total_recompensas }}</td>
+    <td>{{ usuario.id_rol.nombre}}</td>
+  </tr>
+  {% endfor %}
+</table>

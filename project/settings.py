@@ -88,7 +88,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "ecoguia",
         "USER": "postgres",
-        "PASSWORD": "DBpass.1703",
+        "PASSWORD": "chela" , #"DBpass.1703"
         "HOST": "127.0.0.1",
         "PORT": "5432",
     }
