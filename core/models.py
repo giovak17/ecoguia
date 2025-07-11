@@ -178,3 +178,11 @@ class UsuariosRetos(models.Model):
     class Meta:
         managed = False
         db_table = 'usuarios_retos'
+
+class SolicitudRegistro(models.Model):
+    nombre_establecimiento = models.CharField(max_length=100)
+    ubicacion = models.TextField()
+    horarios_atencion = models.CharField(max_length=100)
+    telefono_contacto = models.CharField(max_length=20)
+    materiales_aceptados = models.TextField()
+    aprobado = models.BooleanField(default=False)

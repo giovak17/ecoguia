@@ -1,7 +1,10 @@
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404, redirect
 import traceback
-from core.models import Entregas, Recicladoras, PuntosReciclaje, EntregaMaterialReciclado
+from core.models import Entregas, Recicladoras, PuntosReciclaje, EntregaMaterialReciclado, TipoMaterialReciclable, Usuarios
+from .forms import TipoMaterialReciclableForm, SolicitudRegistroForm
+from django.views import generic
+from django.urls import reverse, reverse_lazy
 
 
 # Create your views here.
@@ -60,3 +63,61 @@ def agregar_punto(request):
     return render(request, "recicladoras/agregar_punto.html")
 
 
+# Listar todos los tipos de material
+def tipo_material_list(request):
+    tipos_material = TipoMaterialReciclable.objects.all()
+    return render(request, "recicladoras/tipomaterial_list.html", {"tipos_material": tipos_material})
+
+# Detalle de un tipo de material
+def tipo_material_detail(request, pk):
+    tipo_material = get_object_or_404(TipoMaterialReciclable, pk=pk)
+    return render(request, "recicladoras/tipomaterial_detail.html", {"tipo_material": tipo_material})
+
+
+def tipo_material_registro(request):
+    if request.method == "POST":
+        try:
+            nombre = request.POST.get("nombre")
+            descripcion = request.POST.get("descripcion")
+            tiempo_descomposicion = request.POST.get("tiempo")
+            
+            TipoMaterialReciclable.objects.create(
+                nombre=nombre,
+                descripcion = descripcion,
+                tiempo_descomposicion = tiempo_descomposicion,
+            )
+
+            print("Fitro insertado con éxito.")
+            return redirect("recicladoras:index")
+
+        except Exception as e:
+            print("Error al insertar:")
+            traceback.print_exc()
+            return redirect("recicladoras:tipomaterial_registro")
+
+    return render(request, "recicladoras/tipomaterial_registro.html")
+
+# Actualizar un tipo de material existente
+def tipo_material_update(request, pk):
+    tipo_material = get_object_or_404(TipoMaterialReciclable, pk=pk)
+    if request.method == "POST":
+        form = TipoMaterialReciclableForm(request.POST, instance=tipo_material)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('tipomaterial_list'))
+        else:
+            print("Formulario inválido:", form.errors)
+    else:
+        form = TipoMaterialReciclableForm(instance=tipo_material)
+    return render(request, "recicladoras/tipomaterial_registro.html", {"form": form})
+
+
+def tipo_material_delete(request, pk):
+    tipo_material = get_object_or_404(TipoMaterialReciclable, pk=pk)
+
+    if request.method == "POST":
+        tipo_material.delete()
+        return redirect(reverse('tipomaterial_list'))
+
+    # Si es GET, renderiza la plantilla de confirmación
+    return render(request, "tipomaterial_delete.html", {"object": tipo_material})
