@@ -10,4 +10,5 @@ urlpatterns = [
     path('Entregas/', views.lista_entregas, name='lista_entregas'),
     path('Entregas/<int:clave>/', views.confirmar_entrega, name='confirmar_entrega'),
     path("registro/", views.usuariosregistro, name="registro"),
-     ]
+    path('mapa/', views.mapa_puntos_google, name='mapa_puntos'),
+]

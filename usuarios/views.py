@@ -1,7 +1,14 @@
 from django.http import HttpRequest
+<<<<<<< HEAD
 from django.shortcuts import redirect, render, get_object_or_404
 from core.models import Usuarios,Entregas
+=======
+from django.shortcuts import redirect, render
+from core.models import Usuarios,Entregas, PuntosReciclaje
+>>>>>>> 27742a5 (Act BD y Mapa)
 from django.utils.timezone import now
+from django.http import JsonResponse
+from django.db import connection
 
 def index(request):
     return render(request, "usuarios/index.html")
@@ -155,3 +162,9 @@ def usuariosregistro(request):
             print("❌ Error al insertar:", e)
 
     return render(request, "usuarios/registro.html")
+
+def mapa_puntos_google(request):
+    puntos = list(PuntosReciclaje.objects.values(
+        'nombre', 'latitud', 'longitud', 'ubicacion', 'ciudad'
+    ))
+    return render(request, 'usuarios/mapa_google.html', {'puntos': puntos})

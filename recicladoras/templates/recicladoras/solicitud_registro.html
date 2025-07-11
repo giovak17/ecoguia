@@ -1,7 +1,75 @@
-<h2>Solicitud de Registro para Recicladoras</h2>
+{% extends "recicladoras/base.html" %}
+{% block title %}Registrar Recicladora - EcoGuia{% endblock %}
 
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Enviar Solicitud</button>
-</form>
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-lg">
+        <div class="card-body">
+          <h2 class="card-title text-center mb-4">Solicita registrar tu recicladora</h2>
+
+          <form method="POST" action="{% url 'recicladoras:solicitar_recicladora' %}" class="needs-validation" novalidate>
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label for="{{ form.nombre.id_for_label }}" class="form-label">Nombre</label>
+              {{ form.nombre }}
+              <div class="invalid-feedback">Este campo es obligatorio.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="{{ form.propietario.id_for_label }}" class="form-label">Propietario</label>
+              {{ form.propietario }}
+              <div class="invalid-feedback">Este campo es obligatorio.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="{{ form.calle.id_for_label }}" class="form-label">Calle</label>
+              {{ form.calle }}
+              <div class="invalid-feedback">Este campo es obligatorio.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="{{ form.codigo_postal.id_for_label }}" class="form-label">Código Postal</label>
+              {{ form.codigo_postal }}
+              <div class="invalid-feedback">Este campo es obligatorio.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="{{ form.colonia.id_for_label }}" class="form-label">Colonia</label>
+              {{ form.colonia }}
+              <div class="invalid-feedback">Este campo es obligatorio.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="{{ form.numero_int.id_for_label }}" class="form-label">Número Interior</label>
+              {{ form.numero_int }}
+              <div class="invalid-feedback">Este campo es obligatorio.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="{{ form.ciudad.id_for_label }}" class="form-label">Ciudad</label>
+              {{ form.ciudad }}
+              <div class="invalid-feedback">Este campo es obligatorio.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="{{ form.numero_telefonico.id_for_label }}" class="form-label">Número Telefónico</label>
+              {{ form.numero_telefonico }}
+              <div class="invalid-feedback">Este campo es obligatorio.</div>
+            </div>
+
+            <div class="d-grid mt-4">
+              <button type="submit" class="btn btn-success fw-bold">Enviar Solicitud</button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+

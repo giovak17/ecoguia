@@ -94,7 +94,7 @@ WSGI_APPLICATION = "project.wsgi.application"
 #     }
 # }
 
-# Conexion del toño
+#Conexion chela
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -105,6 +105,19 @@ DATABASES = {
         "PORT": "5432",
     }
 }
+
+
+# Conexion del toño
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "EcoGuia",
+#         "USER": "postgres",
+#         "PASSWORD": "1234",
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
 
 
 # Password validation

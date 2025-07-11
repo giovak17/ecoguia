@@ -5,6 +5,8 @@ from core.models import Entregas, Recicladoras, PuntosReciclaje, EntregaMaterial
 from .forms import TipoMaterialReciclableForm, SolicitudRegistroForm
 from django.views import generic
 from django.urls import reverse, reverse_lazy
+from core.models import Entregas, Recicladoras, PuntosReciclaje, EntregaMaterialReciclado
+from .forms import SolicitudRecicladoraForm
 
 
 # Create your views here.
@@ -22,12 +24,14 @@ def confirmar_entregas(request: HttpRequest):
 
 def solicitud_registro_view(request):
     if request.method == 'POST':
-        form = SolicitudRegistroForm(request.POST)
+        #form = SolicitudRegistroForm(request.POST)
+        form = SolicitudRecicladoraForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('registro_exitoso')  # redirige a una vista de éxito
     else:
-        form = SolicitudRegistroForm()
+        #form = SolicitudRegistroForm()
+        form = SolicitudRecicladoraForm()
     return render(request, 'recicladoras/solicitud_registro.html', {'form': form})
 
 def agregar_punto(request):
@@ -62,6 +66,20 @@ def agregar_punto(request):
 
     return render(request, "recicladoras/agregar_punto.html")
 
+def solicitar_recicladora(request):
+    if request.method == 'POST':
+        form = SolicitudRecicladoraForm(request.POST)
+        if form.is_valid():
+            recicladora = form.save(commit=False)
+            recicladora.aprobada = False  # queda pendiente
+            recicladora.save()
+            return redirect('solicitud_exitosa')
+    else:
+        form = SolicitudRecicladoraForm()
+    return render(request, 'recicladoras/solicitud_registro.html', {'form': form})
+
+def solicitud_exitosa(request):
+    return render(request, 'recicladoras/solicitud_registro.html')
 
 # Listar todos los tipos de material
 def tipo_material_list(request):
