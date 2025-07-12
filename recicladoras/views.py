@@ -86,12 +86,6 @@ def tipo_material_list(request):
     tipos_material = TipoMaterialReciclable.objects.all()
     return render(request, "recicladoras/tipomaterial_list.html", {"tipos_material": tipos_material})
 
-# Detalle de un tipo de material
-def tipo_material_detail(request, pk):
-    tipo_material = get_object_or_404(TipoMaterialReciclable, pk=pk)
-    return render(request, "recicladoras/tipomaterial_detail.html", {"tipo_material": tipo_material})
-
-
 def tipo_material_registro(request):
     if request.method == "POST":
         try:
