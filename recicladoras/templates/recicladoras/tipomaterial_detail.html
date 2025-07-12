@@ -1,4 +1,5 @@
-{% comment %}{% extends 'recicladoras/base.html' %}
+{% comment %}
+{% extends 'recicladoras/base.html' %}
 
 ##{% block title %}Detalle de Tipo de Material{% endblock %}
 
@@ -9,4 +10,5 @@
 <a href="{% url 'tipomaterial_update' tipo_material.pk %}" class="btn btn-warning">Editar</a>
 <a href="{% url 'tipomaterial_delete' tipo_material.pk %}" class="btn btn-danger">Eliminar</a>
 <a href="{% url 'tipomaterial_list' %}" class="btn btn-info">Volver a la lista</a> */
-{% endblock %} {% endcomment %}
+{% endblock %} 
+{% endcomment %}
