@@ -1,0 +1,56 @@
+{% extends "usuarios/base.html" %}
+{% block title %}Mapa de Puntos de Reciclaje{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4 text-center">Mapa de Puntos de Reciclaje</h2>
+  <div id="map" style="height: 600px; width: 100%;" class="rounded shadow"></div>
+
+  {# INYECTA LOS DATOS COMO JSON (fuera del script principal) #}
+  {{ puntos|json_script:"puntosData" }}
+</div>
+
+<script>
+  function initMap() {
+    const centroMexico = { lat: 23.6345, lng: -102.5528 };
+    const map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 5,
+      center: centroMexico,
+    });
+
+    const data = JSON.parse(document.getElementById('puntosData').textContent);
+
+    data.forEach(punto => {
+      if (punto.latitud && punto.longitud) {
+        const marker = new google.maps.Marker({
+          position: {
+            lat: parseFloat(punto.latitud),
+            lng: parseFloat(punto.longitud)
+          },
+          map: map,
+          title: punto.nombre,
+        });
+
+        const info = `
+          <strong>${punto.nombre}</strong><br>
+          ${punto.ubicacion || ''}<br>
+          Ciudad: ${punto.ciudad || ''}
+        `;
+
+        const infoWindow = new google.maps.InfoWindow({
+          content: info
+        });
+
+        marker.addListener("click", () => {
+          infoWindow.open(map, marker);
+        });
+      }
+    });
+  }
+</script>
+
+<!-- Carga de la API de Google Maps -->
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?apiaqui&callback=initMap">
+</script>
+{% endblock %}

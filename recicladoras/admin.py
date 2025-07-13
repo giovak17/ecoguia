@@ -9,3 +9,4 @@
 # @admin.register(TipoMaterialReciclable)
 # class TipoMaterialReciclableAdmin(admin.ModelAdmin):
 #     list_display = ['id_tipomaterial', 'nombre', 'descripcion', 'tiempo_descomposicion']
+# Register your models here.

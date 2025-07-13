@@ -75,43 +75,34 @@ CREATE TABLE publicaciones (
 	Tiempo_descomposicion INTEGER
 ); */
 CREATE TABLE tipo_material_reciclable (
-    id SERIAL PRIMARY KEY,
-    nombre VARCHAR(40),
+    id_tmr SERIAL PRIMARY KEY,
+    nombre VARCHAR(100),
     descripcion TEXT,
-    tiempo_descomposicion VARCHAR(50)
+    tiempo_descomposicion VARCHAR(100)
 );
 
 
 CREATE TABLE material_reciclable(
 	id_material SERIAL PRIMARY KEY,
-	nombre VARCHAR(50),
+	nombre VARCHAR(100),
 	descripcion TEXT,
 	tipo_reciclaje INTEGER,
-	FOREIGN KEY (tipo_reciclaje) REFERENCES tipo_material_reciclable(id_tipoMaterial)
+	FOREIGN KEY (tipo_reciclaje) REFERENCES tipo_material_reciclable(id_tmr)
 );
 
-/* CREATE TABLE recicladoras(
-	codigo_recicladora SERIAL PRIMARY KEY,
-	nombre VARCHAR(50),
-	propietario INTEGER,
-	FOREIGN KEY (propietario) REFERENCES usuarios(id_usuario),
-	calle VARCHAR(50),
-	codigo_postal INTEGER,
-	colonia VARCHAR(50),
-	numero_int INTEGER,
-	ciudad VARCHAR(30),
-	numero_telefonico VARCHAR(20),
-    aprobada BOOLEAN DEFAULT FALSE
-); */
-CREATE TABLE recicladoras (
+CREATE TABLE recicladoras(
 	codigo_recicladora SERIAL PRIMARY KEY,
 	nombre VARCHAR(100),
 	propietario INTEGER,
 	FOREIGN KEY (propietario) REFERENCES usuarios(id_usuario),
-	direccion TEXT,
+	calle VARCHAR(100),
+	codigo_postal INTEGER,
+	colonia VARCHAR(100),
+	numero_int INTEGER,
+	ciudad VARCHAR(100),
 	numero_telefonico VARCHAR(20),
-	detalles TEXT,
-	aprobada BOOLEAN DEFAULT FALSE
+    aprobada BOOLEAN DEFAULT FALSE,
+	detalles TEXT
 );
 
 
@@ -126,7 +117,7 @@ CREATE TABLE recicladoras (
 ); */
 CREATE TABLE puntos_reciclaje (
     id_punto SERIAL PRIMARY KEY,
-    nombre VARCHAR(50),
+    nombre VARCHAR(100),
     ubicacion TEXT,
     telefono VARCHAR(15),
     horario_entrada TIME,
@@ -142,11 +133,11 @@ CREATE TABLE puntos_reciclaje (
  --Nueva tabla 
  --Material_aceptado por los puntos de reciclaje
 CREATE TABLE material_aceptado (
-    id SERIAL PRIMARY KEY,
+    id_ma SERIAL PRIMARY KEY,
     id_punto INTEGER NOT NULL,
     id_tipo_material INTEGER NOT NULL,
     FOREIGN KEY (id_punto) REFERENCES puntos_reciclaje(id_punto),
-    FOREIGN KEY (id_tipo_material) REFERENCES tipo_material_reciclable(id)
+    FOREIGN KEY (id_tipo_material) REFERENCES tipo_material_reciclable(id_tmr)
 );
 
 
@@ -218,7 +209,7 @@ INSERT INTO tipos_material (nombre, descripcion, tiempo_descomposicion) VALUES
 
 
 --materiales
-INSERT INTO material_reciclable(nombre, descripcion, tipo_materialreciclable) VALUES
+INSERT INTO material_reciclable(nombre, descripcion, tipo_reciclaje) VALUES
 ('Lata de aluminio', 'Envase metálico ligero y resistente, muy común en bebidas.', 1),
 ('Celular viejo', 'Dispositivo electrónico usado, contiene metales y componentes reciclables.', 2),
 ('Pila alcalina', 'Batería pequeña usada en dispositivos portátiles, contiene sustancias tóxicas.', 3),
@@ -231,20 +222,20 @@ INSERT INTO material_reciclable(nombre, descripcion, tipo_materialreciclable) VA
 ('Cargador electrónico', 'Accesorio para dispositivos, contiene componentes electrónicos reciclables.', 2);
 
 --recicladoras
-INSERT INTO recicladoras (nombre, ubicación, telefono, status, detalles, Propietario) VALUES
-('Eco Recycling', 'Blvd. Cucapah 3674, Ex-Ejido Mariano Matamoros, Granjas Familiares del Matamoros, 22203 Tijuana, B.C.', '6642882222', true, 'Empresa dedicada a la compra y venta de autopartes usadas, así como materiales ferrosos y no ferrosos.', 'Luis Herrera'),
-('Solimar', 'San Antonio De Los Buenos, Valle Del Sur 2, 22637 Tijuana, B.C.', '6646376750', true, 'Centro de reciclaje enfocado en materiales domésticos y electrónicos, con servicio comunitario.', 'Marta González'),
-('Recuperada Baja', 'La Morita, 22245 Tijuana, B.C.', '6648998948', true, 'Recicladora comprometida con la recuperación de materiales plásticos y metálicos.', 'Eduardo Sánchez'),
-('Recolectora', 'De Los Ejidatarios 705, Altiplano, 22204 Tijuana, B.C.', '6646296668', true, 'Ofrece servicios de recolección y separación de residuos para empresas y particulares.', 'Ana Pérez'),
-('Metales De Baja California S de RL de CV', 'Loma Bonita 2, La Mesa, Lomas Verdes, 22105 Tijuana, B.C.', '6649020896', true, 'Especializada en reciclaje industrial, con enfoque en metales y materiales de construcción.', 'Carlos Ramírez'),
-('Materiales Expro', 'Pso De Los Taxistas, Infonavit la Mesa, 22226 Tijuana, B.C.', '6644390337', true, 'Centro de acopio y separación de residuos sólidos urbanos y comerciales.', 'Laura Mendoza'),
-('Hyperplastics', 'And Vecinal 10259 Colonia Valle Redondo, Quintas Campestres El Florido, 22710 Tijuana, B.C.', '6644390337', true, 'Recicladora especializada en plásticos de alta y baja densidad.', 'Roberto Díaz'),
-('Ewally', 'Río Colorado 9470, Marron, 22015 Tijuana, B.C.', '6645697984', true, 'Planta recicladora que promueve la economía circular a través del reciclaje tecnológico.', 'Fernanda López'),
-('Corporativo Ambiental', 'Meseta Del Chema, Asfalto 10, Río Tijuana 3a. Etapa, 22225 Tijuana, B.C.', '6646259387', true, 'Corporación dedicada al manejo integral de residuos peligrosos y no peligrosos.', 'Daniel Torres'),
-('Centro De Acopio', 'Ruta Mariano Matamoros 9234, Mariano Matamoros, 22234 Tijuana, B.C.', '6644090457', true, 'Centro comunitario que recibe residuos reciclables como papel, cartón, plástico y vidrio.', 'Verónica Ruiz'),
-('Arjamex', 'Buena Vista 3471, Anexa 20 de Noviembre, 22100 Tijuana, B.C.', '6646222290', true, 'Empresa recicladora que ofrece soluciones para el manejo adecuado de residuos sólidos.', 'Alfredo Jiménez'),
-('Bansus Internacional Recovery De Mexico S de RL de CV', 'Blvd. Díaz Ordaz #12415, El paraiso, 22106 Tijuana, B.C.', '6646891141', true, 'Recicladora internacional que se especializa en recuperación de metales y componentes electrónicos.', 'Patricia Salinas'),
-('Alan Recycling S.A de C.V', 'Camino Vecinal, Valle Redondo 10152, Colonia, 22226 Tijuana, B.C.', '6646268035', true, 'Empresa local dedicada al reciclaje de materiales industriales, plásticos y metales.', 'Jorge Alanís');
+INSERT INTO recicladoras (nombre, calle, numero_int, colonia, codigo_postal, ciudad, numero_telefonico, aprobada, detalles, propietario) VALUES
+('Eco Recycling', 'Blvd. Cucapah', 3674, 'Granjas Familiares del Matamoros', 22203, 'Tijuana', '6642882222', true, 'Empresa dedicada a la compra y venta de autopartes usadas, así como materiales ferrosos y no ferrosos.', 'Luis Herrera'),
+('Solimar', NULL, NULL, 'Valle Del Sur 2', 22637, 'Tijuana', '6646376750', true, 'Centro de reciclaje enfocado en materiales domésticos y electrónicos, con servicio comunitario.', 'Marta González'),
+('Recuperada Baja', NULL, NULL, 'La Morita', 22245, 'Tijuana', '6648998948', true, 'Recicladora comprometida con la recuperación de materiales plásticos y metálicos.', 'Eduardo Sánchez'),
+('Recolectora', 'De Los Ejidatarios', 705, 'Altiplano', 22204, 'Tijuana', '6646296668', true, 'Ofrece servicios de recolección y separación de residuos para empresas y particulares.', 'Ana Pérez'),
+('Metales De Baja California S de RL de CV', 'Loma Bonita 2', NULL, 'Lomas Verdes', 22105, 'Tijuana', '6649020896', true, 'Especializada en reciclaje industrial, con enfoque en metales y materiales de construcción.', 'Carlos Ramírez'),
+('Materiales Expro', 'Pso De Los Taxistas', NULL, 'Infonavit la Mesa', 22226, 'Tijuana', '6644390337', true, 'Centro de acopio y separación de residuos sólidos urbanos y comerciales.', 'Laura Mendoza'),
+('Hyperplastics', 'And Vecinal', 10259, 'Quintas Campestres El Florido', 22710, 'Tijuana', '6644390337', true, 'Recicladora especializada en plásticos de alta y baja densidad.', 'Roberto Díaz'),
+('Ewally', 'Río Colorado', 9470, 'Marron', 22015, 'Tijuana', '6645697984', true, 'Planta recicladora que promueve la economía circular a través del reciclaje tecnológico.', 'Fernanda López'),
+('Corporativo Ambiental', 'Asfalto', 10, 'Río Tijuana 3a. Etapa', 22225, 'Tijuana', '6646259387', true, 'Corporación dedicada al manejo integral de residuos peligrosos y no peligrosos.', 'Daniel Torres'),
+('Centro De Acopio', 'Ruta Mariano Matamoros', 9234, 'Mariano Matamoros', 22234, 'Tijuana', '6644090457', true, 'Centro comunitario que recibe residuos reciclables como papel, cartón, plástico y vidrio.', 'Verónica Ruiz'),
+('Arjamex', 'Buena Vista', 3471, 'Anexa 20 de Noviembre', 22100, 'Tijuana', '6646222290', true, 'Empresa recicladora que ofrece soluciones para el manejo adecuado de residuos sólidos.', 'Alfredo Jiménez'),
+('Bansus Internacional Recovery De Mexico S de RL de CV', 'Blvd. Díaz Ordaz', 12415, 'El Paraiso', 22106, 'Tijuana', '6646891141', true, 'Recicladora internacional que se especializa en recuperación de metales y componentes electrónicos.', 'Patricia Salinas'),
+('Alan Recycling S.A de C.V', 'Camino Vecinal', 10152, 'Colonia Valle Redondo', 22226, 'Tijuana', '6646268035', true, 'Empresa local dedicada al reciclaje de materiales industriales, plásticos y metales.', 'Jorge Alanís');
 
 
 --puntos de reciclaje
