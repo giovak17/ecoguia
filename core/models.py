@@ -36,6 +36,7 @@ class Entregas(models.Model):
     fecha_entrega = models.DateTimeField(blank=True, null=True)
     id_usuario_e = models.ForeignKey('Usuarios', models.DO_NOTHING, db_column='id_usuario_e', blank=True, null=True)
     punto_entrega = models.ForeignKey('PuntosReciclaje', models.DO_NOTHING, db_column='punto_entrega', blank=True, null=True)
+    confirmada = models.BooleanField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -68,11 +69,16 @@ class PuntosReciclaje(models.Model):
     id_punto = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=50, blank=True, null=True)
     ubicacion = models.TextField(blank=True, null=True)
+    telefono = models.CharField(max_length=50, blank=True, null=True)
     ciudad = models.CharField(max_length=30, blank=True, null=True)
     horario_entrada = models.TimeField(blank=True, null=True)
     horario_salida = models.TimeField(blank=True, null=True)
     id_recicladora = models.ForeignKey('Recicladoras', models.DO_NOTHING, db_column='id_recicladora', blank=True, null=True)
-
+    #se usaran para que funcione google maps 
+    extras = models.TextField(blank=True, null=True)
+    latitud = models.FloatField(blank=True, null=True)
+    longitud = models.FloatField(blank=True, null=True)
+    descripcion = models.TextField(blank=True, null=True)
     class Meta:
         managed = False
         db_table = 'puntos_reciclaje'
@@ -88,6 +94,7 @@ class Recicladoras(models.Model):
     numero_int = models.IntegerField(blank=True, null=True)
     ciudad = models.CharField(max_length=30, blank=True, null=True)
     numero_telefonico = models.CharField(max_length=20, blank=True, null=True)
+    aprobada = models.BooleanField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -174,3 +181,11 @@ class UsuariosRetos(models.Model):
     class Meta:
         managed = False
         db_table = 'usuarios_retos'
+
+class SolicitudRegistro(models.Model):
+    nombre_establecimiento = models.CharField(max_length=100)
+    ubicacion = models.TextField()
+    horarios_atencion = models.CharField(max_length=100)
+    telefono_contacto = models.CharField(max_length=20)
+    materiales_aceptados = models.TextField()
+    aprobado = models.BooleanField(default=False)

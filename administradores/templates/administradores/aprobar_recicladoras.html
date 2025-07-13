@@ -1,0 +1,82 @@
+{% extends "administradores/base.html" %}
+<title>{% block title %} Aprobar recicladoras {% endblock %}</title>
+
+<!-- Contentido apartir de aqui sera insertado en base.html -->
+{% block content %}
+<h1 class="text-center fw-bold p-4">Solicitudes de recicladoras</h1>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Codigo</th>
+      <th scope="col">Nombre</th>
+      <th scope="col">Propietario</th>
+      <th scope="col">Direccion</th>
+      <th scope="col">Numero telefonico</th>
+      <th scope="col">Aprobación</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <form id="approval-form" action={% url "administradores:aprobar_recicladoras" %} method="post">
+        {% csrf_token %}
+        {% for rec in recicladoras %}
+            <tr>
+                <th scope="row">{{ rec.codigo_recicladora }}</th>
+                <td>{{ rec.nombre }}</td>
+                <td>{{ rec.propietario.nombre }} {{ rec.propietario.ap_paterno }}</td>
+                <td>{{ rec.ciudad }}, {{ rec.codigo_postal }}, {{ rec.calle }}, {{ rec.colonia }}, {{ rec.numero_int }} </td>
+                <td>{{ rec.numero_telefonico }}</td>
+                <td>
+                        <select class="form-select" name="{{ rec.codigo_recicladora }}" selected="{{rec.aprobada}}">
+                            {% if rec.aprobada %}
+                            <option value="False">Rechazada</option>
+                            <option value="True" selected>Confirmada</option>
+                            {% else %}
+                            <option value="False" selected>Rechazada</option>
+                            <option value="True">Confirmada</option>
+
+                            {% endif %}
+                        </select>
+                </td>
+            <tr>
+        {% endfor %}
+    </form>
+  </tbody>
+</table>
+<button form="approval-form" type="submit" class="btn btn-success my-2 p-3 px-4 fw-bold"" >Aplicar</button>
+
+<script>
+    function fadeOutAndRemoveById(id) {
+        const element = document.getElementById(id);
+        if (!element) return;
+
+        let opacity = 1;
+        const duration = 3000;
+        const interval = 50;
+        const gap = interval / duration;
+
+        const fading = setInterval(() => {
+            opacity -= gap;
+            if (opacity <= 0) {
+                clearInterval(fading);
+                element.remove(); //remove from DOM
+            } else {
+                element.style.opacity = opacity;
+            }
+        }, interval);
+    }
+</script>
+
+{% if success %}
+    <div class="alert alert-success my-4" role="alert" id="success-alert">
+        Cambios aplicados de manera exitosa.
+    </div>
+    <script>
+        fadeOutAndRemoveById("success-alert")
+    </script>
+{%endif %}
+
+
+
+{% endblock %}

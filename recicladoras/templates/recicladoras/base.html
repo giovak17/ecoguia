@@ -5,17 +5,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %} Recicladoras - EcoGuia {% endblock %}</title>
+    <title>{% block title %} EcoGuia {% endblock %}</title>
     <link rel="stylesheet" href="{% static 'core/bootstrap/css/bootstrap.min.css' %}">
 </head>
 
 <body>
+    <body class="d-flex flex-column min-vh-100">
     {% include "recicladoras/partials/header.html" %}
-    <main>
+    <main class="container flex-fill">
         {% block content %}
         <!-- Contenido de los templates que extiendan esta base sera insertado aqui -->
         {% endblock %}
     </main>
+</body>
     {% include "recicladoras/partials/footer.html" %}
     <script src="{% static 'core/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 </body>

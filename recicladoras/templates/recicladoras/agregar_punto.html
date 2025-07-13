@@ -1,0 +1,84 @@
+{% extends "recicladoras/base.html" %}
+{% block title %}Registrar Punto de Reciclaje - EcoGuia{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-lg">
+        <div class="card-body">
+          <h2 class="card-title text-center mb-4">Agrega un Punto de Reciclaje</h2>
+
+          <form method="POST" action="{% url 'recicladoras:agregar_punto' %}" class="needs-validation" novalidate>
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Nombre del Punto</label>
+              <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Punto de reciclaje" required>
+              <div class="invalid-feedback">Este campo es obligatorio.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="ubicacion" class="form-label">Ubicación (URL de Google Maps)</label>
+              <input type="url" class="form-control" id="ubicacion" name="ubicacion" placeholder="https://goo.gl/maps/..." required>
+              <div class="invalid-feedback">Este campo es obligatorio.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="ciudad" class="form-label">Ciudad</label>
+              <input type="text" class="form-control" id="ciudad" name="ciudad" placeholder="Ciudad" required>
+              <div class="invalid-feedback">Este campo es obligatorio.</div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="horario_entrada" class="form-label">Horario de Entrada</label>
+                <input type="time" class="form-control" id="horario_entrada" name="horario_entrada" required>
+                <div class="invalid-feedback">Este campo es obligatorio.</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="horario_salida" class="form-label">Horario de Salida</label>
+                <input type="time" class="form-control" id="horario_salida" name="horario_salida" required>
+                <div class="invalid-feedback">Este campo es obligatorio.</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="latitud" class="form-label">Latitud</label>
+                <input type="text" class="form-control" id="latitud" name="latitud" placeholder="Ej: 19.4326" required>
+                <div class="invalid-feedback">Este campo es obligatorio.</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="longitud" class="form-label">Longitud</label>
+                <input type="text" class="form-control" id="longitud" name="longitud" placeholder="Ej: -99.1332" required>
+                <div class="invalid-feedback">Este campo es obligatorio.</div>
+              </div>
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-success fw-bold">Registrar Punto</button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  (() => {
+    'use strict';
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+      form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  })();
+</script>
+{% endblock %}

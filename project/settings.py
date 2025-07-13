@@ -83,16 +83,41 @@ WSGI_APPLICATION = "project.wsgi.application"
 #     }
 # }
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "ecoguia",
+#         "USER": "postgres",
+#         "PASSWORD": "chela" , #"DBpass.1703"
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
+
+#Conexion chela
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ecoGuia",
-        "USER": "postgres",
-        "PASSWORD": "101258red",
+        "NAME": "ecoguia",
+        "USER": "arath",
+        "PASSWORD": "arath07",
         "HOST": "127.0.0.1",
         "PORT": "5432",
     }
 }
+
+
+# Conexion del toño
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "EcoGuia",
+#         "USER": "postgres",
+#         "PASSWORD": "1234",
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
 
 
 # Password validation
