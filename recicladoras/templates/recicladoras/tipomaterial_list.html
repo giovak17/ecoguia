@@ -21,8 +21,7 @@
             <td>{{ tipo.descripcion }}</td>
             <td>{{ tipo.tiempo_descomposicion }}</td>
             <td>
-                <a href="{% url 'recicladoras:tipomaterial_detail' tipo.pk %}" class="btn btn-info">Ver</a>
-                <a href="{% url 'recicladoras:tipomaterial_update' tipo.pk %}" class="btn btn-warning">Editar</a>
+                <a href="{% url 'recicladoras:tipomaterial_actualizar' tipo.pk %}" class="btn btn-info">Editar</a>
                 <a href="{% url 'recicladoras:tipomaterial_delete' tipo.pk %}" class="btn btn-danger">Eliminar</a>
             </td>
         </tr>

@@ -2,6 +2,7 @@ from django.http import HttpRequest
 from django.shortcuts import redirect, render, get_object_or_404
 from core.models import Usuarios,Entregas
 from django.utils.timezone import now
+from django.urls import reverse
 
 def index(request):
     return render(request, "usuarios/index.html")
@@ -155,3 +156,13 @@ def usuariosregistro(request):
             print("❌ Error al insertar:", e)
 
     return render(request, "usuarios/registro.html")
+
+def usuarios_delete(request, pk):
+    usuarios = get_object_or_404(Usuarios, pk=pk)
+
+    if request.method == "POST":
+        usuarios.delete()
+        return redirect(reverse('usuarios:index'))
+
+    # Si es GET, renderiza la plantilla de confirmación
+    return render(request, "usuarios:usuarios_delete.html", {"object": usuarios})
