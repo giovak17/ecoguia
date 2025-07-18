@@ -1,22 +1,30 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
+<nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm sticky-top">
     <div class="container">
-        <a class="navbar-brand" href="{% url 'usuarios:index' %}">
-             EcoGuía
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'usuarios:index' %}">
+            <i class="bi bi-recycle me-2 fs-3"></i>
+            <span class="fw-bold">EcoGuía</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'usuarios:index' %}">Inicio</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}" href="{% url 'usuarios:index' %}">
+                        <i></i>Inicio
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'usuarios:contenido_educativo' %}">Contenido Educativo</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'contenido_educativo' %}active{% endif %}" href="{% url 'usuarios:contenido_educativo' %}">
+                        <i></i>Contenido Educativo
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'usuarios:login' %}">Iniciar Sesión</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'login' %}active{% endif %}" href="{% url 'usuarios:login' %}">
+                        <i></i>Iniciar Sesión
+                    </a>
                 </li>
             </ul>
         </div>

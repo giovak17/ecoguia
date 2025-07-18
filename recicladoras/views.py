@@ -34,37 +34,43 @@ def solicitud_registro_view(request):
         form = SolicitudRecicladoraForm()
     return render(request, 'recicladoras/solicitud_registro.html', {'form': form})
 
-def agregar_punto(request):
-    if request.method == "POST":
-        try:
-            nombre = request.POST.get("nombre")
-            ubicacion = request.POST.get("ubicacion")
-            ciudad = request.POST.get("ciudad")
-            horario_entrada = request.POST.get("horario_entrada")
-            horario_salida = request.POST.get("horario_salida")
-            latitud = request.POST.get("latitud")
-            longitud = request.POST.get("longitud")
+def  agregar_punto(request):
+    user_id = request.session.get("user_id")
 
-            PuntosReciclaje.objects.create(
-                nombre=nombre,
-                ubicacion=ubicacion,
-                ciudad=ciudad,
-                horario_entrada=horario_entrada,
-                horario_salida=horario_salida,
-                latitud=latitud,
-                longitud=longitud,
-                id_recicladora=Recicladoras.objects.get(pk=1)
-            )
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        ubicacion = request.POST.get('ubicacion')
+        telefono = request.POST.get('telefono')
+        horario_entrada = request.POST.get('horario_entrada')
+        horario_salida = request.POST.get('horario_salida')
+        descripcion = request.POST.get('descripcion')
+        recicladora_codigo = request.POST.get('id_recicladora')
+        extras=request.POST.get('extras')
+        latitud =request.POST.get('latitud')
+        longitud= request.POST.get('longitud')
+        recicladora = Recicladoras.objects.get(codigo_recicladora=recicladora_codigo)
 
-            print("Punto insertado con éxito.")
-            return redirect("recicladoras:index")
+        punto = PuntosReciclaje(
+            nombre=nombre,
+            ubicacion=ubicacion,
+            telefono=telefono,
+            horario_entrada=horario_entrada,
+            horario_salida=horario_salida,
+            descripcion=descripcion,
+            id_recicladora=recicladora,
+            extras=extras,
+            latitud=latitud,
+            longitud=longitud
+        )
+        punto.save()
+        
+        return redirect('recicladoras:index')  
+    # Consulta para llenar el select:
+    recicladoras = Recicladoras.objects.filter(propietario=user_id)
+    return render(request, 'recicladoras/agregar_punto.html', {'recicladoras': recicladoras})
 
-        except Exception as e:
-            print("Error al insertar:")
-            traceback.print_exc()
-            return redirect("recicladoras:agregar_punto")
 
-    return render(request, "recicladoras/agregar_punto.html")
+
 
 def solicitar_recicladora(request):
     if request.method == 'POST':

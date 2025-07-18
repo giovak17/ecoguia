@@ -1,71 +1,115 @@
 {% extends "recicladoras/base.html" %}
+
 {% block title %}Registrar Punto de Reciclaje - EcoGuia{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-8">
-      <div class="card shadow-lg">
-        <div class="card-body">
-          <h2 class="card-title text-center mb-4">Agrega un Punto de Reciclaje</h2>
+<div class="container my-4" style="max-width: 680px;">
+  <div class="card shadow-sm border-0 rounded">
+    <div class="card-header bg-success bg-opacity-75 text-white text-center py-2">
+      <h4 class="mb-0 fw-bold">♻️ Registrar Punto de Reciclaje</h4>
+    </div>
+    <div class="card-body p-3">
 
-          <form method="POST" action="{% url 'recicladoras:agregar_punto' %}" class="needs-validation" novalidate>
-            {% csrf_token %}
+      <form method="post" action="{% url 'recicladoras:agregar_punto' %}" class="needs-validation" novalidate>
+        {% csrf_token %}
 
-            <div class="mb-3">
-              <label for="nombre" class="form-label">Nombre del Punto</label>
-              <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Punto de reciclaje" required>
-              <div class="invalid-feedback">Este campo es obligatorio.</div>
-            </div>
-
-            <div class="mb-3">
-              <label for="ubicacion" class="form-label">Ubicación (URL de Google Maps)</label>
-              <input type="url" class="form-control" id="ubicacion" name="ubicacion" placeholder="https://goo.gl/maps/..." required>
-              <div class="invalid-feedback">Este campo es obligatorio.</div>
-            </div>
-
-            <div class="mb-3">
-              <label for="ciudad" class="form-label">Ciudad</label>
-              <input type="text" class="form-control" id="ciudad" name="ciudad" placeholder="Ciudad" required>
-              <div class="invalid-feedback">Este campo es obligatorio.</div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label for="horario_entrada" class="form-label">Horario de Entrada</label>
-                <input type="time" class="form-control" id="horario_entrada" name="horario_entrada" required>
-                <div class="invalid-feedback">Este campo es obligatorio.</div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="horario_salida" class="form-label">Horario de Salida</label>
-                <input type="time" class="form-control" id="horario_salida" name="horario_salida" required>
-                <div class="invalid-feedback">Este campo es obligatorio.</div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label for="latitud" class="form-label">Latitud</label>
-                <input type="text" class="form-control" id="latitud" name="latitud" placeholder="Ej: 19.4326" required>
-                <div class="invalid-feedback">Este campo es obligatorio.</div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="longitud" class="form-label">Longitud</label>
-                <input type="text" class="form-control" id="longitud" name="longitud" placeholder="Ej: -99.1332" required>
-                <div class="invalid-feedback">Este campo es obligatorio.</div>
-              </div>
-            </div>
-
-            <div class="d-grid">
-              <button type="submit" class="btn btn-success fw-bold">Registrar Punto</button>
-            </div>
-          </form>
-
+        <!-- Nombre -->
+        <div class="row align-items-center mb-2">
+          <label for="nombre" class="col-sm-4 col-form-label small fw-semibold">Nombre</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control form-control-sm" id="nombre" name="nombre" placeholder="Punto Verde Centro" required>
+            <div class="invalid-feedback">Obligatorio</div>
+          </div>
         </div>
-      </div>
+
+        <!-- Ubicación -->
+        <div class="row align-items-start mb-2">
+          <label for="ubicacion" class="col-sm-4 col-form-label small fw-semibold">Ubicación</label>
+          <div class="col-sm-8">
+            <textarea class="form-control form-control-sm" id="ubicacion" name="ubicacion" rows="2" placeholder="Calle Reforma 123, Col Centro" required></textarea>
+            <div class="invalid-feedback">Obligatorio</div>
+          </div>
+        </div>
+
+        <!-- Teléfono, Entrada, Salida -->
+        <div class="row mb-2 g-2">
+          <div class="col-5 col-sm-4">
+            <label for="telefono" class="form-label small fw-semibold">Teléfono</label>
+            <input type="tel" class="form-control form-control-sm" id="telefono" name="telefono" placeholder="555-123-4567" required>
+            <div class="invalid-feedback">Obligatorio</div>
+          </div>
+          <div class="col-3 col-sm-4">
+            <label for="horario_entrada" class="form-label small fw-semibold">Entrada</label>
+            <input type="time" class="form-control form-control-sm" id="horario_entrada" name="horario_entrada" required>
+            <div class="invalid-feedback">Obligatorio</div>
+          </div>
+          <div class="col-4 col-sm-4">
+            <label for="horario_salida" class="form-label small fw-semibold">Salida</label>
+            <input type="time" class="form-control form-control-sm" id="horario_salida" name="horario_salida" required>
+            <div class="invalid-feedback">Obligatorio</div>
+          </div>
+        </div>
+
+        <!-- Descripción -->
+        <div class="row align-items-start mb-2">
+          <label for="descripcion" class="col-sm-4 col-form-label small fw-semibold">Descripción</label>
+          <div class="col-sm-8">
+            <textarea class="form-control form-control-sm" id="descripcion" name="descripcion" rows="3" placeholder="Detalles adicionales del punto" required></textarea>
+            <div class="invalid-feedback">Obligatorio</div>
+          </div>
+        </div>
+
+        <!-- Latitud y Longitud -->
+        <div class="row mb-2 g-2">
+          <div class="col-6 col-sm-6">
+            <label for="latitud" class="form-label small fw-semibold">Latitud</label>
+            <input type="number" step="any" class="form-control form-control-sm" id="latitud" name="latitud" placeholder="19.4326" required>
+            <div class="invalid-feedback">Obligatorio</div>
+          </div>
+          <div class="col-6 col-sm-6">
+            <label for="longitud" class="form-label small fw-semibold">Longitud</label>
+            <input type="number" step="any" class="form-control form-control-sm" id="longitud" name="longitud" placeholder="-99.1332" required>
+            <div class="invalid-feedback">Obligatorio</div>
+          </div>
+        </div>
+
+        <!-- Extras -->
+        <div class="row align-items-start mb-3">
+          <label for="extras" class="col-sm-4 col-form-label small fw-semibold">Extras</label>
+          <div class="col-sm-8">
+            <textarea class="form-control form-control-sm" id="extras" name="extras" rows="2" placeholder="Ej. Reciben cartón, electrónicos"></textarea>
+          </div>
+        </div>
+
+        <!-- Recicladora -->
+        <div class="row align-items-center mb-3">
+          <label for="id_recicladora" class="col-sm-4 col-form-label small fw-semibold">Recicladora</label>
+          <div class="col-sm-8">
+            <select class="form-select form-select-sm" id="id_recicladora" name="id_recicladora" required>
+              <option value="" disabled selected>Seleccione recicladora</option>
+              {% for r in recicladoras %}
+                <option value="{{ r.codigo_recicladora }}">{{ r.nombre }}</option>
+              {% endfor %}
+            </select>
+            <div class="invalid-feedback">Selecciona una recicladora.</div>
+          </div>
+        </div>
+
+        <!-- Botón Guardar -->
+        <div class="text-center">
+          <button type="submit" class="btn btn-success btn-sm px-4 fw-semibold d-flex align-items-center mx-auto">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-check2-circle me-2" viewBox="0 0 16 16">
+              <path d="M2.5 8a5.5 5.5 0 1 1 11 0 5.5 5.5 0 0 1-11 0zm9.354-1.354a.5.5 0 0 0-.708-.708L7 9.793 5.854 8.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l4-4z"/>
+            </svg>
+            Guardar Punto
+          </button>
+        </div>
+
+      </form>
     </div>
   </div>
 </div>
+
 <script>
   (() => {
     'use strict';

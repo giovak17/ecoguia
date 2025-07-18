@@ -130,17 +130,36 @@ def verify_crendentials(email, password) -> tuple[bool, str, Usuarios]:
     else:
         return False, "Contrasena incorrecta.", Usuarios()
     
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.utils.timezone import now
+
+
 def usuariosregistro(request):
     if request.method == "POST":
-        try:
-            
-            nombre = request.POST.get("nombre")
-            ap_paterno = request.POST.get("ap_paterno")
-            ap_materno = request.POST.get("ap_materno")
-            correo = request.POST.get("correo")
-            contrasena = request.POST.get("contrasena")
-            fecha_nacimiento = request.POST.get("fecha_nacimiento")
+        nombre = request.POST.get("nombre")
+        ap_paterno = request.POST.get("ap_paterno")
+        ap_materno = request.POST.get("ap_materno")
+        correo = request.POST.get("correo")
+        contrasena = request.POST.get("contrasena")
+        fecha_nacimiento = request.POST.get("fecha_nacimiento")
 
+        context = {
+            "nombre": nombre,
+            "ap_paterno": ap_paterno,
+            "ap_materno": ap_materno,
+            "correo": correo,
+            "fecha_nacimiento": fecha_nacimiento,
+        }
+
+        # Validar que el correo no exista ya
+        if Usuarios.objects.filter(correo=correo).exists():
+            context["error_correo"] = "Este correo ya está registrado."
+            return render(request, "usuarios/registro.html", context)
+
+        # Aquí puedes añadir más validaciones si quieres
+
+        try:
             Usuarios.objects.create(
                 nombre=nombre,
                 ap_paterno=ap_paterno,
@@ -150,16 +169,15 @@ def usuariosregistro(request):
                 fecha_nacimiento=fecha_nacimiento,
                 fecha_registro=now(),
                 total_recompensas=0,
-                id_rol_id=2 
+                id_rol_id=2,
             )
-
-            print("✅ Usuario insertado con éxito.")
             return redirect("usuarios:index")
-
         except Exception as e:
-            print("❌ Error al insertar:", e)
+            context["error_general"] = "Error al registrar usuario, intenta de nuevo."
+            return render(request, "usuarios/registro.html", context)
 
     return render(request, "usuarios/registro.html")
+
 
 def mapa_puntos_google(request):
     puntos = list(PuntosReciclaje.objects.values(

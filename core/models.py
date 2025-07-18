@@ -70,7 +70,6 @@ class PuntosReciclaje(models.Model):
     nombre = models.CharField(max_length=50, blank=True, null=True)
     ubicacion = models.TextField(blank=True, null=True)
     telefono = models.CharField(max_length=50, blank=True, null=True)
-    ciudad = models.CharField(max_length=30, blank=True, null=True)
     horario_entrada = models.TimeField(blank=True, null=True)
     horario_salida = models.TimeField(blank=True, null=True)
     id_recicladora = models.ForeignKey('Recicladoras', models.DO_NOTHING, db_column='id_recicladora', blank=True, null=True)
