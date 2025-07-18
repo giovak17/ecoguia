@@ -6,6 +6,7 @@ from core.models import Usuarios,Entregas, PuntosReciclaje
 from django.utils.timezone import now
 from django.http import JsonResponse
 from django.db import connection
+from django.urls import reverse
 
 def index(request):
     return render(request, "usuarios/index.html")
@@ -165,3 +166,13 @@ def mapa_puntos_google(request):
         'nombre', 'latitud', 'longitud', 'ubicacion', 'ciudad'
     ))
     return render(request, 'usuarios/mapa_google.html', {'puntos': puntos})
+
+def usuarios_delete(request, pk):
+    usuarios = get_object_or_404(Usuarios, pk=pk)
+
+    if request.method == "POST":
+        usuarios.delete()
+        return redirect(reverse('usuarios:index'))
+
+    # Si es GET, renderiza la plantilla de confirmación
+    return render(request, "usuarios:usuarios_delete.html", {"object": usuarios})

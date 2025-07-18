@@ -86,12 +86,6 @@ def tipo_material_list(request):
     tipos_material = TipoMaterialReciclable.objects.all()
     return render(request, "recicladoras/tipomaterial_list.html", {"tipos_material": tipos_material})
 
-# Detalle de un tipo de material
-def tipo_material_detail(request, pk):
-    tipo_material = get_object_or_404(TipoMaterialReciclable, pk=pk)
-    return render(request, "recicladoras/tipomaterial_detail.html", {"tipo_material": tipo_material})
-
-
 def tipo_material_registro(request):
     if request.method == "POST":
         try:
@@ -116,18 +110,18 @@ def tipo_material_registro(request):
     return render(request, "recicladoras/tipomaterial_registro.html")
 
 # Actualizar un tipo de material existente
-def tipo_material_update(request, pk):
+def tipo_material_actualizar(request, pk):
     tipo_material = get_object_or_404(TipoMaterialReciclable, pk=pk)
     if request.method == "POST":
         form = TipoMaterialReciclableForm(request.POST, instance=tipo_material)
         if form.is_valid():
             form.save()
-            return redirect(reverse('tipomaterial_list'))
+            return redirect(reverse('recicladoras:tipomaterial_list'))
         else:
             print("Formulario inválido:", form.errors)
     else:
         form = TipoMaterialReciclableForm(instance=tipo_material)
-    return render(request, "recicladoras/tipomaterial_registro.html", {"form": form})
+    return render(request, "recicladoras/tipomaterial_actualizar.html", {"form": form})
 
 
 def tipo_material_delete(request, pk):
@@ -138,4 +132,4 @@ def tipo_material_delete(request, pk):
         return redirect(reverse('tipomaterial_list'))
 
     # Si es GET, renderiza la plantilla de confirmación
-    return render(request, "tipomaterial_delete.html", {"object": tipo_material})
+    return render(request, "recicladoras/tipomaterial_delete.html", {"object": tipo_material})
