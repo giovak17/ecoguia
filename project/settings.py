@@ -95,12 +95,13 @@ WSGI_APPLICATION = "project.wsgi.application"
 # }
 
 #Conexion chela
+#no cambiar  cada 1 ponga el suyo 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "ecoguia",
-        "USER": "arath",
-        "PASSWORD": "arath07",
+        "USER": "postgres",
+        "PASSWORD": "chela",
         "HOST": "127.0.0.1",
         "PORT": "5432",
     }
