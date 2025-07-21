@@ -1,11 +1,6 @@
 from django.http import HttpRequest
-<<<<<<< HEAD
-from django.shortcuts import redirect, render, get_object_or_404
-from core.models import Usuarios,Entregas
-=======
 from django.shortcuts import redirect, render
 from core.models import Usuarios,Entregas, PuntosReciclaje
->>>>>>> 27742a5 (Act BD y Mapa)
 from django.utils.timezone import now
 from django.http import JsonResponse
 from django.db import connection

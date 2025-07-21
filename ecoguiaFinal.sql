@@ -173,6 +173,21 @@ INSERT INTO usuarios (nombre, ap_paterno, ap_materno, correo, contrasena, fecha_
 ('Carlos', 'Ramírez', 'Vega', 'carlos@correo.com', 'car123', '1988-07-22', 15, 2),
 ('Lucía', 'Fernández', 'Pérez', 'lucia@correo.com', 'lucia456', '1995-12-03', 0, 3),
 ('David', 'Torres', 'Hernández', 'admin@correo.com', 'admin123', '1985-05-30', 0, 1); 
+----mas registros para recicladoras
+INSERT INTO usuarios (nombre, ap_paterno, ap_materno, correo, contrasena, fecha_nacimiento, total_recompensas, id_rol) VALUES 
+
+('Luis', 'Herrera', 'García', 'luis@correo.com', 'pass123', '1985-04-10', 0, 2),
+('Marta', 'González', 'Sánchez', 'marta@correo.com', 'pass123', '1990-06-12', 0, 2),
+('Eduardo', 'Sánchez', 'Martínez', 'eduardo@correo.com', 'pass123', '1988-02-25', 0, 2),
+('Ana', 'Pérez', 'Ramírez', 'ana@correo.com', 'pass123', '1993-09-18',  0, 2),
+('Carlos', 'Ramírez', 'Torres', 'carlos@correo.com', 'pass123', '1987-01-15', 0, 2),
+('Laura', 'Mendoza', 'Flores', 'laura@correo.com', 'pass123', '1991-12-01',  0, 2),
+('Roberto', 'Díaz', 'Moreno', 'roberto@correo.com', 'pass123', '1984-08-21', 0, 2),
+('Fernanda', 'López', 'Jiménez', 'fernanda@correo.com', 'pass123', '1995-03-05',0, 2),
+('Maria', 'perez', 'Fernandez', 'fernandez@correo.com', 'pass123', '1995-03-05',0, 2),
+('Alejandro', 'Hernandez', 'Jimenez', 'ale@correo.com', 'pass123', '1995-03-05',0, 2),
+('Frida', 'Arriaga', 'Valle', 'Frida@correo.com', 'pass123', '1995-03-05',0, 2),
+('Juan', 'Lara', 'Mejia', 'juan@correo.com', 'pass123', '1985-04-10', 0, 1);
 
 --retos
 INSERT INTO retos (titulo, descripcion) VALUES ('Recicla 5 botellas de plástico', 'Participa entregando al menos 5 botellas PET.');
@@ -186,17 +201,17 @@ INSERT INTO recompensas (nombre, descripcion, clave_reto) VALUES
 ('Bolsa reutilizable', 'Bolsa con diseño ecológico', 3);
 
 --contenido educativo
-INSERT INTO contenido_educativo (titulo, descripcion, id_usuario_ce) VALUES ('¿Por qué reciclar?', 'El reciclaje reduce la contaminación y ahorra recursos.', 4);
-INSERT INTO contenido_educativo (titulo, descripcion, id_usuario_ce) VALUES ('Tipos de residuos', 'Conoce los residuos orgánicos, inorgánicos y peligrosos.', 4);
-INSERT INTO contenido_educativo (titulo, descripcion, id_usuario_ce) VALUES ('Beneficios del reciclaje', 'Contribuye al medio ambiente y genera empleo.', 4);
+INSERT INTO contenido_educativo (titulo, descripcion, id_usuario_ce) VALUES ('¿Por qué reciclar?', 'El reciclaje reduce la contaminación y ahorra recursos.', 3);
+INSERT INTO contenido_educativo (titulo, descripcion, id_usuario_ce) VALUES ('Tipos de residuos', 'Conoce los residuos orgánicos, inorgánicos y peligrosos.', 3);
+INSERT INTO contenido_educativo (titulo, descripcion, id_usuario_ce) VALUES ('Beneficios del reciclaje', 'Contribuye al medio ambiente y genera empleo.', 3);
 
 --publicaciones
-INSERT INTO publicaciones (titulo, contenido, id_usuario_p) VALUES ('Mi primer entrega', 'Entregué mis primeras 5 botellas y me siento genial.', 1);
-INSERT INTO publicaciones (titulo, contenido, id_usuario_p) VALUES ('Limpieza en mi colonia', 'Nos organizamos para limpiar el parque y reciclamos mucho.', 2);
-INSERT INTO publicaciones (titulo, contenido, id_usuario_p) VALUES ('Reciclar es fácil', 'Solo necesitas separar tus residuos y llevarlos al punto más cercano.', 1);
+INSERT INTO publicaciones (titulo, contenido, id_usuario_p) VALUES ('Mi primer entrega', 'Entregué mis primeras 5 botellas y me siento genial.', 4);
+INSERT INTO publicaciones (titulo, contenido, id_usuario_p) VALUES ('Limpieza en mi colonia', 'Nos organizamos para limpiar el parque y reciclamos mucho.', 16);
+INSERT INTO publicaciones (titulo, contenido, id_usuario_p) VALUES ('Reciclar es fácil', 'Solo necesitas separar tus residuos y llevarlos al punto más cercano.', 4);
 
 --tipo material
-INSERT INTO tipos_material (nombre, descripcion, tiempo_descomposicion) VALUES
+INSERT INTO tipo_material_reciclable (nombre, descripcion, tiempo_descomposicion) VALUES
 ('Metales', 'Materiales como aluminio, acero y cobre comúnmente reciclados por su valor y durabilidad.', '200-500 años'),
 ('Electrónicos', 'Dispositivos eléctricos como celulares, computadoras y electrodomésticos, que contienen metales y componentes peligrosos.', '1 millón de años (componentes no biodegradables)'),
 ('Baterías', 'Acumuladores de energía como pilas y baterías recargables, que pueden contener sustancias tóxicas.', '100-1000 años'),
@@ -223,19 +238,19 @@ INSERT INTO material_reciclable(nombre, descripcion, tipo_reciclaje) VALUES
 
 --recicladoras
 INSERT INTO recicladoras (nombre, calle, numero_int, colonia, codigo_postal, ciudad, numero_telefonico, aprobada, detalles, propietario) VALUES
-('Eco Recycling', 'Blvd. Cucapah', 3674, 'Granjas Familiares del Matamoros', 22203, 'Tijuana', '6642882222', true, 'Empresa dedicada a la compra y venta de autopartes usadas, así como materiales ferrosos y no ferrosos.', 'Luis Herrera'),
-('Solimar', NULL, NULL, 'Valle Del Sur 2', 22637, 'Tijuana', '6646376750', true, 'Centro de reciclaje enfocado en materiales domésticos y electrónicos, con servicio comunitario.', 'Marta González'),
-('Recuperada Baja', NULL, NULL, 'La Morita', 22245, 'Tijuana', '6648998948', true, 'Recicladora comprometida con la recuperación de materiales plásticos y metálicos.', 'Eduardo Sánchez'),
-('Recolectora', 'De Los Ejidatarios', 705, 'Altiplano', 22204, 'Tijuana', '6646296668', true, 'Ofrece servicios de recolección y separación de residuos para empresas y particulares.', 'Ana Pérez'),
-('Metales De Baja California S de RL de CV', 'Loma Bonita 2', NULL, 'Lomas Verdes', 22105, 'Tijuana', '6649020896', true, 'Especializada en reciclaje industrial, con enfoque en metales y materiales de construcción.', 'Carlos Ramírez'),
-('Materiales Expro', 'Pso De Los Taxistas', NULL, 'Infonavit la Mesa', 22226, 'Tijuana', '6644390337', true, 'Centro de acopio y separación de residuos sólidos urbanos y comerciales.', 'Laura Mendoza'),
-('Hyperplastics', 'And Vecinal', 10259, 'Quintas Campestres El Florido', 22710, 'Tijuana', '6644390337', true, 'Recicladora especializada en plásticos de alta y baja densidad.', 'Roberto Díaz'),
-('Ewally', 'Río Colorado', 9470, 'Marron', 22015, 'Tijuana', '6645697984', true, 'Planta recicladora que promueve la economía circular a través del reciclaje tecnológico.', 'Fernanda López'),
-('Corporativo Ambiental', 'Asfalto', 10, 'Río Tijuana 3a. Etapa', 22225, 'Tijuana', '6646259387', true, 'Corporación dedicada al manejo integral de residuos peligrosos y no peligrosos.', 'Daniel Torres'),
-('Centro De Acopio', 'Ruta Mariano Matamoros', 9234, 'Mariano Matamoros', 22234, 'Tijuana', '6644090457', true, 'Centro comunitario que recibe residuos reciclables como papel, cartón, plástico y vidrio.', 'Verónica Ruiz'),
-('Arjamex', 'Buena Vista', 3471, 'Anexa 20 de Noviembre', 22100, 'Tijuana', '6646222290', true, 'Empresa recicladora que ofrece soluciones para el manejo adecuado de residuos sólidos.', 'Alfredo Jiménez'),
-('Bansus Internacional Recovery De Mexico S de RL de CV', 'Blvd. Díaz Ordaz', 12415, 'El Paraiso', 22106, 'Tijuana', '6646891141', true, 'Recicladora internacional que se especializa en recuperación de metales y componentes electrónicos.', 'Patricia Salinas'),
-('Alan Recycling S.A de C.V', 'Camino Vecinal', 10152, 'Colonia Valle Redondo', 22226, 'Tijuana', '6646268035', true, 'Empresa local dedicada al reciclaje de materiales industriales, plásticos y metales.', 'Jorge Alanís');
+('Eco Recycling', 'Blvd. Cucapah', 3674, 'Granjas Familiares del Matamoros', 22203, 'Tijuana', '6642882222', true, 'Empresa dedicada a la compra y venta de autopartes usadas, así como materiales ferrosos y no ferrosos.', 5),
+('Solimar', NULL, NULL, 'Valle Del Sur 2', 22637, 'Tijuana', '6646376750', true, 'Centro de reciclaje enfocado en materiales domésticos y electrónicos, con servicio comunitario.', 6),
+('Recuperada Baja', NULL, NULL, 'La Morita', 22245, 'Tijuana', '6648998948', true, 'Recicladora comprometida con la recuperación de materiales plásticos y metálicos.',7),
+('Recolectora', 'De Los Ejidatarios', 705, 'Altiplano', 22204, 'Tijuana', '6646296668', true, 'Ofrece servicios de recolección y separación de residuos para empresas y particulares.',8),
+('Metales De Baja California S de RL de CV', 'Loma Bonita 2', NULL, 'Lomas Verdes', 22105, 'Tijuana', '6649020896', true, 'Especializada en reciclaje industrial, con enfoque en metales y materiales de construcción.', 9),
+('Materiales Expro', 'Pso De Los Taxistas', NULL, 'Infonavit la Mesa', 22226, 'Tijuana', '6644390337', true, 'Centro de acopio y separación de residuos sólidos urbanos y comerciales.', 10),
+('Hyperplastics', 'And Vecinal', 10259, 'Quintas Campestres El Florido', 22710, 'Tijuana', '6644390337', true, 'Recicladora especializada en plásticos de alta y baja densidad.',11),
+('Ewally', 'Río Colorado', 9470, 'Marron', 22015, 'Tijuana', '6645697984', true, 'Planta recicladora que promueve la economía circular a través del reciclaje tecnológico.', 12),
+('Corporativo Ambiental', 'Asfalto', 10, 'Río Tijuana 3a. Etapa', 22225, 'Tijuana', '6646259387', true, 'Corporación dedicada al manejo integral de residuos peligrosos y no peligrosos.', 1),
+('Centro De Acopio', 'Ruta Mariano Matamoros', 9234, 'Mariano Matamoros', 22234, 'Tijuana', '6644090457', true, 'Centro comunitario que recibe residuos reciclables como papel, cartón, plástico y vidrio.', 2),
+('Arjamex', 'Buena Vista', 3471, 'Anexa 20 de Noviembre', 22100, 'Tijuana', '6646222290', true, 'Empresa recicladora que ofrece soluciones para el manejo adecuado de residuos sólidos.', 13),
+('Bansus Internacional Recovery De Mexico S de RL de CV', 'Blvd. Díaz Ordaz', 12415, 'El Paraiso', 22106, 'Tijuana', '6646891141', true, 'Recicladora internacional que se especializa en recuperación de metales y componentes electrónicos.', 14),
+('Alan Recycling S.A de C.V', 'Camino Vecinal', 10152, 'Colonia Valle Redondo', 22226, 'Tijuana', '6646268035', true, 'Empresa local dedicada al reciclaje de materiales industriales, plásticos y metales.', 15);
 
 
 --puntos de reciclaje
@@ -289,23 +304,23 @@ INSERT INTO material_aceptado (id_punto, id_tipo_material) VALUES
 --usuarios recompensas
 INSERT INTO usuarios_recompensas (id_usuario, id_recompensa, fecha_canjeo)
 VALUES 
-(1, 1, '2025-06-10'),
-(2, 2, '2025-06-11'),
-(2, 3, '2025-06-15');
+(4, 1, '2025-06-10'),
+(4, 2, '2025-06-11'),
+(16, 3, '2025-06-15');
 
 --usuarios retos
 INSERT INTO usuarios_retos (id_usuario, id_reto, fecha_inicio, fecha_fin)
 VALUES 
-(1, 1, '2025-06-01', '2025-06-07'),
-(2, 2, '2025-06-02', '2025-06-08'),
-(1, 3, '2025-06-03', '2025-06-09');
+(4, 1, '2025-06-01', '2025-06-07'),
+(16, 2, '2025-06-02', '2025-06-08'),
+(4, 3, '2025-06-03', '2025-06-09');
 
 --entregas
 INSERT INTO entregas (id_usuario_e, punto_entrega, confirmada)
 VALUES 
-(1, 1, false),
-(2, 2, true),
-(2, 3, true);
+(16, 1, false),
+(4, 2, true),
+(4, 3, true);
 
 --material_entregado
 INSERT INTO entrega_material_reciclado (id_entrega, id_material, cantidad, condiciones_entrega)

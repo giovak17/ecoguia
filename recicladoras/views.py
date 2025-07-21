@@ -2,7 +2,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404, redirect
 import traceback
 from core.models import Entregas, Recicladoras, PuntosReciclaje, EntregaMaterialReciclado, TipoMaterialReciclable, Usuarios
-from .forms import TipoMaterialReciclableForm, SolicitudRegistroForm
+from .forms import TipoMaterialReciclableForm, SolicitudRegistro
 from django.views import generic
 from django.urls import reverse, reverse_lazy
 from core.models import Entregas, Recicladoras, PuntosReciclaje, EntregaMaterialReciclado

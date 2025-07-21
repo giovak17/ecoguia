@@ -94,17 +94,17 @@ WSGI_APPLICATION = "project.wsgi.application"
 #     }
 # }
 
-#Conexion chela
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ecoguia",
-        "USER": "arath",
-        "PASSWORD": "arath07",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
-    }
-}
+# #Conexion chela
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "ecoguia",
+#         "USER": "arath",
+#         "PASSWORD": "arath07",
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
 
 
 # Conexion del toño
@@ -119,6 +119,17 @@ DATABASES = {
 #     }
 # }
 
+# Conexion America
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "ecoGuia",
+        "USER": "postgres",
+        "PASSWORD": "101258red",
+        "HOST": "127.0.0.1",
+        "PORT": "5432",
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -155,7 +166,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [BASE_DIR /"static"]
+STATICFILES_DIRS = [
+                    BASE_DIR / 'project' / 'static',
+                    BASE_DIR / 'statics'
+                    ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
