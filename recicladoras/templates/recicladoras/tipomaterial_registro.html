@@ -1,13 +1,59 @@
-{% extends 'recicladoras/base.html' %}
-
-{% block title %}{% if form.instance.pk %}Editar Tipo de Material{% else %}Crear Tipo de Material{% endif %}{% endblock %}
+{% extends "recicladoras/base.html" %}
+{% block title %}Registrar Tipo de Material - EcoGuia{% endblock %}
 
 {% block content %}
-<h2>{% if form.instance.pk %}Editar Tipo de Material{% else %}Crear Tipo de Material{% endif %}</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-success">Guardar</button>
-    <a href="{% url 'recicladoras/tipomaterial_list' %}" class="btn btn-info">Cancelar</a>
-</form>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card shadow-lg">
+        <div class="card-body">
+          <h2 class="card-title text-center mb-4">Agrega un Tipo de Material</h2>
+
+          <form method="POST" action="{% url 'recicladoras:tipomaterial_registro' %}" class="needs-validation" novalidate>
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del material" required>
+              <div class="invalid-feedback">Este campo es obligatorio.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="descripcion" class="form-label">Descripción</label>
+              <textarea class="form-control" id="descripcion" name="descripcion" rows="3" placeholder="Descripción del material" required></textarea>
+              <div class="invalid-feedback">Este campo es obligatorio.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="tiempo_descomposicion" class="form-label">Tiempo de Descomposición (días)</label>
+              <input type="number" class="form-control" id="tiempo_descomposicion" name="tiempo_descomposicion" placeholder="Ej: 400" min="0" required>
+              <div class="invalid-feedback">Por favor ingresa un número válido.</div>
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-success fw-bold">Registrar Tipo de Material</button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (() => {
+    'use strict';
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+      form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  })();
+</script>
 {% endblock %}

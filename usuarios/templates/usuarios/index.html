@@ -1,11 +1,27 @@
 {% extends "usuarios/base.html" %}
 
-<title>{% block title %} Index {% endblock %}</title>
+{% block title %}Inicio | Plataforma de Reciclaje{% endblock %}
 
-<!-- Contentido apartir de aqui sera insertado en base.html -->
 {% block content %}
-<h1>Index Usuarios</h1>
-<a href="{% url 'recicladoras:index' %}">Recicladoras</a>
-<br>
-<a href="{% url 'administradores:index' %}">Administradores</a>
+<div class="container py-5">
+  <!-- Encabezado temático -->
+  <div class="text-center mb-5">
+    <h1 class="display-4 fw-bold text-success">🌿 Plataforma EcoGuía</h1>
+    <p class="lead text-muted">Conectamos comunidades con puntos de reciclaje para construir un futuro sostenible.</p>
+  </div>
+
+  <!-- Secciones principales -->
+  <div class="row justify-content-center g-4">
+
+
+<style>
+  .eco-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .eco-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 1rem 1.5rem rgba(76, 175, 80, 0.2);
+  }
+</style>
 {% endblock %}

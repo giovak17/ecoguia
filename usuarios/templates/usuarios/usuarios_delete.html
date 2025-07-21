@@ -1,12 +1,12 @@
-{% extends 'recicladoras/base.html' %}
+{% extends 'usuarios/base.html' %}
 
-{% block title %}Eliminar Tipo de Material{% endblock %}
+{% block title %}Eliminar usuarios{% endblock %}
 
 {% block content %}
 <h2>¿Seguro que quieres eliminar "{{ object.nombre }}"?</h2>
 <form method="post">
     {% csrf_token %}
     <button type="submit" class="btn btn-danger">Eliminar</button>
-    <a href="{% url 'recicladoras:tipomaterial_list' %}" class="btn btn-info">Cancelar</a>
+    <a href="{% url 'usuarios:index' %}" class="btn btn-bg-success">Cancelar</a>
 </form>
 {% endblock %}

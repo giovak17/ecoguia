@@ -1,0 +1,35 @@
+{% extends "recicladoras/base.html" %}
+{% block title %}Editar Tipo de Material - EcoGuia{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card shadow-lg">
+        <div class="card-body">
+          <h2 class="card-title text-center mb-4">Editar Tipo de Material</h2>
+          <form method="POST" >
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="{{ form.nombre.id_for_label }}" class="form-label">Nombre</label>
+              {{ form.nombre }}
+            </div>
+            <div class="mb-3">
+              <label for="{{ form.descripcion.id_for_label }}" class="form-label">Descripción</label>
+              {{ form.descripcion }}
+            </div>
+            <div class="mb-3">
+              <label for="{{ form.tiempo_descomposicion.id_for_label }}" class="form-label">Tiempo de Descomposición (días)</label>
+              {{ form.tiempo_descomposicion }}
+              <div class="invalid-feedback">Por favor ingresa un número válido.</div>
+            </div>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-success fw-bold">Guardar Cambios</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

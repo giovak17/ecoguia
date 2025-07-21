@@ -1,41 +1,60 @@
 {% extends "usuarios/base.html" %}
 
-<title>{% block title %} Inicio de sesion {% endblock %}</title>
+{% block title %}Inicio de sesión | EcoGuía{% endblock %}
 
 {% block content %}
-<div class="w-50 mx-auto my-5">
-    <!-- heading -->
-    <div class="py-4 my-2">
-        <h1 class="text-center fw-bold">Bienvenido de vuelta</h1>
-        <p class=" text-center">¿No tiene una cuenta?
-            <a href="{% url 'usuarios:registro' %}" class="text-decoration-none text-dark fw-bold">Registrarse.</a>
+<div class="container d-flex justify-content-center align-items-center min-vh-75 my-5">
+  <div class="card shadow-lg rounded-4 border-0" style="max-width: 440px; width: 100%;">
+    <div class="card-body p-4">
+      <!-- Encabezado -->
+      <div class="text-center mb-4">
+        <div class="mb-2">
+          <i class="bi bi-recycle text-success" style="font-size: 3rem;"></i>
+        </div>
+        <h2 class="fw-bold text-success">Bienvenido a EcoGuia!</h2>
+        <p class="mb-0">¿No tienes una cuenta?
+          <a href="{% url 'usuarios:registro' %}" class="text-decoration-none fw-semibold text-success">Regístrate aquí</a>
         </p>
-    </div>
-    <!-- end heading -->
-    <div class="shadow p-5 mb-5 bg-body rounded rounded-lg">
-        <form method="post" action="" class="">
-            {% csrf_token %}
-            <div class="form-group ">
-                <label for="exampleInputEmail1" class="py-2 fw-bold">Correo electronico</label>
-                <input type="email" class="form-control p-3" id="exampleInputEmail1" aria-describedby="emailHelp"
-                    placeholder="Correo electronico" name="email" value="{% if email %} {{ email }} {% endif %}"
-                    required>
-            </div>
-            <div class="form-group py-4">
-                <label for="exampleInputPassword1" class="py-2 fw-bold">Contraseña</label>
-                <input type="password" class="form-control p-3" id="exampleInputPassword1" placeholder="Contraseña"
-                    name="password" required>
-            </div>
-            {% if message %}
-            <div class="alert alert-danger" role="alert">
-                {{ message }}
-            </div>
-            {% endif %}
+      </div>
 
-            <button type="submit" class="btn btn-success my-2 p-3 px-4 fw-bold">Iniciar sesión</button>
-        </form>
+      <!-- Formulario -->
+      <form method="post" action="">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="email" class="form-label fw-semibold">Correo electrónico</label>
+          <input
+            type="email"
+            class="form-control form-control-lg"
+            id="email"
+            name="email"
+            placeholder="tu@email.com"
+            value="{% if email %}{{ email }}{% endif %}"
+            required
+            autofocus
+          >
+        </div>
 
+        <div class="mb-3">
+          <label for="password" class="form-label fw-semibold">Contraseña</label>
+          <input
+            type="password"
+            class="form-control form-control-lg"
+            id="password"
+            name="password"
+            placeholder="********"
+            required
+          >
+        </div>
+
+        {% if message %}
+        <div class="alert alert-danger mt-3" role="alert">
+          {{ message }}
+        </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-success w-100 py-3 fw-bold fs-5 mt-3">Iniciar sesión</button>
+      </form>
     </div>
+  </div>
 </div>
-
 {% endblock %}

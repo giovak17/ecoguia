@@ -2,7 +2,11 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404, redirect
 import traceback
 from core.models import Entregas, Recicladoras, PuntosReciclaje, EntregaMaterialReciclado, TipoMaterialReciclable, Usuarios
+<<<<<<< HEAD
 from .forms import TipoMaterialReciclableForm, SolicitudRegistro
+=======
+from .forms import TipoMaterialReciclableForm
+>>>>>>> 1e94b3394d24dae885092b94f9c4644951ffeef8
 from django.views import generic
 from django.urls import reverse, reverse_lazy
 from core.models import Entregas, Recicladoras, PuntosReciclaje, EntregaMaterialReciclado
@@ -34,37 +38,43 @@ def solicitud_registro_view(request):
         form = SolicitudRecicladoraForm()
     return render(request, 'recicladoras/solicitud_registro.html', {'form': form})
 
-def agregar_punto(request):
-    if request.method == "POST":
-        try:
-            nombre = request.POST.get("nombre")
-            ubicacion = request.POST.get("ubicacion")
-            ciudad = request.POST.get("ciudad")
-            horario_entrada = request.POST.get("horario_entrada")
-            horario_salida = request.POST.get("horario_salida")
-            latitud = request.POST.get("latitud")
-            longitud = request.POST.get("longitud")
+def  agregar_punto(request):
+    user_id = request.session.get("user_id")
 
-            PuntosReciclaje.objects.create(
-                nombre=nombre,
-                ubicacion=ubicacion,
-                ciudad=ciudad,
-                horario_entrada=horario_entrada,
-                horario_salida=horario_salida,
-                latitud=latitud,
-                longitud=longitud,
-                id_recicladora=Recicladoras.objects.get(pk=1)
-            )
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        ubicacion = request.POST.get('ubicacion')
+        telefono = request.POST.get('telefono')
+        horario_entrada = request.POST.get('horario_entrada')
+        horario_salida = request.POST.get('horario_salida')
+        descripcion = request.POST.get('descripcion')
+        recicladora_codigo = request.POST.get('id_recicladora')
+        extras=request.POST.get('extras')
+        latitud =request.POST.get('latitud')
+        longitud= request.POST.get('longitud')
+        recicladora = Recicladoras.objects.get(codigo_recicladora=recicladora_codigo)
 
-            print("Punto insertado con éxito.")
-            return redirect("recicladoras:index")
+        punto = PuntosReciclaje(
+            nombre=nombre,
+            ubicacion=ubicacion,
+            telefono=telefono,
+            horario_entrada=horario_entrada,
+            horario_salida=horario_salida,
+            descripcion=descripcion,
+            id_recicladora=recicladora,
+            extras=extras,
+            latitud=latitud,
+            longitud=longitud
+        )
+        punto.save()
+        
+        return redirect('recicladoras:index')  
+    # Consulta para llenar el select:
+    recicladoras = Recicladoras.objects.filter(propietario=user_id)
+    return render(request, 'recicladoras/agregar_punto.html', {'recicladoras': recicladoras})
 
-        except Exception as e:
-            print("Error al insertar:")
-            traceback.print_exc()
-            return redirect("recicladoras:agregar_punto")
 
-    return render(request, "recicladoras/agregar_punto.html")
+
 
 def solicitar_recicladora(request):
     if request.method == 'POST':
@@ -110,18 +120,18 @@ def tipo_material_registro(request):
     return render(request, "recicladoras/tipomaterial_registro.html")
 
 # Actualizar un tipo de material existente
-def tipo_material_update(request, pk):
+def tipo_material_actualizar(request, pk):
     tipo_material = get_object_or_404(TipoMaterialReciclable, pk=pk)
     if request.method == "POST":
         form = TipoMaterialReciclableForm(request.POST, instance=tipo_material)
         if form.is_valid():
             form.save()
-            return redirect(reverse('tipomaterial_list'))
+            return redirect(reverse('recicladoras:tipomaterial_list'))
         else:
             print("Formulario inválido:", form.errors)
     else:
         form = TipoMaterialReciclableForm(instance=tipo_material)
-    return render(request, "recicladoras/tipomaterial_registro.html", {"form": form})
+    return render(request, "recicladoras/tipomaterial_actualizar.html", {"form": form})
 
 
 def tipo_material_delete(request, pk):
@@ -132,4 +142,4 @@ def tipo_material_delete(request, pk):
         return redirect(reverse('tipomaterial_list'))
 
     # Si es GET, renderiza la plantilla de confirmación
-    return render(request, "tipomaterial_delete.html", {"object": tipo_material})
+    return render(request, "recicladoras/tipomaterial_delete.html", {"object": tipo_material})

@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-l*h#w!qwf#fyr8mm2slr&09=pfgb(e_n&9yg$4@gku1*v@u-)o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['3.144.137.212', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -108,12 +108,13 @@ WSGI_APPLICATION = "project.wsgi.application"
 
 
 # Conexion del toño
+# #no cambiar  cada 1 ponga el suyo 
 # DATABASES = {
 #     "default": {
 #         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "EcoGuia",
+#         "NAME": "ecoguia",
 #         "USER": "postgres",
-#         "PASSWORD": "1234",
+#         "PASSWORD": "chela",
 #         "HOST": "127.0.0.1",
 #         "PORT": "5432",
 #     }
@@ -130,6 +131,19 @@ DATABASES = {
         "PORT": "5432",
     }
 }
+
+# #Conexion del toño
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "Ecoguia",
+#         "USER": "postgres",
+#         "PASSWORD": "1234",
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -155,7 +169,17 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "UTC"#Conexion del toño
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "Ecoguia",
+#         "USER": "postgres",
+#         "PASSWORD": "1234",
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
 
 USE_I18N = True
 

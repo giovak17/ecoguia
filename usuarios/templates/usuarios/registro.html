@@ -3,52 +3,92 @@
 
 {% block title %}Registro de Usuario{% endblock %}
 
-{% block extra_css %}
-<!-- Si quieres agregar CSS extra personalizado, aquí -->
-{% endblock %}
-
 {% block content %}
-<div class="w-50 mx-auto my-5">
-  <h1 class="text-center fw-bold mb-4">Únete a la comunidad de EcoGuía</h1>
-  <p class="text-center mb-4">
-    ¿Ya tienes una cuenta? 
-    <a href="{% url 'usuarios:login' %}" class="text-decoration-none text-success fw-bold">Inicia sesión</a>
-  </p>
-
-  <form method="POST" action="{% url 'usuarios:registro' %}" novalidate>
-    {% csrf_token %}
-    
-    <div class="mb-3">
-      <label class="form-label fw-bold">Nombre(s)</label>
-      <input type="text" class="form-control" name="nombre" placeholder="Nombre" required>
+<div class="container d-flex justify-content-center align-items-center my-5">
+  <div class="card shadow-lg rounded-4 border-0 p-4" style="max-width: 520px; width: 100%; background-color: #f8fdf8;">
+    <div class="text-center mb-4">
+      <div class="mb-2">
+        <i class="bi bi-person-plus-fill text-success" style="font-size: 3rem;"></i>
+      </div>
+      <h2 class="fw-bold text-success">Únete a EcoGuía</h2>
+      <p class="text-muted mb-0">
+        ¿Ya tienes una cuenta?
+        <a href="{% url 'usuarios:login' %}" class="text-decoration-none fw-semibold text-success">Inicia sesión aquí</a>
+      </p>
     </div>
 
-    <div class="mb-3">
-      <label class="form-label fw-bold">Apellido paterno</label>
-      <input type="text" class="form-control" name="ap_paterno" placeholder="Apellido paterno" required>
-    </div>
+    <form method="POST" action="{% url 'usuarios:registro' %}" class="needs-validation" novalidate>
+      {% csrf_token %}
 
-    <div class="mb-3">
-      <label class="form-label fw-bold">Apellido materno</label>
-      <input type="text" class="form-control" name="ap_materno" placeholder="Apellido materno" required>
-    </div>
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Nombre(s)</label>
+        <input type="text" class="form-control form-control-lg rounded-3" name="nombre" placeholder="Ej. Juan Carlos" required value="{{ nombre|default_if_none:'' }}">
+        <div class="invalid-feedback">Obligatorio</div>
+      </div>
 
-    <div class="mb-3">
-      <label class="form-label fw-bold">Correo electrónico</label>
-      <input type="email" class="form-control" name="correo" placeholder="correo electrónico" required>
-    </div>
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Apellido paterno</label>
+        <input type="text" class="form-control form-control-lg rounded-3" name="ap_paterno" placeholder="Ej. Pérez" required value="{{ ap_paterno|default_if_none:'' }}">
+        <div class="invalid-feedback">Obligatorio</div>
+      </div>
 
-    <div class="mb-3">
-      <label class="form-label fw-bold">Contraseña</label>
-      <input type="password" class="form-control" name="contrasena" placeholder="••••••••" required>
-    </div>
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Apellido materno</label>
+        <input type="text" class="form-control form-control-lg rounded-3" name="ap_materno" placeholder="Ej. Gómez" required value="{{ ap_materno|default_if_none:'' }}">
+        <div class="invalid-feedback">Obligatorio</div>
+      </div>
 
-    <div class="mb-3">
-      <label class="form-label fw-bold">Fecha de nacimiento</label>
-      <input type="date" class="form-control" name="fecha_nacimiento" required>
-    </div>
-
-    <button type="submit" class="btn btn-success w-100 py-3 fw-bold">Registrarse</button>
-  </form>
+     <div class="mb-3">
+  <label class="form-label fw-semibold">Correo electrónico</label>
+  <input 
+    type="email" 
+    class="form-control form-control-lg rounded-3 {% if error_correo %}is-invalid{% endif %}" 
+    name="correo" 
+    placeholder="correo@ejemplo.com" 
+    required 
+    value="{{ correo|default_if_none:'' }}"
+  >
+  <div class="invalid-feedback">
+    {% if error_correo %}
+      {{ error_correo }}
+    {% else %}
+      Obligatorio
+    {% endif %}
+  </div>
 </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Contraseña</label>
+        <input type="password" class="form-control form-control-lg rounded-3" name="contrasena" placeholder="********" required>
+        <div class="invalid-feedback">Obligatorio</div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Fecha de nacimiento</label>
+        <input type="date" class="form-control form-control-lg rounded-3" name="fecha_nacimiento" required value="{{ fecha_nacimiento|default_if_none:'' }}">
+        <div class="invalid-feedback">Obligatorio</div>
+      </div>
+
+      <button type="submit" class="btn btn-success w-100 py-3 fw-bold fs-5 rounded-pill">
+        <i class="bi bi-check-circle me-2"></i>Registrarse
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+  (() => {
+    'use strict';
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+      form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  })();
+</script>
 {% endblock %}
