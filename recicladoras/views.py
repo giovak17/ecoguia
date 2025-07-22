@@ -139,3 +139,7 @@ def tipo_material_delete(request, pk):
 
     # Si es GET, renderiza la plantilla de confirmación
     return render(request, "recicladoras/tipomaterial_delete.html", {"object": tipo_material})
+
+def clasificacion(request):
+    clasificacion = TipoMaterialReciclable.objects.all()
+    return render(request, "recicladoras/clasificacion_materiales.html", {"clasificacion": clasificacion})
