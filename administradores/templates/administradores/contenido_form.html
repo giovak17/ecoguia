@@ -1,0 +1,68 @@
+{% extends 'administradores/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+  <h1 class="mt-4 mb-4">{% if contenido %}Editar{% else %}Nuevo{% endif %} Contenido Educativo</h1>
+
+  {% if errores %}
+    <div class="alert alert-danger">
+      <ul>
+        {% for campo, mensajes in errores.items %}
+          {% for msg in mensajes %}
+            <li>{{ campo }}: {{ msg }}</li>
+          {% endfor %}
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="titulo" class="form-label">Título</label>
+      <input type="text" id="titulo" name="titulo" class="form-control" maxlength="25" minlength="3"value="{{ contenido.titulo|default_if_none:'' }}">
+      <small class="text-muted">Máximo 25 caracteres.</small>
+      {% if errores.titulo %}
+        <div class="text-danger">{{ errores.titulo }}</div>
+      {% endif %}
+    </div>
+
+    <div class="mb-3">
+      <label for="descripcion" class="form-label">Descripción</label>
+      <textarea id="descripcion" name="descripcion" class="form-control" rows="4" minlength="10" required>{{ contenido.descripcion|default_if_none:'' }}</textarea>
+      <small class="text-muted">Mínimo 10 caracteres.</small>
+      {% if errores.descripcion %}
+        <div class="text-danger">{{ errores.descripcion }}</div>
+      {% endif %}
+    </div>
+
+    <div class="mb-3">
+      <label for="videos" class="form-label">URL Video YouTube (opcional)</label>
+      <input type="url" id="videos" name="videos" class="form-control" pattern="https?://.*"  value="{{ contenido.videos|default_if_none:'' }}">
+      <small class="text-muted">Si agregas un video, debe ser un enlace válido (https://...)</small>
+      {% if errores.videos %}
+        <div class="text-danger">{{ errores.videos }}</div>
+      {% endif %}
+    </div>
+
+    <div class="mb-3">
+      <label for="imagen" class="form-label">Imagen (opcional)</label>
+      <input type="file" id="imagen" name="imagen" class="form-control">
+      {% if contenido.imagen %}
+        <img src="{{ contenido.imagen.url }}" alt="Imagen actual" style="max-height:100px; margin-top:10px;">
+      {% endif %}
+    </div>
+
+    <div class="mb-3">
+      <label for="video_local" class="form-label">Video Local (opcional)</label>
+      <input type="file" id="video_local" name="video_local" class="form-control">
+      {% if contenido.video_local %}
+        <p>Video actual: {{ contenido.video_local.name }}</p>
+      {% endif %}
+    </div>
+
+    <button type="submit" class="btn btn-success">{% if contenido %}Guardar cambios{% else %}Crear{% endif %}</button>
+    <a href="{% url 'administradores:contenido_admin' %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

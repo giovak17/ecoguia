@@ -6,6 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
+from django.core.exceptions import ValidationError
 
 
 class ContenidoEducativo(models.Model):
@@ -13,9 +14,20 @@ class ContenidoEducativo(models.Model):
     titulo = models.CharField(max_length=25, blank=True, null=True)
     descripcion = models.TextField(blank=True, null=True)
     id_usuario_ce = models.ForeignKey('Usuarios', models.DO_NOTHING, db_column='id_usuario_ce', blank=True, null=True)
+    # son campos para cargar media
+    imagen = models.ImageField(upload_to='contenido/imagenes/', blank=True, null=True)
+    videos= models.URLField(blank=True, null=True)
+    video_local = models.FileField(upload_to='contenido/videos/', blank=True, null=True)
+
+    def clean(self):
+        super().clean()
+        if not (self.imagen or self.videos or self.video_local):
+            raise ValidationError("Debe subir al menos una imagen, un video local o un enlace de video.")
+
+
 
     class Meta:
-        managed = False
+        # managed = False
         db_table = 'contenido_educativo'
 
 

@@ -1,15 +1,13 @@
 from django.http import HttpRequest
-<<<<<<< HEAD
-=======
 from django.shortcuts import redirect, render, get_object_or_404
 from core.models import Usuarios,Entregas
->>>>>>> 1e94b3394d24dae885092b94f9c4644951ffeef8
 from django.shortcuts import redirect, render
-from core.models import Usuarios,Entregas, PuntosReciclaje
+from core.models import Usuarios,Entregas, PuntosReciclaje,ContenidoEducativo
 from django.utils.timezone import now
 from django.http import JsonResponse
 from django.db import connection
 from django.urls import reverse
+
 
 def index(request):
     return render(request, "usuarios/index.html")
@@ -35,37 +33,40 @@ def login(request: HttpRequest):
     # Redirecciona a la vista adecuada segun el tipo de usuario
     return map_user_rol(user)
 
-def contenido_educativo(request):
 
-    contenidos = [
-        {
-            'titulo': 'Cómo separar residuos correctamente',
-            'descripcion': 'Guía visual para separar papel, plástico, vidrio y orgánicos.',
-            'tipo': 'imagen',
-            'archivo': 'contenido/contenedores.webp',
-            'fecha': '2025-07-05'
-        },
-        {       
-            'titulo': 'Video: El impacto del reciclaje en el planeta',
-            'descripcion': 'Un breve documental sobre cómo el reciclaje ayuda al medio ambiente.',
-            'tipo': 'youtube',
-            'archivo': convertir_a_embed("https://www.youtube.com/watch?v=cvakvfXj0KE"),
-            'fecha': '2025-06-28'
-        },
-        {
-            'titulo': 'Infografía: ¿Qué puedo reciclar?',
-            'descripcion': 'Infografía sobre materiales que sí y no se pueden reciclar.',
-            'tipo': 'imagen',
-            'archivo': 'contenido/recicla.jpeg',
-            'fecha': '2025-06-15'
-        }
-    ]
+
+def contenido_educativo(request):
+    contenidos = ContenidoEducativo.objects.all()
+    for contenido in contenidos:
+        if contenido.videos:
+         contenido.videos_embed = convertir_a_embed(contenido.videos)
     return render(request, 'usuarios/contenido_educativo.html', {'contenidos': contenidos})
 
 def convertir_a_embed(url):
-    if "watch?v=" in url:
-        return url.replace("watch?v=", "embed/")
-    return url
+    # if "watch?v=" in url:
+    #     return url.replace("watch?v=", "embed/")
+    # return url
+    import re
+
+    # Extraer ID del video
+    video_id = None
+
+    # Caso watch?v=
+    m = re.search(r'v=([^\?&]+)', url)
+    if m:
+        video_id = m.group(1)
+    else:
+        # Caso youtu.be/
+        m = re.search(r'youtu\.be/([^\?&]+)', url)
+        if m:
+            video_id = m.group(1)
+
+    if video_id:
+        return f'https://www.youtube.com/embed/{video_id}'
+    else:
+        # Si no se puede extraer ID, retorna la URL original
+        return url
+    
 def lista_entregas(request):
     entregas = Entregas.objects.all()
     return render(request, 'usuarios/lista_entregas.html', {'entregas': entregas})  

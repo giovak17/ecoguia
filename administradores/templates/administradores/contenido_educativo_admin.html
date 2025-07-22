@@ -1,42 +1,53 @@
-{% extends 'usuarios/base.html' %}
+{% extends 'administradores/base.html' %}
 {% load static %}
 {% block content %}
 <div class="container">
-  <h1 class="mt-4 mb-4">Contenido Educativo</h1>
+  <h1 class="mt-4 mb-4">Contenido Educativo - Administración</h1>
+  <div class="d-flex justify-content-end mb-3">
+  <a href="{% url 'administradores:contenido_crear' %}" class="btn btn-success">
+    <i class="bi bi-plus-lg"></i> Agregar Nuevo Contenido
+  </a>
+</div>
+
   <div class="row g-4">
     {% for item in contenidos %}
       <div class="col-12 col-md-6 col-lg-4 mb-4">
-        <div class="card" data-bs-toggle="modal" data-bs-target="#modal{{ forloop.counter }}" style="cursor: pointer;">
-          <div class="card-body">
+        <div class="card">
+          <div class="card-body" data-bs-toggle="modal" data-bs-target="#modal{{ forloop.counter }}" style="cursor: pointer;">
             <h5 class="card-title">{{ item.titulo }}</h5>
             <p class="card-text">{{ item.descripcion }}</p>
 
-
             {% if item.imagen %}
-              <!-- Imagen desde MEDIA -->
               <img src="{{ item.imagen.url }}" class="img-fluid rounded" alt="{{ item.titulo }}">
-            
             {% elif item.videos %}
-              <!-- Si el campo videos contiene un enlace de YouTube -->
               {% if "youtube.com" in item.videos or "youtu.be" in item.videos %}
                 <div class="ratio ratio-16x9">
-                  <iframe src="{{item.videos_embed}}" allowfullscreen></iframe>
+                  <iframe src="{{ item.videos_embed }}" allowfullscreen></iframe>
                 </div>
               {% else %}
-                <!-- Si el campo videos es un archivo local -->
                 <div class="ratio ratio-16x9">
                   <video controls class="w-100 rounded">
-                    <source src="{{ item.videos.url }}" type="video/mp4">
+                    <source src="{{ item.video_local.url }}" type="video/mp4">
                     Tu navegador no soporta videos.
                   </video>
                 </div>
               {% endif %}
             {% endif %}
           </div>
+
+          <div class="card-footer d-flex justify-content-between">
+            <a href="{% url 'administradores:contenido_editar' item.pk %}" class="btn btn-sm btn-secondary">
+              <i class="bi bi-pencil"></i>Editar
+          </a>
+            <form action="{% url 'administradores:contenido_borrar' item.pk %}" method="post" onsubmit="return confirm('¿Eliminar este contenido?');">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+            </form>
+          </div>
         </div>
       </div>
 
-      <!-- Modal -->
+      <!-- Modal (igual que antes, para detalles) -->
       <div class="modal fade" id="modal{{ forloop.counter }}" tabindex="-1" aria-labelledby="modalLabel{{ forloop.counter }}" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
           <div class="modal-content">
@@ -50,11 +61,11 @@
               {% elif item.videos %}
                 {% if "youtube.com" in item.videos or "youtu.be" in item.videos %}
                   <div class="ratio ratio-16x9 rounded">
-                    <iframe src="{{item.videos_embed}}" allowfullscreen></iframe>
+                    <iframe src="{{ item.videos_embed }}" allowfullscreen></iframe>
                   </div>
                 {% else %}
                   <video controls class="w-100 rounded">
-                    <source src="{{ item.videos.url }}" type="video/mp4">
+                    <source src="{{ item.video_local.url }}" type="video/mp4">
                     Tu navegador no soporta videos.
                   </video>
                 {% endif %}
@@ -65,6 +76,9 @@
           </div>
         </div>
       </div>
+
+    {% empty %}
+      <p>No hay contenidos educativos.</p>
     {% endfor %}
   </div>
 </div>
