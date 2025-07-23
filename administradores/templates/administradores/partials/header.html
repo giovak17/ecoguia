@@ -28,6 +28,12 @@
                         <i class="bi bi-people"></i> Usuarios
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/administradores/recicladoras/aprobar/' %}active{% endif %}" href="{% url 'administradores:aprobar_recicladoras' %}">
+                        <i class="bi bi-recycle"></i> Aprobar Recicladoras
+                    </a>
+                </li>
+
             </ul>
         </div>
     </div>

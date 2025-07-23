@@ -7,8 +7,11 @@ from core.models import ContenidoEducativo
 from usuarios.views import convertir_a_embed
 from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import user_passes_test
+from core.auth import login_required
 
 # Create your views here.
+
+@login_required(role="administrador")
 def index(request):
     return render(request, "administradores/index.html")
 
@@ -20,8 +23,8 @@ def listar_usuarios(request):
     usuarios = Usuarios.objects.all()
     return render(request, 'administradores/listado_usuarios.html', {'usuarios': usuarios})
   
+@login_required(role="administrador")
 def aprobar_recicladoras(request: HttpRequest):
-
     success = False
     if request.method == "POST":
         post_data = request.POST.copy().dict()

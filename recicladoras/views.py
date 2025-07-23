@@ -7,9 +7,11 @@ from django.views import generic
 from django.urls import reverse, reverse_lazy
 from core.models import Entregas, Recicladoras, PuntosReciclaje, EntregaMaterialReciclado
 from .forms import SolicitudRecicladoraForm
-
+from core.auth import login_required
 
 # Create your views here.
+
+@login_required(role="recicladora")
 def index(request):
     return render(request, "recicladoras/index.html")
 

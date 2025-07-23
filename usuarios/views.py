@@ -4,8 +4,6 @@ from core.models import Usuarios,Entregas
 from django.shortcuts import redirect, render
 from core.models import Usuarios,Entregas, PuntosReciclaje,ContenidoEducativo
 from django.utils.timezone import now
-from django.http import JsonResponse
-from django.db import connection
 from django.urls import reverse
 
 
@@ -33,6 +31,9 @@ def login(request: HttpRequest):
     # Redirecciona a la vista adecuada segun el tipo de usuario
     return map_user_rol(user)
 
+def logout(request: HttpRequest):
+    request.session.flush()
+    return redirect('usuarios:login')
 
 
 def contenido_educativo(request):
