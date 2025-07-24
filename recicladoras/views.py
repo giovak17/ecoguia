@@ -16,14 +16,138 @@ from core.auth import login_required
 def index(request):
     return render(request, "recicladoras/index.html")
 
-# En progreso
-def confirmar_entregas(request: HttpRequest):
-    user_id = int(request.session["user_id"])
+# @login_required(role="recicladora")
+# def confirmar_entregas(request):
+#     user_id = request.user.id_usuario
 
-    print(request.session["user_id"])
-    return HttpResponse(request.session["user_id"] )
+#     # Indica si las actualizaciones se aplicaron correctamente, es falsa hasta que se presiona el boton "Aplicar" en el template
+#     success = False
+#     if request.method == 'POST':
+#         # Procesar cambios en las confirmaciones
+#         for key, value in request.POST.items():
+#             if key.startswith('confirmada_'):
+#                 entrega_id = key.split('_')[1]
+#                 try:
+#                     entrega = Entregas.objects.get(pk=entrega_id)
+#                     # Validar que el usuario logeado es dueño de esta entrega
+#                     if entrega.punto_entrega and entrega.punto_entrega.id_recicladora.propietario.id_usuario == user_id:
+#                         entrega.confirmada = True if value == 'true' else False
+#                         entrega.save()
+#                 except Entregas.DoesNotExist:
+#                     continue
+#         # return redirect('recicladoras:confirmar_entregas', {'success': True}) 
+#         success = True
 
-    # return render(request, "recicladoras/confirmar_entregas.html")
+
+#     entregas = Entregas.objects.select_related(
+#         'id_usuario_e',
+#         'punto_entrega',
+#         'punto_entrega__id_recicladora'
+#     ).filter(
+#         punto_entrega__id_recicladora__propietario__id_usuario=user_id
+#     )
+
+#     return render(request, 'recicladoras/confirmar_entregas.html', {'entregas': entregas, 'success': success})
+
+# def confirmar_entregas(request):
+#     user_id = request.user.id_usuario
+#     success = False
+
+#     if request.method == 'POST':
+#         for key, value in request.POST.items():
+#             if key.startswith('confirmada_'):
+#                 entrega_id = key.split('_')[1]
+#                 try:
+#                     entrega = Entregas.objects.select_related(
+#                         'punto_entrega',
+#                         'punto_entrega__id_recicladora'
+#                     ).get(pk=entrega_id)
+#                     if entrega.punto_entrega and entrega.punto_entrega.id_recicladora.propietario.id_usuario == user_id:
+#                         entrega.confirmada = value == 'true'
+#                         entrega.save()
+#                 except Entregas.DoesNotExist:
+#                     continue
+#         success = True
+
+#     entregas_queryset = Entregas.objects.select_related(
+#         'id_usuario_e',
+#         'punto_entrega',
+#         'punto_entrega__id_recicladora'
+#     ).filter(
+#         punto_entrega__id_recicladora__propietario__id_usuario=user_id
+#     )
+
+#     entregas = []
+#     for entrega in entregas_queryset:
+#         materiales = EntregaMaterialReciclado.objects.filter(id_entrega=entrega).select_related('id_material')
+#         entregas.append({
+#             'entrega': entrega,
+#             'correo': entrega.id_usuario_e.correo if entrega.id_usuario_e else '',
+#             'materiales': [
+#                 {
+#                     'nombre': m.id_material.nombre if m.id_material else 'Desconocido',
+#                     'cantidad': m.cantidad or 0,
+#                 } for m in materiales
+#             ]
+#         })
+
+#     return render(request, 'recicladoras/confirmar_entregas.html', {
+#         'entregas': entregas,
+#         'success': success
+#     })
+
+
+@login_required(role="recicladora")
+def confirmar_entregas(request):
+    user_id = request.user.id_usuario
+    success = False
+
+    if request.method == 'POST':
+        for key, value in request.POST.items():
+            if key.startswith('confirmada_'):
+                entrega_id = key.split('_')[1]
+                try:
+                    entrega = Entregas.objects.get(pk=entrega_id)
+                    if entrega.punto_entrega and entrega.punto_entrega.id_recicladora.propietario.id_usuario == user_id:
+                        entrega.confirmada = True if value == 'true' else False
+                        entrega.save()
+                except Entregas.DoesNotExist:
+                    continue
+        success = True
+
+    entregas_queryset = Entregas.objects.select_related(
+        'id_usuario_e',
+        'punto_entrega',
+        'punto_entrega__id_recicladora'
+    ).filter(
+        punto_entrega__id_recicladora__propietario__id_usuario=user_id
+    )
+
+    entregas = []
+    for entrega in entregas_queryset:
+        materiales_entregados = EntregaMaterialReciclado.objects.filter(id_entrega=entrega).select_related('id_material')
+
+        materiales = [
+            {
+                'nombre': m.id_material.nombre,
+                'cantidad': m.cantidad,
+                'condiciones': m.condiciones_entrega
+            }
+            for m in materiales_entregados
+        ]
+
+        entregas.append({
+            'entrega': entrega,
+            'correo': entrega.id_usuario_e.correo,
+            'materiales': materiales
+        })
+
+    return render(request, 'recicladoras/confirmar_entregas.html', {
+        'entregas': entregas,
+        'success': success
+    })
+
+
 
 def solicitud_registro_view(request):
     if request.method == 'POST':

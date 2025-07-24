@@ -96,16 +96,16 @@ WSGI_APPLICATION = "project.wsgi.application"
 # }
 
 # #Conexion chela
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ecoguia",
-        "USER": "arath",
-        "PASSWORD": "arath07",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
-    }
-}
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "ecoguia",
+#         "USER": "arath",
+#         "PASSWORD": "arath07",
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
 
 
 # Conexion del toño
@@ -159,27 +159,27 @@ DATABASES = {
 # }
 
 # # #Conexion Kevin
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "ecoguia",
-#         "USER": "postgres",
-#         "PASSWORD": "DBpass.1703",
-#         "HOST": "127.0.0.1",
-#         "PORT": "5432",
-#     }
-# }
-# #Conexion del toño
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "Ecoguia",
+        "NAME": "ecoguia",
         "USER": "postgres",
-        "PASSWORD": "1234",
+        "PASSWORD": "DBpass.1703",
         "HOST": "127.0.0.1",
         "PORT": "5432",
     }
 }
+# #Conexion del toño
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "Ecoguia",
+#         "USER": "postgres",
+#         "PASSWORD": "1234",
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
 
 # #Conexion Kevin
 # DATABASES = {

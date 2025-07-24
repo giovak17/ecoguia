@@ -5,6 +5,13 @@
 {% block content %}
 <h1 class="text-center fw-bold p-4">Solicitudes de recicladoras</h1>
 
+{% if success %}
+    <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+        Cambios aplicados de manera exitosa.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+{%endif %}
+
 <table class="table table-hover">
   <thead>
     <tr>
@@ -44,39 +51,8 @@
     </form>
   </tbody>
 </table>
-<button form="approval-form" type="submit" class="btn btn-success my-2 p-3 px-4 fw-bold"" >Aplicar</button>
 
-<script>
-    function fadeOutAndRemoveById(id) {
-        const element = document.getElementById(id);
-        if (!element) return;
-
-        let opacity = 1;
-        const duration = 3000;
-        const interval = 50;
-        const gap = interval / duration;
-
-        const fading = setInterval(() => {
-            opacity -= gap;
-            if (opacity <= 0) {
-                clearInterval(fading);
-                element.remove(); //remove from DOM
-            } else {
-                element.style.opacity = opacity;
-            }
-        }, interval);
-    }
-</script>
-
-{% if success %}
-    <div class="alert alert-success my-4" role="alert" id="success-alert">
-        Cambios aplicados de manera exitosa.
-    </div>
-    <script>
-        fadeOutAndRemoveById("success-alert")
-    </script>
-{%endif %}
-
-
-
+<div class="text-end">
+  <button form="approval-form" type="submit" class="btn btn-success my-2 fw-bold">Aplicar</button>
+<div>
 {% endblock %}
