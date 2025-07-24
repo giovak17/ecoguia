@@ -1,3 +1,4 @@
+import os
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404, redirect
 import traceback
@@ -99,15 +100,27 @@ def tipo_material_registro(request):
         try:
             nombre = request.POST.get("nombre")
             descripcion = request.POST.get("descripcion")
-            tiempo_descomposicion = request.POST.get("tiempo")
+            tiempo_descomposicion = request.POST.get("tiempo_descomposicion")
+            imagen = request.FILES.get('imagen')
+            
+            # Validación manual de formato/size
+            if imagen:
+                ext = os.path.splitext(imagen.name)[1].lower()
+                if ext not in ['.jpg', '.jpeg', '.png']:
+                    raise Exception("Sólo imágenes JPG, JPEG y PNG.")
+                if imagen.size > 3 * 1024 * 1024 * 1024:
+                    raise Exception("Imagen demasiado grande. Máximo 10MB.")
+                
+                
             
             TipoMaterialReciclable.objects.create(
                 nombre=nombre,
                 descripcion = descripcion,
                 tiempo_descomposicion = tiempo_descomposicion,
+                imagen = imagen
             )
-
-            print("Fitro insertado con éxito.")
+            
+            print("tipo de material insertado con éxito.")
             return redirect("recicladoras:index")
 
         except Exception as e:
@@ -121,14 +134,14 @@ def tipo_material_registro(request):
 def tipo_material_actualizar(request, pk):
     tipo_material = get_object_or_404(TipoMaterialReciclable, pk=pk)
     if request.method == "POST":
-        form = TipoMaterialReciclableForm(request.POST, instance=tipo_material)
+        form = TipoMaterialReciclableForm(request.POST, request.FILES, instance=tipo_material, is_update=True)
         if form.is_valid():
             form.save()
             return redirect(reverse('recicladoras:tipomaterial_list'))
         else:
             print("Formulario inválido:", form.errors)
     else:
-        form = TipoMaterialReciclableForm(instance=tipo_material)
+        form = TipoMaterialReciclableForm(instance=tipo_material, is_update=True)
     return render(request, "recicladoras/tipomaterial_actualizar.html", {"form": form})
 
 
@@ -137,7 +150,7 @@ def tipo_material_delete(request, pk):
 
     if request.method == "POST":
         tipo_material.delete()
-        return redirect(reverse('tipomaterial_list'))
+        return redirect(reverse('recicladoras:tipomaterial_list'))
 
     # Si es GET, renderiza la plantilla de confirmación
     return render(request, "recicladoras/tipomaterial_delete.html", {"object": tipo_material})
