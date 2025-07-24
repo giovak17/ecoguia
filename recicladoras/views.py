@@ -145,3 +145,14 @@ def tipo_material_delete(request, pk):
 def clasificacion(request):
     clasificacion = TipoMaterialReciclable.objects.all()
     return render(request, "recicladoras/clasificacion_materiales.html", {"clasificacion": clasificacion})
+
+@login_required(role="recicladora")
+def verpuntosreciclaje(request):
+     user_id = request.session.get("user_id")
+     puntos = PuntosReciclaje.objects.select_related('id_recicladora__propietario')\
+        .filter(id_recicladora__propietario__id_usuario=user_id)
+
+     context = {
+        'puntos': puntos,
+    }
+     return render(request, "recicladoras/verpuntosreciclaje.html",context)

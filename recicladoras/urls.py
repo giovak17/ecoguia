@@ -15,5 +15,6 @@ urlpatterns = [
     path('clasificacion', views.clasificacion, name='clasificacion_materiales'),
 
     path('solicitar/', views.solicitar_recicladora, name='solicitar_recicladora'),
+    path('verpuntosreciclaje/',views.verpuntosreciclaje,name='verpuntosreciclaje'),
 ]
     
