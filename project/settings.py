@@ -121,7 +121,7 @@ DATABASES = {
 #     }
 # }
 
-# Conexion America
+# # Conexion America
 # DATABASES = {
 #     "default": {
 #         "ENGINE": "django.db.backends.postgresql",
@@ -145,7 +145,43 @@ DATABASES = {
 #     }
 # }
 
+# #Conexion del toño
+# # Conexion America
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "ecoGuia",
+#         "USER": "postgres",
+#         "PASSWORD": "101258red",
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
+
 # # #Conexion Kevin
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "ecoguia",
+#         "USER": "postgres",
+#         "PASSWORD": "DBpass.1703",
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
+# #Conexion del toño
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "Ecoguia",
+        "USER": "postgres",
+        "PASSWORD": "1234",
+        "HOST": "127.0.0.1",
+        "PORT": "5432",
+    }
+}
+
+# #Conexion Kevin
 # DATABASES = {
 #     "default": {
 #         "ENGINE": "django.db.backends.postgresql",

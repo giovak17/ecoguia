@@ -119,6 +119,9 @@
                 <li class="nav-item">
                     <a class="nav-link {% if request.resolver_match.url_name == 'contenido_educativo' %}active{% endif %}" href="{% url 'usuarios:contenido_educativo' %}">Contenido Educativo</a>
                 </li>
+                 <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'mostrarentregas' %}active{% endif %}" href="{% url 'usuarios:mostrarentregas' %}">Historial</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Acerca de</a>
                 </li>

@@ -1,0 +1,63 @@
+{% extends "usuarios/base.html" %}
+
+{% block title %}Historiales{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+  <h3 class="text-success mb-4">Historial de Entregas</h3>
+  {% if entregas %}
+    <div class="row row-cols-1 row-cols-md-2 g-3 mb-5">
+      {% for entrega in entregas %}
+        <div class="col">
+          <div class="card border-success shadow-sm h-100" style="font-size: 0.9rem;">
+            <div class="card-header bg-success text-white py-2">
+              Entrega #{{ entrega.id_entrega }}
+            </div>
+            <div class="card-body py-2">
+              <p class="mb-1"><strong>Fecha:</strong> {{ entrega.fecha_entrega|date:"d/m/Y" }}</p>
+              <p class="mb-2"><strong>Punto de Entrega:</strong> {{ entrega.punto_entrega }}</p>
+              <p class="mb-1 fw-semibold text-success">Materiales:</p>
+              <ul class="list-group list-group-flush" style="font-size: 0.85rem;">
+                {% for material in entrega.materiales %}
+                  <li class="list-group-item d-flex justify-content-between align-items-center p-1">
+                    {{ material.nombre_material }}
+                    <span class="badge bg-success rounded-pill">{{ material.cantidad }}</span>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center mb-5">
+      No hay entregas registradas.
+    </div>
+  {% endif %}
+
+  <h3 class="text-success mb-4">Historial de Retos Cumplidos</h3>
+  {% if retos %}
+  <div class="row row-cols-1 row-cols-md-2 g-4">
+    {% for reto in retos %}
+      <div class="col">
+        <div class="card border-success shadow-sm h-100" style="font-size: 0.9rem;">
+          <div class="card-header bg-success text-white py-2">
+            {{ reto.titulo }}
+          </div>
+          <div class="card-body py-2">
+            <p><strong>Fecha de Finalización:</strong> {{ reto.fecha_fin|date:"d/m/Y" }}</p>
+            <hr class="my-2" />
+            <p><strong>Descripción:</strong></p>
+            <p>{{ reto.descripcion }}</p>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>No has completado retos todavía.</p>
+{% endif %}
+</div>
+{% endblock %}
