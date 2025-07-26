@@ -1,27 +1,176 @@
+<!-- templates/index.html -->
 {% extends "usuarios/base.html" %}
+{% load static %}
 
-{% block title %}Inicio | Plataforma de Reciclaje{% endblock %}
+{% block title %}Inicio - Ecoguía{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-  <!-- Encabezado temático -->
-  <div class="text-center mb-5">
-    <h1 class="display-4 fw-bold text-success">🌿 Plataforma EcoGuía</h1>
-    <p class="lead text-muted">Conectamos comunidades con puntos de reciclaje para construir un futuro sostenible.</p>
-  </div>
 
-  <!-- Secciones principales -->
-  <div class="row justify-content-center g-4">
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1>Explora, Aprende y Cuida el Planeta</h1>
+            <p>Ecoguía es tu compañera para aprender sobre sostenibilidad y encontrar los mejores puntos para reciclar en tu ciudad. Juntos podemos hacer la diferencia.</p>
+            <div class="hero-btns">
+                <a href="#" class="btn">Iniciar sesión</a>
+                <a href="#" class="btn btn-outline">Registrarse</a>
+            </div>
+        </div>
+    </div>
+</section>
 
+<!-- Tipos de Materiales -->
+<section class="menu">
+    <div class="container">
+        <div class="section-title"><h3>Tipos de Materiales Reciclables</h3></div>
+        <div class="section-subtitle">Conoce los materiales más comunes que puedes reciclar y cómo hacerlo correctamente.</div>
+        <div class="menu-categories">
+            <!-- Categorías -->
+            <div class="menu-category">
+                <i class="fas fa-recycle"></i>
+                <h3>Plástico</h3>
+                <p>Botellas, envases y bolsas que pueden ser reutilizados si se separan y limpian adecuadamente.</p>
+            </div>
+            <div class="menu-category">
+                <i class="fas fa-glass-whiskey"></i>
+                <h3>Vidrio</h3>
+                <p>Frascos, botellas y otros productos de vidrio pueden reciclarse infinitamente sin perder calidad.</p>
+            </div>
+            <div class="menu-category">
+                <i class="fas fa-file-alt"></i>
+                <h3>Papel y Cartón</h3>
+                <p>Periódicos, cajas y revistas son reciclables. Evita que se mojen o contaminen.</p>
+            </div>
+            <div class="menu-category">
+                <i class="fas fa-seedling"></i>
+                <h3>Orgánicos</h3>
+                <p>Los restos de comida y residuos del jardín pueden convertirse en abono natural mediante el compostaje.</p>
+            </div>
+        </div>
+    </div>
+</section>
 
-<style>
-  .eco-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
+<!-- Acerca de -->
+<section class="about">
+    <div class="container">
+        <div class="about-container">
+            <div class="about-img">
+                <img src="{% static 'assets/istockphoto-2166615363-612x612.jpg' %}" alt="">
+            </div>
+            <div class="about-content">
+                <h2>¿Qué es Ecoguía?</h2>
+                <p>Ecoguía es una plataforma creada para facilitar la educación ambiental y promover prácticas sostenibles entre las personas de todas las edades.</p>
+                <p>Proporcionamos información sobre reciclaje, puntos de recolección y artículos educativos para crear conciencia ecológica y fomentar una comunidad más responsable con el medio ambiente.</p>
+                <a href="#" class="btn">Más información</a>
+            </div>
+        </div>
+    </div>
+</section>
 
-  .eco-card:hover {
-    transform: scale(1.03);
-    box-shadow: 0 1rem 1.5rem rgba(76, 175, 80, 0.2);
-  }
-</style>
+<!-- Servicios -->
+<div class="services">
+    <div class="container">
+        <div class="section-title"><h3>Servicios</h3></div>
+        <div class="section-subtitle">Descubre cómo Ecoguía puede ayudarte a contribuir con el planeta</div>
+        <div class="services-grid">
+            <div class="service-card">
+                <i class="fas fa-map-marker-alt"></i>
+                <h3>Ubicación de Puntos Verdes</h3>
+                <p>Consulta mapas interactivos para encontrar centros de acopio cercanos.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-leaf"></i>
+                <h3>Educación Ambiental</h3>
+                <p>Accede a recursos educativos y artículos que promueven prácticas sostenibles.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-book"></i>
+                <h3>Guías y Consejos</h3>
+                <p>Aprende a separar residuos, hacer compostaje y reducir tu huella ecológica.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-bullhorn"></i>
+                <h3>Campañas Comunitarias</h3>
+                <p>Participa en campañas de recolección y eventos ambientales.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Separación Inteligente -->
+<section class="delivery">
+    <div class="container">
+        <div class="delivery-container">
+            <div class="delivery-img">
+                <div class="img-grid">
+                    <div class="img-main"><img src="{% static 'assets/photo-1582408921715-18e7806365c1.png' %}" alt=""></div>
+                    <div class="img-secondary"><img src="{% static 'assets/istockphoto-2166615363-612x612.jpg' %}" alt=""></div>
+                    <div class="img-secondary"><img src="{% static 'assets/photo-1558583055-d7ac00b1adca.png' %}" alt=""></div>
+                </div>
+            </div>
+            <div class="delivery-content">
+                <h2>Separación de Residuos</h2>
+                <p>Aprende a separar adecuadamente los residuos para maximizar su aprovechamiento.</p>
+                <a href="#" class="btn">Ver más</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonios -->
+<section class="testimonials">
+    <div class="container">
+        <h2 class="section-title">Testimonios</h2>
+        <p class="section-subtitle">Historias reales de personas que transformaron su forma de vivir con Ecoguía</p>
+        <div class="testimonials-grid">
+            <div class="testimonials-card">
+                <p>"Gracias a Ecoguía aprendí a separar residuos correctamente."</p>
+                <h3>María López</h3>
+            </div>
+            <div class="testimonials-card">
+                <p>"Los artículos me ayudaron a iniciar mi propio compost en casa."</p>
+                <h3>Daniel Ríos</h3>
+            </div>
+            <div class="testimonials-card">
+                <p>"Usar la app para ubicar centros de reciclaje ha sido un cambio de vida."</p>
+                <h3>Lucía Hernández</h3>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Blog -->
+<section class="blog-section">
+    <div class="container">
+        <div class="section-title"><h3>Blog y Artículos</h3></div>
+    </div>
+    <div class="blog-grid">
+        <div class="blog-card">
+            <img src="{% static 'assets/istockphoto-2166615363-612x612.jpg' %}" alt="Reciclaje en casa">
+            <div class="blog-date">Febrero 3, 2025</div>
+            <h3>10 maneras fáciles de comenzar a reciclar desde casa</h3>
+        </div>
+        <div class="blog-card">
+            <img src="{% static 'assets/photo-1558583055-d7ac00b1adca.png' %}" alt="Economía circular">
+            <div class="blog-date">Enero 22, 2025</div>
+            <h3>¿Qué es la economía circular y cómo puedes contribuir?</h3>
+        </div>
+        <div class="blog-card">
+            <img src="{% static 'assets/photo-1582408921715-18e7806365c1.png' %}" alt="Separación de residuos">
+            <div class="blog-date">Diciembre 15, 2024</div>
+            <h3>Errores comunes al separar basura y cómo evitarlos</h3>
+        </div>
+        <div class="blog-card">
+            <img src="{% static 'assets/istockphoto-2166615363-612x612.jpg' %}" alt="Plástico de un solo uso">
+            <div class="blog-date">Noviembre 8, 2024</div>
+            <h3>Alternativas ecológicas al plástico de un solo uso</h3>
+        </div>
+        <div class="blog-card">
+            <img src="{% static 'assets/photo-1558583055-d7ac00b1adca.png' %}" alt="Compostaje">
+            <div class="blog-date">Octubre 10, 2024</div>
+            <h3>¿Cómo hacer compostaje en casa?</h3>
+        </div>
+    </div>
+</section>
 {% endblock %}

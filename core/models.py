@@ -27,7 +27,7 @@ class ContenidoEducativo(models.Model):
 
 
     class Meta:
-        # managed = False
+        managed = True
         db_table = 'contenido_educativo'
 
 

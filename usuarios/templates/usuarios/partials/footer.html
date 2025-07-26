@@ -1,6 +1,44 @@
-<footer class="text-center py-3 mt-5">
+ {% load static %}
+<!-- templates/footer.html -->
+<footer class="footer">
     <div class="container">
-        <p class="mb-0">&copy; 2025 EcoGuía. Todos los derechos reservados.</p>
-        <small>Desarrollado por EcoGuia</small>
+        <div class="footer-grid">
+            <div class="footer-about">
+                <h3>Ecoguía</h3>
+                <p>Una iniciativa que busca transformar el presente para construir un futuro más verde y responsable con el planeta.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>Páginas</h4>
+                <ul>
+                    <li><a href="#">Inicio</a></li>
+                    <li><a href="#">Puntos de Reciclaje</a></li>
+                    <li><a href="#">Educación Ambiental</a></li>
+                    <li><a href="#">Contáctanos</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Páginas Útiles</h4>
+                <ul>
+                    <li><a href="#">Iniciar Sesión</a></li>
+                    <li><a href="#">Registrarse</a></li>
+                    <li><a href="#">Registrarse</a></li>
+                </ul>
+            </div>
+            <div class="footer-img">
+                <h4>Más imágenes</h4>
+                <div class="footerImg-grid">
+                    <div class="footerImg-img"><img src="{% static 'assets/istockphoto-2166615363-612x612.jpg' %}" alt=""></div>
+                    <div class="footerImg-img"><img src="{% static 'assets/photo-1558583055-d7ac00b1adca.png' %}" alt=""></div>
+                    <div class="footerImg-img"><img src="{% static 'assets/photo-1582408921715-18e7806365c1.png' %}" alt=""></div>
+                    <div class="footerImg-img"><img src="{% static 'assets/istockphoto-2166615363-612x612.jpg' %}" alt=""></div>
+                </div>
+            </div>
+        </div>
     </div>
 </footer>
