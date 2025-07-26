@@ -1,0 +1,15 @@
+{% extends 'administradores/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Confirmar eliminación</h2>
+    <p>¿Estás seguro que deseas eliminar la recicladora <strong>{{ recicladora.nombre }}</strong>?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a href="{% url 'administradores:ver_recicladoras' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

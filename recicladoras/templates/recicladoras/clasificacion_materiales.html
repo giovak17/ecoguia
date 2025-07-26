@@ -1,0 +1,21 @@
+{% extends "recicladoras/base.html" %}
+{% load static %}
+{% block content %}
+<div style="text-align:center; margin-top: 20px;">
+    <h2 style="color: #30b65d; font-weight: bold;">Reciclables</h2>
+    <p style="margin-bottom: 30px;">Selecciona el residuo que quieres conocer</p>
+</div>
+<div style="display: flex; flex-wrap: wrap; justify-content: center;">
+    {% for material in clasificacion %}
+    <div style="background: #fff; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                width: 120px; margin: 15px; padding: 20px; text-align: center;
+                display: flex; flex-direction: column; align-items: center;">
+        <img src="{% static material.imagen %}" alt="{{ material.nombre }}" style="height: 50px; margin-bottom: 10px;"> 
+        <div style="height: 50px; margin-bottom: 10px; line-height: 50px; color: #ccc; font-size: 12px;">
+            Imagen aquí
+        </div>
+        <span>{{ material.nombre }}</span>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

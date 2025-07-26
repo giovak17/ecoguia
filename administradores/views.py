@@ -1,27 +1,140 @@
 from django.http import HttpRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from core.models import Recicladoras
-from core.models import Usuarios
+from core.models import Usuarios, Roles
 from django.contrib import messages
 from core.models import ContenidoEducativo
 from usuarios.views import convertir_a_embed
 from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import user_passes_test
+from core.auth import login_required
+import re
 
 # Create your views here.
+
+@login_required(role="administrador")
 def index(request):
     return render(request, "administradores/index.html")
 
 def ver_recicladoras(request):
     recicladoras = Recicladoras.objects.select_related('propietario').all()
     return render(request, 'administradores/recicladoras.html', {'recicladoras': recicladoras})
+def recicladora_crear(request):
+    errores = {}
+    recicladora_data = {}
+    propietarios = Usuarios.objects.all()
+    reciclador_rol = Roles.objects.get(nombre='Recicladora')
+    propietarios = Usuarios.objects.filter(id_rol=reciclador_rol)
+
+
+
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        propietario_id = request.POST.get('propietario')
+        calle = request.POST.get('calle')
+        colonia = request.POST.get('colonia')
+        ciudad = request.POST.get('ciudad')
+        codigo_postal = request.POST.get('codigo_postal')
+        numero_int = request.POST.get('numero_int')
+        telefono = request.POST.get('numero_telefonico')
+
+        recicladora_data = {
+            'nombre': nombre,
+            'propietario_id': propietario_id,
+            'calle': calle,
+            'colonia': colonia,
+            'ciudad': ciudad,
+            'codigo_postal': codigo_postal,
+            'numero_int': numero_int,
+            'numero_telefonico': telefono,
+        }
+
+        if not nombre:
+            errores['nombre'] = 'El nombre es obligatorio'
+        if not ciudad:
+            errores['ciudad'] = 'La ciudad es obligatoria'
+
+        if not errores:
+            Recicladoras.objects.create(
+                nombre=nombre,
+                propietario_id=propietario_id or None,
+                calle=calle,
+                colonia=colonia,
+                ciudad=ciudad,
+                codigo_postal=codigo_postal or None,
+                numero_int=numero_int or None,
+                numero_telefonico=telefono
+            )
+            return redirect('administradores:ver_recicladoras')
+
+    return render(request, 'administradores/recicladora_form.html', {
+        'errores': errores,
+        'titulo': 'Registrar Recicladora',
+        'propietarios': propietarios,
+        'recicladora': recicladora_data
+    })
+
+
+
+def recicladora_editar(request, pk):
+    recicladora = get_object_or_404(Recicladoras, pk=pk)
+    errores = {}
+
+    from core.models import Usuarios 
+
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        ciudad = request.POST.get('ciudad')
+        telefono = request.POST.get('numero_telefonico')
+        calle = request.POST.get('calle')
+        colonia = request.POST.get('colonia')
+        numero_int = request.POST.get('numero_int')
+        codigo_postal = request.POST.get('codigo_postal')
+        aprobada = request.POST.get('aprobada') == 'on'
+        propietario_id = request.POST.get('propietario')
+
+        if not nombre:
+            errores['nombre'] = 'El nombre es obligatorio'
+        if not ciudad:
+            errores['ciudad'] = 'La ciudad es obligatoria'
+
+        if not errores:
+            recicladora.nombre = nombre
+            recicladora.ciudad = ciudad
+            recicladora.numero_telefonico = telefono or None
+            recicladora.calle = calle or None
+            recicladora.colonia = colonia or None
+            recicladora.numero_int = numero_int or None
+            recicladora.codigo_postal = codigo_postal or None
+            recicladora.aprobada = aprobada
+            recicladora.propietario_id = propietario_id or None
+            recicladora.save()
+            return redirect('administradores:ver_recicladoras')
+
+ 
+    propietarios = Usuarios.objects.all()
+
+    return render(request, 'administradores/recicladora_form.html', {
+        'recicladora': recicladora,
+        'errores': errores,
+        'propietarios': propietarios,
+        'titulo': 'Editar Recicladora'
+    })
+
+def recicladora_eliminar(request, pk):
+    recicladora = get_object_or_404(Recicladoras, pk=pk)
+    if request.method == 'POST':
+        recicladora.delete()
+        return redirect('administradores:ver_recicladoras')
+    return render(request, 'administradores/recicladoras_confirm_delete.html', {'recicladora': recicladora})
+
 
 def listar_usuarios(request):
     usuarios = Usuarios.objects.all()
     return render(request, 'administradores/listado_usuarios.html', {'usuarios': usuarios})
   
+@login_required(role="administrador")
 def aprobar_recicladoras(request: HttpRequest):
-
     success = False
     if request.method == "POST":
         post_data = request.POST.copy().dict()

@@ -2,11 +2,11 @@ from django.http import HttpRequest
 from django.shortcuts import redirect, render, get_object_or_404
 from core.models import Usuarios,Entregas
 from django.shortcuts import redirect, render
-from core.models import Usuarios,Entregas, PuntosReciclaje,ContenidoEducativo
+from core.models import Usuarios,Entregas, PuntosReciclaje,ContenidoEducativo,EntregaMaterialReciclado
 from django.utils.timezone import now
-from django.http import JsonResponse
-from django.db import connection
 from django.urls import reverse
+from core.auth import login_required
+from django.db import connection
 
 
 def index(request):
@@ -33,6 +33,9 @@ def login(request: HttpRequest):
     # Redirecciona a la vista adecuada segun el tipo de usuario
     return map_user_rol(user)
 
+def logout(request: HttpRequest):
+    request.session.flush()
+    return redirect('usuarios:login')
 
 
 def contenido_educativo(request):
@@ -198,3 +201,83 @@ def usuarios_delete(request, pk):
 
     # Si es GET, renderiza la plantilla de confirmación
     return render(request, "usuarios:usuarios_delete.html", {"object": usuarios})
+
+from django.db import connection
+from django.shortcuts import render
+
+from django.db import connection
+from django.shortcuts import render, redirect
+
+def mostrarentregas(request):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return redirect('usuarios:login')  # O la vista que uses para login
+
+    query = """
+  select u.nombre,
+        e.id_entrega as entrega,
+        e.punto_entrega as puntodeentrega,
+        emr.id_material as material,
+        mr.nombre as nombreMaterial,
+        emr.cantidad as cantidad,
+        e.fecha_entrega as fecha
+        from usuarios u
+    JOIN entregas e
+    on e.id_usuario_e = u.id_usuario
+    JOIN entrega_material_reciclado emr
+    ON emr.id_entrega=e.id_entrega
+    JOIN material_reciclable mr 
+    ON mr.id_material=emr.id_material
+    WHERE u.id_usuario= %s
+    """
+
+    with connection.cursor() as cursor:
+        cursor.execute(query, [user_id])
+        rows = cursor.fetchall()
+
+    entregas_dict = {}
+    for nombre, entrega_id, punto_entrega, material_id, nombre_material, cantidad, entrega_fecha in rows:
+
+        if entrega_id not in entregas_dict:
+            entregas_dict[entrega_id] = {
+                'id_entrega': entrega_id,
+                'fecha_entrega': entrega_fecha,
+                'punto_entrega': punto_entrega,
+                'materiales': [],
+                'usuario_nombre': nombre,
+            }
+        entregas_dict[entrega_id]['materiales'].append({
+            'id_material': material_id,
+            'nombre_material': nombre_material,
+            'cantidad': cantidad,
+        })
+
+    entregas = list(entregas_dict.values())
+     # Consulta retos cumplidos
+    query_retos = """
+    SELECT u.nombre, r.titulo, r.descripcion,ur.fecha_fin
+    FROM usuarios u
+    JOIN usuarios_retos ur ON ur.id_usuario = u.id_usuario
+    JOIN retos r ON r.codigo = ur.id_reto
+    WHERE ur.id_usuario = %s
+    ORDER BY ur.fecha_fin DESC
+    """
+
+    with connection.cursor() as cursor:
+        cursor.execute(query_retos, [user_id])
+        rows_retos = cursor.fetchall()
+
+    # Procesamos retos a lista de dicts
+    retos = []
+    for nombre, titulo, descripcion,fecha_fin in rows_retos:
+        retos.append({
+            'usuario_nombre': nombre,
+            'titulo': titulo,
+            'descripcion':descripcion,
+            'fecha_fin': fecha_fin,
+        })
+
+    return render(request, "usuarios/mostrarentregas.html",{'entregas': entregas, 'retos': retos,
+})
+    #return render(request, "usuarios/registro.html")
+

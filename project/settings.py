@@ -51,6 +51,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "core.auth.SimpleAuthMiddleware",
 ]
 
 ROOT_URLCONF = "project.urls"
@@ -120,7 +121,7 @@ WSGI_APPLICATION = "project.wsgi.application"
 #     }
 # }
 
-# Conexion America
+# # Conexion America
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -132,13 +133,25 @@ DATABASES = {
     }
 }
 
-# #Conexion del toño
+# # #Conexion del toño
 # DATABASES = {
 #     "default": {
 #         "ENGINE": "django.db.backends.postgresql",
 #         "NAME": "Ecoguia",
 #         "USER": "postgres",
 #         "PASSWORD": "1234",
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
+
+# #Conexion Kevin
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "ecoguia",
+#         "USER": "postgres",
+#         "PASSWORD": "DBpass.1703",
 #         "HOST": "127.0.0.1",
 #         "PORT": "5432",
 #     }

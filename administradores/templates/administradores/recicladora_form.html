@@ -1,0 +1,85 @@
+{% extends 'administradores/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">{{ titulo }}</h2>
+    <form method="post" class="row g-3">
+        {% csrf_token %}
+
+        <div class="col-md-6">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" required
+                value="{{ recicladora.nombre|default_if_none:'' }}"
+                required pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"
+                title="Solo letras y espacios permitidos">
+               
+        </div>
+
+        <div class="col-md-6">
+            <label for="propietario" class="form-label">Propietario</label>
+            <select class="form-select" id="propietario" name="propietario" required>
+                <option value="" disabled {% if not recicladora.propietario %}selected{% endif %}>Seleccione</option>
+                {% for p in propietarios %}
+                <option value="{{ p.id_usuario }}"
+                    {% if recicladora.propietario and recicladora.propietario.id_usuario == p.id_usuario %}selected{% endif %}>
+                    {{ p.nombre }} {{ p.ap_paterno }} {{ p.ap_materno }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="col-md-6">
+            <label for="calle" class="form-label">Calle</label>
+            <input type="text" class="form-control" id="calle" name="calle"
+                value="{{ recicladora.calle|default_if_none:'' }}"
+                pattern=".{3,100}"
+                title="La calle debe tener al menos 3 caracteres">
+        </div>
+
+        <div class="col-md-6">
+            <label for="colonia" class="form-label">Colonia</label>
+            <input type="text" class="form-control" id="colonia" name="colonia"
+                value="{{ recicladora.colonia|default_if_none:'' }}"
+                pattern=".{3,100}"
+                title="La colonia debe tener al menos 3 caracteres">
+        </div>
+
+        <div class="col-md-6">
+            <label for="ciudad" class="form-label">Ciudad</label>
+            <input type="text" class="form-control" id="ciudad" name="ciudad"
+                value="{{ recicladora.ciudad|default_if_none:'' }}"
+                required pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"
+                title="Solo letras y espacios permitidos">
+        </div>
+
+        <div class="col-md-3">
+            <label for="codigo_postal" class="form-label">Código Postal</label>
+            <input type="number" class="form-control" id="codigo_postal" name="codigo_postal"
+                value="{{ recicladora.codigo_postal|default_if_none:'' }}"
+                min="10000" max="99999"
+                title="Debe ser un número de 5 dígitos">
+        </div>
+
+        <div class="col-md-3">
+            <label for="numero_int" class="form-label">Número Interior</label>
+            <input type="number" class="form-control" id="numero_int" name="numero_int"
+                value="{{ recicladora.numero_int|default_if_none:'' }}"
+                min="1" title="Solo números mayores a 0">
+        </div>
+
+        <div class="col-md-6">
+            <label for="numero_telefonico" class="form-label">Teléfono</label>
+            <input type="text" class="form-control" id="numero_telefonico" name="numero_telefonico"
+                value="{{ recicladora.numero_telefonico|default_if_none:'' }}"
+                pattern="[0-9]{10}" maxlength="10"
+                title="El número debe contener 10 dígitos">
+        </div>
+
+        <div class="col-12 text-end">
+            <button type="submit" class="btn btn-success">Guardar</button>
+            <a href="{% url 'administradores:ver_recicladoras' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
