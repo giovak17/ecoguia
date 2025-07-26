@@ -282,8 +282,6 @@ def tipo_material_delete(request, pk):
 def clasificacion(request):
     clasificacion = TipoMaterialReciclable.objects.all()
     return render(request, "recicladoras/clasificacion_materiales.html", {"clasificacion": clasificacion})
-<<<<<<< HEAD
-=======
 
 @login_required(role="recicladora")
 def verpuntosreciclaje(request):
@@ -295,4 +293,3 @@ def verpuntosreciclaje(request):
         'puntos': puntos,
     }
      return render(request, "recicladoras/verpuntosreciclaje.html",context)
->>>>>>> 677279f92b375aa938226e6d6ec37fd192b888d8
