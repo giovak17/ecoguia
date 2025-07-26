@@ -147,7 +147,11 @@ class TipoMaterialReciclable(models.Model):
     id_tmr  = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=40, blank=True, null=True)
     descripcion = models.TextField(blank=True, null=True)
+<<<<<<< HEAD
     tiempo_descomposicion = models.IntegerField(blank=True, null=True)
+=======
+    tiempo_descomposicion = models.TextField(blank=True, null=True)
+>>>>>>> 677279f92b375aa938226e6d6ec37fd192b888d8
     imagen = models.ImageField(upload_to='clasificacion/', blank=True, null=True)
 
     class Meta:

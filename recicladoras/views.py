@@ -1,3 +1,4 @@
+import os
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404, redirect
 import traceback
@@ -15,14 +16,138 @@ from core.auth import login_required
 def index(request):
     return render(request, "recicladoras/index.html")
 
-# En progreso
-def confirmar_entregas(request: HttpRequest):
-    user_id = int(request.session["user_id"])
+# @login_required(role="recicladora")
+# def confirmar_entregas(request):
+#     user_id = request.user.id_usuario
 
-    print(request.session["user_id"])
-    return HttpResponse(request.session["user_id"] )
+#     # Indica si las actualizaciones se aplicaron correctamente, es falsa hasta que se presiona el boton "Aplicar" en el template
+#     success = False
+#     if request.method == 'POST':
+#         # Procesar cambios en las confirmaciones
+#         for key, value in request.POST.items():
+#             if key.startswith('confirmada_'):
+#                 entrega_id = key.split('_')[1]
+#                 try:
+#                     entrega = Entregas.objects.get(pk=entrega_id)
+#                     # Validar que el usuario logeado es dueño de esta entrega
+#                     if entrega.punto_entrega and entrega.punto_entrega.id_recicladora.propietario.id_usuario == user_id:
+#                         entrega.confirmada = True if value == 'true' else False
+#                         entrega.save()
+#                 except Entregas.DoesNotExist:
+#                     continue
+#         # return redirect('recicladoras:confirmar_entregas', {'success': True}) 
+#         success = True
 
-    # return render(request, "recicladoras/confirmar_entregas.html")
+
+#     entregas = Entregas.objects.select_related(
+#         'id_usuario_e',
+#         'punto_entrega',
+#         'punto_entrega__id_recicladora'
+#     ).filter(
+#         punto_entrega__id_recicladora__propietario__id_usuario=user_id
+#     )
+
+#     return render(request, 'recicladoras/confirmar_entregas.html', {'entregas': entregas, 'success': success})
+
+# def confirmar_entregas(request):
+#     user_id = request.user.id_usuario
+#     success = False
+
+#     if request.method == 'POST':
+#         for key, value in request.POST.items():
+#             if key.startswith('confirmada_'):
+#                 entrega_id = key.split('_')[1]
+#                 try:
+#                     entrega = Entregas.objects.select_related(
+#                         'punto_entrega',
+#                         'punto_entrega__id_recicladora'
+#                     ).get(pk=entrega_id)
+#                     if entrega.punto_entrega and entrega.punto_entrega.id_recicladora.propietario.id_usuario == user_id:
+#                         entrega.confirmada = value == 'true'
+#                         entrega.save()
+#                 except Entregas.DoesNotExist:
+#                     continue
+#         success = True
+
+#     entregas_queryset = Entregas.objects.select_related(
+#         'id_usuario_e',
+#         'punto_entrega',
+#         'punto_entrega__id_recicladora'
+#     ).filter(
+#         punto_entrega__id_recicladora__propietario__id_usuario=user_id
+#     )
+
+#     entregas = []
+#     for entrega in entregas_queryset:
+#         materiales = EntregaMaterialReciclado.objects.filter(id_entrega=entrega).select_related('id_material')
+#         entregas.append({
+#             'entrega': entrega,
+#             'correo': entrega.id_usuario_e.correo if entrega.id_usuario_e else '',
+#             'materiales': [
+#                 {
+#                     'nombre': m.id_material.nombre if m.id_material else 'Desconocido',
+#                     'cantidad': m.cantidad or 0,
+#                 } for m in materiales
+#             ]
+#         })
+
+#     return render(request, 'recicladoras/confirmar_entregas.html', {
+#         'entregas': entregas,
+#         'success': success
+#     })
+
+
+@login_required(role="recicladora")
+def confirmar_entregas(request):
+    user_id = request.user.id_usuario
+    success = False
+
+    if request.method == 'POST':
+        for key, value in request.POST.items():
+            if key.startswith('confirmada_'):
+                entrega_id = key.split('_')[1]
+                try:
+                    entrega = Entregas.objects.get(pk=entrega_id)
+                    if entrega.punto_entrega and entrega.punto_entrega.id_recicladora.propietario.id_usuario == user_id:
+                        entrega.confirmada = True if value == 'true' else False
+                        entrega.save()
+                except Entregas.DoesNotExist:
+                    continue
+        success = True
+
+    entregas_queryset = Entregas.objects.select_related(
+        'id_usuario_e',
+        'punto_entrega',
+        'punto_entrega__id_recicladora'
+    ).filter(
+        punto_entrega__id_recicladora__propietario__id_usuario=user_id
+    )
+
+    entregas = []
+    for entrega in entregas_queryset:
+        materiales_entregados = EntregaMaterialReciclado.objects.filter(id_entrega=entrega).select_related('id_material')
+
+        materiales = [
+            {
+                'nombre': m.id_material.nombre,
+                'cantidad': m.cantidad,
+                'condiciones': m.condiciones_entrega
+            }
+            for m in materiales_entregados
+        ]
+
+        entregas.append({
+            'entrega': entrega,
+            'correo': entrega.id_usuario_e.correo,
+            'materiales': materiales
+        })
+
+    return render(request, 'recicladoras/confirmar_entregas.html', {
+        'entregas': entregas,
+        'success': success
+    })
+
+
 
 def solicitud_registro_view(request):
     if request.method == 'POST':
@@ -99,15 +224,27 @@ def tipo_material_registro(request):
         try:
             nombre = request.POST.get("nombre")
             descripcion = request.POST.get("descripcion")
-            tiempo_descomposicion = request.POST.get("tiempo")
+            tiempo_descomposicion = request.POST.get("tiempo_descomposicion")
+            imagen = request.FILES.get('imagen')
+            
+            # Validación manual de formato/size
+            if imagen:
+                ext = os.path.splitext(imagen.name)[1].lower()
+                if ext not in ['.jpg', '.jpeg', '.png']:
+                    raise Exception("Sólo imágenes JPG, JPEG y PNG.")
+                if imagen.size > 3 * 1024 * 1024 * 1024:
+                    raise Exception("Imagen demasiado grande. Máximo 10MB.")
+                
+                
             
             TipoMaterialReciclable.objects.create(
                 nombre=nombre,
                 descripcion = descripcion,
                 tiempo_descomposicion = tiempo_descomposicion,
+                imagen = imagen
             )
-
-            print("Fitro insertado con éxito.")
+            
+            print("tipo de material insertado con éxito.")
             return redirect("recicladoras:index")
 
         except Exception as e:
@@ -121,14 +258,14 @@ def tipo_material_registro(request):
 def tipo_material_actualizar(request, pk):
     tipo_material = get_object_or_404(TipoMaterialReciclable, pk=pk)
     if request.method == "POST":
-        form = TipoMaterialReciclableForm(request.POST, instance=tipo_material)
+        form = TipoMaterialReciclableForm(request.POST, request.FILES, instance=tipo_material, is_update=True)
         if form.is_valid():
             form.save()
             return redirect(reverse('recicladoras:tipomaterial_list'))
         else:
             print("Formulario inválido:", form.errors)
     else:
-        form = TipoMaterialReciclableForm(instance=tipo_material)
+        form = TipoMaterialReciclableForm(instance=tipo_material, is_update=True)
     return render(request, "recicladoras/tipomaterial_actualizar.html", {"form": form})
 
 
@@ -137,7 +274,7 @@ def tipo_material_delete(request, pk):
 
     if request.method == "POST":
         tipo_material.delete()
-        return redirect(reverse('tipomaterial_list'))
+        return redirect(reverse('recicladoras:tipomaterial_list'))
 
     # Si es GET, renderiza la plantilla de confirmación
     return render(request, "recicladoras/tipomaterial_delete.html", {"object": tipo_material})
@@ -145,3 +282,17 @@ def tipo_material_delete(request, pk):
 def clasificacion(request):
     clasificacion = TipoMaterialReciclable.objects.all()
     return render(request, "recicladoras/clasificacion_materiales.html", {"clasificacion": clasificacion})
+<<<<<<< HEAD
+=======
+
+@login_required(role="recicladora")
+def verpuntosreciclaje(request):
+     user_id = request.session.get("user_id")
+     puntos = PuntosReciclaje.objects.select_related('id_recicladora__propietario')\
+        .filter(id_recicladora__propietario__id_usuario=user_id)
+
+     context = {
+        'puntos': puntos,
+    }
+     return render(request, "recicladoras/verpuntosreciclaje.html",context)
+>>>>>>> 677279f92b375aa938226e6d6ec37fd192b888d8

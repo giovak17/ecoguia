@@ -9,7 +9,7 @@
         <div class="card-body">
           <h2 class="card-title text-center mb-4">Agrega un Tipo de Material</h2>
 
-          <form method="POST" action="{% url 'recicladoras:tipomaterial_registro' %}" class="needs-validation" novalidate>
+          <form method="POST" action="{% url 'recicladoras:tipomaterial_registro' %}" class="needs-validation" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
 
             <div class="mb-3">
@@ -26,10 +26,20 @@
 
             <div class="mb-3">
               <label for="tiempo_descomposicion" class="form-label">Tiempo de Descomposición (días)</label>
-              <input type="number" class="form-control" id="tiempo_descomposicion" name="tiempo_descomposicion" placeholder="Ej: 400" min="0" required>
-              <div class="invalid-feedback">Por favor ingresa un número válido.</div>
+              <input type="text" class="form-control" id="tiempo_descomposicion" name="tiempo_descomposicion" placeholder="Ej: tiempo" required>
             </div>
-
+            <div class="mb-3">
+                <label for="imagen" class="form-label">Imagen (archivo)</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  id="imagen"
+                  name="imagen"
+                  accept="image/png, image/jpeg,image/jpg"
+                  required>
+                <div class="form-text">Solo se permiten archivos JPG, JPEG o PNG de máximo 10MB.</div>
+                <div class="invalid-feedback">Por favor selecciona una imagen válida.</div>
+              </div>
             <div class="d-grid">
               <button type="submit" class="btn btn-success fw-bold">Registrar Tipo de Material</button>
             </div>

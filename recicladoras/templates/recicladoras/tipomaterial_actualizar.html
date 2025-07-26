@@ -4,28 +4,46 @@
 {% block content %}
 <div class="container py-5">
   <div class="row justify-content-center">
-    <div class="col-lg-6">
-      <div class="card shadow-lg">
-        <div class="card-body">
-          <h2 class="card-title text-center mb-4">Editar Tipo de Material</h2>
-          <form method="POST" >
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <h2 class="card-title text-center mb-5 fw-bold text-success">Editar Tipo de Material</h2>
+          <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
+
             <div class="mb-3">
               <label for="{{ form.nombre.id_for_label }}" class="form-label">Nombre</label>
               {{ form.nombre }}
             </div>
+
             <div class="mb-3">
               <label for="{{ form.descripcion.id_for_label }}" class="form-label">Descripción</label>
               {{ form.descripcion }}
             </div>
+
             <div class="mb-3">
-              <label for="{{ form.tiempo_descomposicion.id_for_label }}" class="form-label">Tiempo de Descomposición (días)</label>
+              <label for="{{ form.tiempo_descomposicion.id_for_label }}" class="form-label">
+                Tiempo de Descomposición (días)
+              </label>
               {{ form.tiempo_descomposicion }}
-              <div class="invalid-feedback">Por favor ingresa un número válido.</div>
+              {% if form.tiempo_descomposicion.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ form.tiempo_descomposicion.errors.0 }}
+                </div>
+              {% endif %}
             </div>
+
+            <div class="mb-3">
+              <label for="{{ form.imagen.id_for_label }}" class="form-label">Imagen</label>
+              {{ form.imagen }}
+            </div>
+
             <div class="d-grid">
-              <button type="submit" class="btn btn-success fw-bold">Guardar Cambios</button>
+              <button type="submit" class="btn btn-success fw-bold btn-lg">
+                Guardar Cambios
+              </button>
             </div>
+
           </form>
         </div>
       </div>

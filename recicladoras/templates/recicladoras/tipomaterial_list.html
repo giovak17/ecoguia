@@ -1,33 +1,57 @@
 {% extends 'recicladoras/base.html' %}
+{% load static %}
 
 {% block title %}Lista de Tipos de Material Reciclable{% endblock %}
 
 {% block content %}
-<h2>Tipos de Material Reciclable</h2>
-<a href="{% url 'recicladoras:tipomaterial_registro' %}" class="btn btn-success">Crear Nuevo</a>
-<table>
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Tiempo de Descomposición (días)</th>
-            <th>Acciones</th>
-        </tr>
+<div class="container py-4">
+  <h2 class="mb-4">Tipos de Material Reciclable</h2>
+
+ 
+  <a href="{% url 'recicladoras:tipomaterial_registro' %}" class="btn btn-success mb-4 px-4 py-2" style="font-size: 1rem;">
+    Crear Nuevo
+  </a>
+  
+  <table class="table table-responsive table-bordered table-hover">
+ 
+    <thead > 
+      <tr>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Tiempo de Descomposición (días)</th>
+        <th>Imagen</th>
+        <th>Acciones</th>
+      </tr>
     </thead>
     <tbody>
-        {% for tipo in tipos_material %}
-        <tr>
-            <td>{{ tipo.nombre }}</td>
-            <td>{{ tipo.descripcion }}</td>
-            <td>{{ tipo.tiempo_descomposicion }}</td>
-            <td>
-                <a href="{% url 'recicladoras:tipomaterial_actualizar' tipo.pk %}" class="btn btn-info">Editar</a>
-                <a href="{% url 'recicladoras:tipomaterial_delete' tipo.pk %}" class="btn btn-danger">Eliminar</a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="4">No hay tipos de material.</td></tr>
-        {% endfor %}
+      {% for tipo in tipos_material %}
+      <tr>
+        <td>{{ tipo.nombre }}</td>
+        <td>{{ tipo.descripcion }}</td>
+        <td>{{ tipo.tiempo_descomposicion }}</td>
+        <td>
+          {% if tipo.imagen and tipo.imagen.name %}
+            <!-- Imagen más grande -->
+            <img src="{{ tipo.imagen.url }}" alt="Imagen del material" width="220" class="img-thumbnail" />
+          {% else %}
+            <span class="text-muted fst-italic">No hay imagen</span>
+          {% endif %}
+        </td>
+            <td class="d-flex justify-content-between align-items-center">
+            <a href="{% url 'recicladoras:tipomaterial_actualizar' tipo.pk %}" class="btn btn-info btn-md">
+            Editar
+            </a>
+            <a href="{% url 'recicladoras:tipomaterial_delete' tipo.pk %}" class="btn btn-danger btn-md">
+            Eliminar
+            </a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" class="text-center text-muted fst-italic">No hay tipos de material.</td>
+      </tr>
+      {% endfor %}
     </tbody>
-</table>
+  </table>
+</div>
 {% endblock %}
