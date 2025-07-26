@@ -19,7 +19,7 @@
         <div class="col-md-6">
             <label for="propietario" class="form-label">Propietario</label>
             <select class="form-select" id="propietario" name="propietario" required>
-                <option value="" disabled {% if not recicladora.propietario %}selected{% endif %}>Seleccione</option>
+                <option value="" disabled {% if not recicladora.propietario %}selected{% endif %}>Seleccione propietario</option>
                 {% for p in propietarios %}
                 <option value="{{ p.id_usuario }}"
                     {% if recicladora.propietario and recicladora.propietario.id_usuario == p.id_usuario %}selected{% endif %}>

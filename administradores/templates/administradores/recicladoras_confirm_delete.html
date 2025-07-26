@@ -4,7 +4,7 @@
 {% block content %}
 <div class="container mt-4">
     <h2>Confirmar eliminación</h2>
-    <p>¿Estás seguro que deseas eliminar la recicladora <strong>{{ recicladora.nombre }}</strong>?</p>
+    <p>¿Estás seguro que deseas eliminar la recicladora <strong>{{ recicladora.nombre }}</strong>?, se eliminara permanentemente</p>
 
     <form method="post">
         {% csrf_token %}
