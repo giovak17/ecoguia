@@ -16,11 +16,21 @@
 			<span class="text">EcoGuía</span>
 		</a>
 		<ul class="side-menu top">
-			<li class="active"><a href="#"><i class='bx bxs-dashboard'></i><span class="text">Panel de Control</span></a></li>
+			<li class="active"><a href="administradores:index"><i class='bx bxs-dashboard'></i><span class="text">Panel de Control</span></a></li>
+			 <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/administradores/' %}active{% endif %}" href="{% url 'administradores:index' %}">
+                        <i class="bi bi-house-door">Home</i> 
+                    </a>
+                </li>
 			<li><a href="#"><i class='bx bxs-check-square'></i><span class="text">Solicitudes de Recicladoras</span></a></li>
 			<li><a href="#"><i class='bx bxs-user-detail'></i><span class="text">Usuarios Registrados</span></a></li>
 			<li><a href="#"><i class='bx bxs-factory'></i><span class="text">Recicladoras Aprobadas</span></a></li>
 			<li><a href="#"><i class='bx bxs-user-minus'></i><span class="text">Gestión de Usuarios</span></a></li>
+			<li>
+				<a href="{% url 'administradores:backup' %}" class="{% if request.path == '/administradores/backup/' %}active{% endif %}">
+					<i class='bx bxs-user-minus'></i><span class="text">Respaldar base de datos</span>
+				</a>
+			</li>
 		</ul>
 		<ul class="side-menu">
 			<li><a href="#"><i class='bx bxs-cog'></i><span class="text">Configuración</span></a></li>

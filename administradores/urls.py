@@ -15,6 +15,12 @@ urlpatterns = [
     path('contenido/nuevo/', views.contenido_crear, name='contenido_crear'),
     path('contenido/<int:pk>/editar/', views.contenido_editar, name='contenido_editar'),
     path('contenido/<int:pk>/borrar/', views.contenido_borrar, name='contenido_borrar'),
+
+    path('backup', views.backup, name='backup'),
+    path('restaurar-bd/', views.restaurar_toda_db, name='restaurar_bd'),
+    path('restaurar-tabla-archivo/', views.backup_tabla_especif, name='restaurar_tabla_archivo'),
+    path('administradores/restaurar-tabla-predefinida/', views.restaurar_tabla, name='restaurar_tabla_especifica'),
+
   
 ]
 

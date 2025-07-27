@@ -1,0 +1,172 @@
+{% extends "administradores/base.html" %}
+{% block title %}Gestión de Backups y Restauraciones{% endblock %}
+
+{% block content %}
+<div class="container my-5" style="max-width: 900px;">
+  <h1 class="mb-5 text-center text-success fw-bold">
+    <i class="bi bi-hdd-stack"></i> Gestión de Backups y Restauraciones
+  </h1>
+
+  {% if error_message %}
+    <div class="alert alert-danger shadow-sm">{{ error_message }}</div>
+  {% endif %}
+  {% if success_message %}
+    <div class="alert alert-success shadow-sm">{{ success_message }}</div>
+  {% endif %}
+
+  <!-- SECCIÓN 1 -->
+  <section class="mb-5 section-card section-success">
+    <div class="card border-success shadow-sm rounded-4">
+      <div class="card-header rounded-top-4 d-flex align-items-center" style="background: #d4edda; color: #155724;">
+        <i class="bi bi-cloud-arrow-down me-2 fs-4"></i>
+        <strong>Respaldo Completo</strong>
+      </div>
+      <div class="card-body bg-light rounded-bottom-4">
+        <p class="text-muted mb-4">Genera un archivo <strong>.backup</strong> con una copia completa de la base de datos actual.</p>
+        <form action="{% url 'administradores:backup' %}" method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Contraseña de la base de datos:</label>
+            <input type="password" name="db_password" class="form-control" placeholder="Ingrese su contraseña" required>
+          </div>
+          <button type="submit" class="btn btn-success w-100 fw-semibold" style="background-color: #a8d5ba; border-color: #a8d5ba; color: #155724;">
+            Generar archivo de respaldo
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 2 -->
+  <section class="mb-5 section-card section-danger">
+    <div class="card border-danger shadow-sm rounded-4">
+      <div class="card-header rounded-top-4 d-flex align-items-center" style="background: #f8d7da; color: #721c24;">
+        <i class="bi bi-arrow-clockwise me-2 fs-4"></i>
+        <strong>Restaurar Base Completa</strong>
+      </div>
+      <div class="card-body bg-light rounded-bottom-4">
+        <p class="text-muted mb-4">Selecciona un archivo <strong>.backup</strong> previamente generado para restaurar toda la base de datos.</p>
+        <form action="{% url 'administradores:restaurar_bd' %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Contraseña de la base de datos:</label>
+            <input type="password" name="db_password" class="form-control" placeholder="Ingrese su contraseña" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Archivo de respaldo (.backup):</label>
+            <input type="file" name="backup_file" class="form-control" accept=".backup" required>
+          </div>
+          <button type="submit" class="btn btn-danger w-100 fw-semibold" style="background-color: #f5b7b1; border-color: #f5b7b1; color: #721c24;">
+            Restaurar base de datos
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 3 -->
+  <section class="mb-5 section-card section-primary">
+    <div class="card border-primary shadow-sm rounded-4">
+      <div class="card-header rounded-top-4 d-flex align-items-center" style="background: #cfe2ff; color: #084298;">
+        <i class="bi bi-table me-2 fs-4"></i>
+        <strong>Respaldo de Tabla</strong>
+      </div>
+      <div class="card-body bg-light rounded-bottom-4">
+        <p class="text-muted mb-4">Especifica el nombre de la tabla que deseas respaldar. Se generará un archivo <strong>.backup</strong>.</p>
+        <form action="{% url 'administradores:restaurar_tabla_archivo' %}" method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Contraseña de la base de datos:</label>
+            <input type="password" name="db_password" class="form-control" placeholder="Ingrese su contraseña" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Nombre de la tabla:</label>
+            <input type="text" name="table_name" class="form-control" placeholder="Ejemplo: entrega_material" required>
+          </div>
+          <button type="submit" class="btn btn-primary w-100 fw-semibold" style="background-color: #a8c5ff; border-color: #a8c5ff; color: #084298;">
+            Generar respaldo de tabla
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 4 -->
+  <section class="mb-5 section-card section-warning">
+    <div class="card border-warning shadow-sm rounded-4">
+      <div class="card-header rounded-top-4 d-flex align-items-center" style="background: #fff3cd; color: #856404;">
+        <i class="bi bi-upload me-2 fs-4"></i>
+        <strong>Restaurar Tabla Específica</strong>
+      </div>
+      <div class="card-body bg-light rounded-bottom-4">
+        <p class="text-muted mb-4">Sube un archivo <strong>.backup</strong> para restaurar una tabla específica.</p>
+        <form action="{% url 'administradores:restaurar_tabla_especifica' %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Contraseña de la base de datos:</label>
+            <input type="password" name="db_password" class="form-control" placeholder="Ingrese su contraseña" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Nombre de la tabla:</label>
+            <input type="text" name="table_name" class="form-control" placeholder="Ejemplo: entrega_material" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Archivo de respaldo (.backup):</label>
+            <input type="file" name="backup_file" class="form-control" accept=".backup" required>
+          </div>
+          <button type="submit" class="btn btn-warning text-dark w-100 fw-semibold" style="background-color: #fff0b3; border-color: #fff0b3;">
+            Restaurar tabla
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+
+.section-card {
+  border-radius: 15px;
+  padding: 1rem;
+  background: #f8f9fa; /* gris muy claro */
+  box-shadow: 0 6px 15px rgba(100, 100, 100, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+.section-card:hover {
+  box-shadow: 0 8px 25px rgba(100, 100, 100, 0.1);
+}
+label.form-label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #6c757d; /* gris medio claro */
+}
+input.form-control {
+  border-radius: 8px;
+  box-shadow: inset 0 1px 3px rgba(100, 100, 100, 0.07);
+  transition: border-color 0.3s ease;
+  border: 1px solid #ced4da; /* gris claro */
+}
+input.form-control:focus {
+  border-color: #adb5bd !important; /* gris suave */
+  box-shadow: 0 0 6px #adb5bd;
+}
+button.btn {
+  background-color: transparent !important;
+  border: 2px solid #adb5bd; /* gris suave */
+  color: #adb5bd; /* gris suave */
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  box-shadow: none;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+button.btn:hover {
+  border-color: #868e96; /* gris un poco más oscuro */
+  color: #868e96;
+  background-color: transparent !important;
+}
+
+</style>
+{% endblock %}

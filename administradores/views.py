@@ -1,4 +1,4 @@
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from core.models import Recicladoras
 from core.models import Usuarios, Roles
@@ -8,7 +8,8 @@ from usuarios.views import convertir_a_embed
 from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import user_passes_test
 from core.auth import login_required
-import re
+import subprocess, datetime, os
+from django.conf import settings
 
 # Create your views here.
 
@@ -248,3 +249,208 @@ def contenido_borrar(request, pk):
         contenido.delete()
         return redirect(('administradores:contenido_admin'))
     return render(request, 'administradores/contenido_confirm_delete.html', {'contenido': contenido})
+
+@login_required(role="administrador")
+def backup(request):
+     error_message = None
+     success_message = None
+
+     if request.method == "POST":
+        db_settings = settings.DATABASES['default']
+        db_name = db_settings['NAME']
+        db_user = db_settings['USER']
+        db_host = db_settings['HOST'] or 'localhost'
+        db_port = db_settings['PORT'] or '5432'
+
+        db_pass = request.POST.get('db_password')
+
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        filename = f"backup_{timestamp}.backup"
+        filepath = os.path.join(settings.BASE_DIR, filename)
+
+        pg_dump_path = r"C:\Program Files\PostgreSQL\17\bin\pg_dump.exe"  # Cambia si es necesario
+
+        os.environ['PGPASSWORD'] = db_pass
+
+        cmd = [
+            pg_dump_path,
+            "-h", db_host,
+            "-p", str(db_port),
+            "-U", db_user,
+            "-F", "c",     # Formato personalizado (binario)
+            "-f", filepath,
+            db_name,
+        ]
+
+        try:
+            subprocess.run(cmd, check=True)
+            with open(filepath, 'rb') as f:
+                response = HttpResponse(f.read(), content_type='application/octet-stream')
+                response['Content-Disposition'] = f'attachment; filename="{filename}"'
+            os.remove(filepath)
+            success_message = "Respaldo generado exitosamente."
+            return response
+        except subprocess.CalledProcessError:
+            error_message = "Contraseña incorrecta o error al generar respaldo."
+        except Exception as e:
+            error_message = f"Error inesperado: {e}"
+
+     return render(request, "administradores/backupscreen.html", {
+        'error_message': error_message,
+        'success_message': success_message
+    })
+#################################################################################
+def restaurar_toda_db(request):
+    success_message = None
+    error_message = None
+
+    if request.method == "POST":
+        db_settings = settings.DATABASES['default']
+        db_name = db_settings['NAME']
+        db_user = db_settings['USER']
+        db_host = db_settings['HOST'] or 'localhost'
+        db_port = db_settings['PORT'] or '5432'
+
+        db_pass = request.POST.get('db_password')
+        file = request.FILES.get('backup_file')
+
+        if file:
+            tmp_path = os.path.join(settings.BASE_DIR, f"tmp_full_restore.backup")
+            with open(tmp_path, 'wb') as f:
+                for chunk in file.chunks():
+                    f.write(chunk)
+
+            os.environ['PGPASSWORD'] = db_pass
+
+            pg_restore_path = r"C:\Program Files\PostgreSQL\17\bin\pg_restore.exe"  # Cambia si es necesario
+
+            cmd = [
+                pg_restore_path,
+                "-h", db_host,
+                "-p", str(db_port),
+                "-U", db_user,
+                "-d", db_name,
+                "-c",  # Limpia antes de restaurar
+                tmp_path
+            ]
+
+            try:
+                subprocess.run(cmd, check=True)
+                success_message = "La base de datos se restauró exitosamente."
+            except subprocess.CalledProcessError:
+                error_message = "Error al restaurar la base de datos."
+            finally:
+                os.remove(tmp_path)
+
+    return render(request, "administradores/backupscreen.html", {
+        'success_message': success_message,
+        'error_message': error_message
+    })
+
+
+@login_required(role="administrador")
+def backup_tabla_especif(request):
+    error_message = None
+    success_message = None
+
+    if request.method == "POST":
+        db_settings = settings.DATABASES['default']
+        db_name = db_settings['NAME']
+        db_user = db_settings['USER']
+        db_host = db_settings['HOST'] or 'localhost'
+        db_port = db_settings['PORT'] or '5432'
+
+        db_pass = request.POST.get('db_password')
+        table_name = request.POST.get('table_name')
+
+        if table_name:
+            timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            filename = f"backup_table_{table_name}_{timestamp}.backup"
+            filepath = os.path.join(settings.BASE_DIR, filename)
+
+            pg_dump_path = r"C:\Program Files\PostgreSQL\17\bin\pg_dump.exe"
+            os.environ['PGPASSWORD'] = db_pass
+
+            cmd = [
+                pg_dump_path,
+                "-h", db_host,
+                "-p", str(db_port),
+                "-U", db_user,
+                "-F", "c",  # <- formato custom (binario .backup)
+                "-t", table_name,
+                "-f", filepath,
+                db_name,
+            ]
+
+            try:
+                subprocess.run(cmd, check=True)
+                with open(filepath, 'rb') as f:
+                    response = HttpResponse(f.read(), content_type='application/octet-stream')
+                    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+                os.remove(filepath)
+                request.session['success_message'] = f"Respaldo de tabla '{table_name}' generado exitosamente."
+                return response
+            except subprocess.CalledProcessError:
+                error_message = f"Contraseña incorrecta o error al generar respaldo de la tabla '{table_name}'."
+            except Exception as e:
+                error_message = f"Error inesperado: {e}"
+
+    success_message = request.session.pop('success_message', None)
+
+    return render(request, "administradores/backupscreen.html", {
+        'error_message': error_message,
+        'success_message': success_message,
+    })
+
+#######################################################
+@login_required(role="administrador")
+def restaurar_tabla(request):
+    error_message = None
+    success_message = None
+
+    if request.method == "POST":
+        db_settings = settings.DATABASES['default']
+        db_name = db_settings['NAME']
+        db_user = db_settings['USER']
+        db_host = db_settings['HOST'] or 'localhost'
+        db_port = db_settings['PORT'] or '5432'
+
+        db_pass = request.POST.get('db_password')
+        table_name = request.POST.get('table_name')
+        backup_file = request.FILES.get('backup_file')
+
+        if backup_file and table_name:
+            tmp_path = os.path.join(settings.BASE_DIR, f"tmp_restore_{table_name}.backup")
+            with open(tmp_path, 'wb') as f:
+                for chunk in backup_file.chunks():
+                    f.write(chunk)
+
+            pg_restore_path = r"C:\Program Files\PostgreSQL\17\bin\pg_restore.exe"
+            os.environ['PGPASSWORD'] = db_pass
+
+            cmd = [
+                pg_restore_path,
+                "-h", db_host,
+                "-p", str(db_port),
+                "-U", db_user,
+                "-d", db_name,
+                "-t", table_name,
+                "-c",         # <- drops y recrea
+                tmp_path
+            ]
+
+            try:
+                subprocess.run(cmd, check=True)
+                success_message = f"La tabla '{table_name}' se restauró exitosamente desde el respaldo."
+            except subprocess.CalledProcessError:
+                error_message = f"Error al restaurar la tabla '{table_name}'. Asegúrate de que el respaldo es correcto."
+            except Exception as e:
+                error_message = f"Error inesperado: {e}"
+            finally:
+                os.remove(tmp_path)
+
+    return render(request, "administradores/backupscreen.html", {
+        'error_message': error_message,
+        'success_message': success_message
+    })
+
