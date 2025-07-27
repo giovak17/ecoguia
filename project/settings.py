@@ -136,7 +136,7 @@ DATABASES = {
 #     }
 # }
 
-# # #Conexion Kevin
+# # # #Conexion Kevin
 # DATABASES = {
 #     "default": {
 #         "ENGINE": "django.db.backends.postgresql",
@@ -209,6 +209,7 @@ STATICFILES_DIRS = [
                     BASE_DIR / 'project' / 'static',
                     BASE_DIR / 'statics',
                     BASE_DIR / 'usuarios' / 'static',
+                    BASE_DIR / 'administradores' / 'static',
 ]
 
 

@@ -521,6 +521,68 @@ body{
     display: block;
 }
 
+/*login*/
+.login {
+  padding-top: 120px; /* Compensa la navbar fija */
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--white);
+}
+
+.login-wrapper {
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
+}
+
+.login-card {
+  background: var(--primary-color-light);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.login-header h2 {
+  margin-top: 0.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.2rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.form-error {
+  color: red;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.btn.login-btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+}
+
 
 @media (max-width: 992px){
     .menu-categories, .services-grid, .blog-grid{
