@@ -125,13 +125,15 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"#Conexion del toño
+TIME_ZONE = "UTC"
+
+#Conexion del toño
 # DATABASES = {
 #     "default": {
 #         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "Ecoguia",
+#         "NAME": "ecoguia",
 #         "USER": "postgres",
-#         "PASSWORD": "1234",
+#         "PASSWORD": "chela",
 #         "HOST": "127.0.0.1",
 #         "PORT": "5432",
 #     }

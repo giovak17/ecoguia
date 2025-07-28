@@ -7,9 +7,9 @@
 	<div class="left">
 		<h1>Panel de Administración</h1>
 		<ul class="breadcrumb">
-			<li><a href="#">Administrador</a></li>
+			<li><a  href="{% url 'administradores:index' %}" >Administrador</a></li>
 			<li><i class='bx bx-chevron-right'></i></li>
-			<li><a class="active" href="#">Inicio</a></li>
+			<li><a class="active"  href="{% url 'administradores:index' %}" >Inicio</a></li>
 		</ul>
 	</div>
 	<a href="#" class="btn-download">
@@ -51,8 +51,7 @@
 		</div>
 		<ul class="todo-list">
 			<li class="not-completed"><p>Revisar solicitudes pendientes</p><i class='bx bx-dots-vertical-rounded'></i></li>
-			<li class="completed"><p>Actualizar listado de usuarios</p><i class='bx bx-dots-vertical-rounded'></i></li>
-			<li class="not-completed"><p>Eliminar cuentas inactivas</p><i class='bx bx-dots-vertical-rounded'></i></li>
+			<li class="not-completed"><a href="{% url 'administradores:listar_usuarios' %}"><p>Eliminar cuentas inactivas</p></a><i class='bx bx-dots-vertical-rounded'></i></li>
 			<li class="completed"><p>Ver estadísticas de uso</p><i class='bx bx-dots-vertical-rounded'></i></li>
 		</ul>
 	</div>

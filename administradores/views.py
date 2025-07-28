@@ -133,6 +133,12 @@ def recicladora_eliminar(request, pk):
 def listar_usuarios(request):
     usuarios = Usuarios.objects.all()
     return render(request, 'administradores/listado_usuarios.html', {'usuarios': usuarios})
+
+def eliminar_usuario(request, usuario_id):
+    usuario = get_object_or_404(Usuarios, id_usuario=usuario_id)
+    usuario.delete()
+    messages.success(request, "Usuario eliminado correctamente.")
+    return redirect('administradores:listar_usuarios')
   
 @login_required(role="administrador")
 def aprobar_recicladoras(request: HttpRequest):

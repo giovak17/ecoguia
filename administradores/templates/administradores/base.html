@@ -5,30 +5,45 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+	<!-- Bootstrap CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 	<link rel="stylesheet" href="{% static 'css/style2.css' %}">
 	<title>{% block title %}Ecoguía - Panel de Administrador{% endblock %}</title>
 </head>
 <body>
 	<!-- SIDEBAR -->
 	<section id="sidebar">
-		<a href="#" class="brand">
+		<a  href="{% url 'administradores:index' %}"  class="brand">
 			<i class='bx bxs-leaf'></i>
 			<span class="text">EcoGuía</span>
 		</a>
 		<ul class="side-menu top">
-			<li class="active"><a href="administradores:index"><i class='bx bxs-dashboard'></i><span class="text">Panel de Control</span></a></li>
-			 <li class="nav-item">
-                    <a class="nav-link {% if request.path == '/administradores/' %}active{% endif %}" href="{% url 'administradores:index' %}">
-                        <i class="bi bi-house-door">Home</i> 
-                    </a>
-                </li>
-			<li><a href="#"><i class='bx bxs-check-square'></i><span class="text">Solicitudes de Recicladoras</span></a></li>
-			<li><a href="#"><i class='bx bxs-user-detail'></i><span class="text">Usuarios Registrados</span></a></li>
-			<li><a href="#"><i class='bx bxs-factory'></i><span class="text">Recicladoras Aprobadas</span></a></li>
-			<li><a href="#"><i class='bx bxs-user-minus'></i><span class="text">Gestión de Usuarios</span></a></li>
+			<li class="{% if request.path == '/administradores/' %}active{% endif %}">
+				<a href="{% url 'administradores:index' %}">
+					<i class='bx bxs-dashboard'></i><span class="text">Panel de Control</span>
+				</a>
+			</li>
+
+			<li >
+			<a href="#">
+				<i class='bx bxs-check-square'></i><span class="text">Solicitud de Recicladoras</span>
+			</a>
+			</li>
+			
+			<li class="{% if request.resolver_match.url_name == 'listar_usuarios' %}active{% endif %}">
+				<a href="{% url 'administradores:listar_usuarios' %}">
+					<i class='bx bxs-user-detail'></i><span class="text">Gestion de usuarios</span>
+				</a>
+			</li>
+
 			<li>
-				<a href="{% url 'administradores:backup' %}" class="{% if request.path == '/administradores/backup/' %}active{% endif %}">
-					<i class='bx bxs-user-minus'></i><span class="text">Respaldar base de datos</span>
+			<a href="#">
+				<i class='bx bxs-factory'></i><span class="text">Recicladoras</span>
+			</a>
+			</li>
+			<li class="{% if request.resolver_match.url_name == 'backup' %}active{% endif %}">
+				<a href="{% url 'administradores:backup' %}">
+					<i class='bx bxs-user-minus'></i><span class="text">Respaldar datos</span>
 				</a>
 			</li>
 		</ul>
@@ -70,6 +85,6 @@
 		</main>
 	</section>
 
-	<script src="{% static 'js/script.js' %}"></script>
+	 <script src="{% static 'js/script.js' %}"></script>
 </body>
 </html>

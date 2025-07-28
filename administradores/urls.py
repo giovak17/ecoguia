@@ -11,6 +11,7 @@ urlpatterns = [
     path('recicladoras/eliminar/<int:pk>/', views.recicladora_eliminar, name='recicladora_eliminar'),
 
     path('usuarios/', views.listar_usuarios, name='listar_usuarios'),
+    path('usuarios/eliminar/<int:usuario_id>/', views.eliminar_usuario, name='eliminar_usuario'),
     path('contenido/', views.contenido_educativo_admin, name='contenido_admin'),
     path('contenido/nuevo/', views.contenido_crear, name='contenido_crear'),
     path('contenido/<int:pk>/editar/', views.contenido_editar, name='contenido_editar'),
