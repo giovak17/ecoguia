@@ -7,6 +7,10 @@ from django.utils.timezone import now
 from django.urls import reverse
 from core.auth import login_required
 from django.db import connection
+# usuarios/views.py
+from recicladoras.views import clasificacion
+from django.contrib import messages
+from django.utils.timezone import now
 
 
 def index(request):
@@ -137,9 +141,7 @@ def verify_crendentials(email, password) -> tuple[bool, str, Usuarios]:
     else:
         return False, "Contrasena incorrecta.", Usuarios()
     
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from django.utils.timezone import now
+
 
 
 def usuariosregistro(request):

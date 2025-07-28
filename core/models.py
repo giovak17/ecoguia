@@ -172,27 +172,27 @@ class Usuarios(models.Model):
         db_table = 'usuarios'
 
 
-class UsuariosRecompensas(models.Model):
-    pk = models.CompositePrimaryKey('id_usuario', 'id_recompensa')
-    id_usuario = models.ForeignKey(Usuarios, models.DO_NOTHING, db_column='id_usuario')
-    id_recompensa = models.ForeignKey(Recompensas, models.DO_NOTHING, db_column='id_recompensa')
-    fecha_canjeo = models.DateField(blank=True, null=True)
+# class UsuariosRecompensas(models.Model):
+#     pk = models.CompositePrimaryKey('id_usuario', 'id_recompensa')
+#     id_usuario = models.ForeignKey(Usuarios, models.DO_NOTHING, db_column='id_usuario')
+#     id_recompensa = models.ForeignKey(Recompensas, models.DO_NOTHING, db_column='id_recompensa')
+#     fecha_canjeo = models.DateField(blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = 'usuarios_recompensas'
+#     class Meta:
+#         managed = False
+#         db_table = 'usuarios_recompensas'
 
 
-class UsuariosRetos(models.Model):
-    pk = models.CompositePrimaryKey('id_usuario', 'id_reto')
-    id_usuario = models.ForeignKey(Usuarios, models.DO_NOTHING, db_column='id_usuario')
-    id_reto = models.ForeignKey(Retos, models.DO_NOTHING, db_column='id_reto')
-    fecha_inicio = models.DateField(blank=True, null=True)
-    fecha_fin = models.DateField(blank=True, null=True)
+# class UsuariosRetos(models.Model):
+#     pk = models.CompositePrimaryKey('id_usuario', 'id_reto')
+#     id_usuario = models.ForeignKey(Usuarios, models.DO_NOTHING, db_column='id_usuario')
+#     id_reto = models.ForeignKey(Retos, models.DO_NOTHING, db_column='id_reto')
+#     fecha_inicio = models.DateField(blank=True, null=True)
+#     fecha_fin = models.DateField(blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = 'usuarios_retos'
+#     class Meta:
+#         managed = False
+#         db_table = 'usuarios_retos'
 
 class SolicitudRegistro(models.Model):
     nombre_establecimiento = models.CharField(max_length=100)

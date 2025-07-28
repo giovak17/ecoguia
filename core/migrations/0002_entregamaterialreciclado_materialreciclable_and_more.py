@@ -76,29 +76,29 @@ class Migration(migrations.Migration):
                 'managed': False,
             },
         ),
-        migrations.CreateModel(
-            name='UsuariosRecompensas',
-            fields=[
-                ('pk', models.CompositePrimaryKey('id_usuario', 'id_recompensa', blank=True, editable=False, primary_key=True, serialize=False)),
-                ('fecha_canjeo', models.DateField(blank=True, null=True)),
-            ],
-            options={
-                'db_table': 'usuarios_recompensas',
-                'managed': False,
-            },
-        ),
-        migrations.CreateModel(
-            name='UsuariosRetos',
-            fields=[
-                ('pk', models.CompositePrimaryKey('id_usuario', 'id_reto', blank=True, editable=False, primary_key=True, serialize=False)),
-                ('fecha_inicio', models.DateField(blank=True, null=True)),
-                ('fecha_fin', models.DateField(blank=True, null=True)),
-            ],
-            options={
-                'db_table': 'usuarios_retos',
-                'managed': False,
-            },
-        ),
+        # migrations.CreateModel(
+        #     name='UsuariosRecompensas',
+        #     fields=[
+        #         ('pk', models.CompositePrimaryKey('id_usuario', 'id_recompensa', blank=True, editable=False, primary_key=True, serialize=False)),
+        #         ('fecha_canjeo', models.DateField(blank=True, null=True)),
+        #     ],
+        #     options={
+        #         'db_table': 'usuarios_recompensas',
+        #         'managed': False,
+        #     },
+        # ),
+        # migrations.CreateModel(
+        #     name='UsuariosRetos',
+        #     fields=[
+        #         ('pk', models.CompositePrimaryKey('id_usuario', 'id_reto', blank=True, editable=False, primary_key=True, serialize=False)),
+        #         ('fecha_inicio', models.DateField(blank=True, null=True)),
+        #         ('fecha_fin', models.DateField(blank=True, null=True)),
+        #     ],
+        #     options={
+        #         'db_table': 'usuarios_retos',
+        #         'managed': False,
+        #     },
+        # ),
         migrations.DeleteModel(
             name='AuthGroup',
         ),
