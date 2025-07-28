@@ -33,6 +33,10 @@
                         <i class="bi bi-recycle"></i> Aprobar Recicladoras
                     </a>
                 </li>
+                  <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/administradores/backup/' %}active{% endif %}" href="{% url 'administradores:backup' %}">
+                        <i class="bi bi-recycle"></i> Restaurar base de datos
+                    </a>
 
             </ul>
         </div>

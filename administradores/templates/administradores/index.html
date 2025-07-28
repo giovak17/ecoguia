@@ -1,8 +1,59 @@
 {% extends "administradores/base.html" %}
 
-<title>{% block title %} Administradores {% endblock %}</title>
+{% block title %}Panel de Administración{% endblock %}
 
-<!-- Contentido apartir de aqui sera insertado en base.html -->
 {% block content %}
-<h1>Index administradores</h1>
+<div class="head-title">
+	<div class="left">
+		<h1>Panel de Administración</h1>
+		<ul class="breadcrumb">
+			<li><a  href="{% url 'administradores:index' %}" >Administrador</a></li>
+			<li><i class='bx bx-chevron-right'></i></li>
+			<li><a class="active"  href="{% url 'administradores:index' %}" >Inicio</a></li>
+		</ul>
+	</div>
+	<a href="#" class="btn-download">
+		<i class='bx bxs-cloud-download'></i>
+		<span class="text">Descargar Reporte</span>
+	</a>
+</div>
+
+<ul class="box-info">
+	<li><i class='bx bxs-building-house'></i><span class="text"><h3>12</h3><p>Solicitudes Pendientes</p></span></li>
+	<li><i class='bx bxs-user'></i><span class="text"><h3>150</h3><p>Usuarios Registrados</p></span></li>
+	<li><i class='bx bxs-factory'></i><span class="text"><h3>27</h3><p>Recicladoras Activas</p></span></li>
+</ul>
+
+<div class="table-data">
+	<div class="order">
+		<div class="head">
+			<h3>Solicitudes de Recicladoras</h3>
+			<i class='bx bx-search'></i>
+			<i class='bx bx-filter'></i>
+		</div>
+		<table>
+			<thead>
+				<tr><th>Nombre</th><th>Fecha de Solicitud</th><th>Estado</th></tr>
+			</thead>
+			<tbody>
+				<tr><td><p>EcoRecy S.A.</p></td><td>10-07-2025</td><td><span class="status pending">Pendiente</span></td></tr>
+				<tr><td><p>VerdeVida</p></td><td>08-07-2025</td><td><span class="status completed">Aprobada</span></td></tr>
+				<tr><td><p>ReciMex</p></td><td>05-07-2025</td><td><span class="status rejected">Rechazada</span></td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="todo">
+		<div class="head">
+			<h3>Tareas Administrativas</h3>
+			<i class='bx bx-plus'></i>
+			<i class='bx bx-filter'></i>
+		</div>
+		<ul class="todo-list">
+			<li class="not-completed"><p>Revisar solicitudes pendientes</p><i class='bx bx-dots-vertical-rounded'></i></li>
+			<li class="not-completed"><a href="{% url 'administradores:listar_usuarios' %}"><p>Eliminar cuentas inactivas</p></a><i class='bx bx-dots-vertical-rounded'></i></li>
+			<li class="completed"><p>Ver estadísticas de uso</p><i class='bx bx-dots-vertical-rounded'></i></li>
+		</ul>
+	</div>
+</div>
 {% endblock %}

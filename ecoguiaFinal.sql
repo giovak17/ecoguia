@@ -172,7 +172,9 @@ INSERT INTO usuarios (nombre, ap_paterno, ap_materno, correo, contrasena, fecha_
 ('Ana', 'García', 'López', 'ana@correo.com', 'ana123', '1990-03-15', 5, 2),
 ('Carlos', 'Ramírez', 'Vega', 'carlos@correo.com', 'car123', '1988-07-22', 15, 2),
 ('Lucía', 'Fernández', 'Pérez', 'lucia@correo.com', 'lucia456', '1995-12-03', 0, 3),
-('David', 'Torres', 'Hernández', 'admin@correo.com', 'admin123', '1985-05-30', 0, 1); 
+('David', 'Torres', 'Hernández', 'admin@correo.com', 'admin123', '1985-05-30', 0, 1),
+-- RECICLADORA
+('Alan', 'Sanchez', 'Perez', 'recicladora@correo.com', 'rec123', '2000-03-30', 0, 3); 
 ----mas registros para recicladoras
 INSERT INTO usuarios (nombre, ap_paterno, ap_materno, correo, contrasena, fecha_nacimiento, total_recompensas, id_rol) VALUES 
 
@@ -250,7 +252,8 @@ INSERT INTO recicladoras (nombre, calle, numero_int, colonia, codigo_postal, ciu
 ('Centro De Acopio', 'Ruta Mariano Matamoros', 9234, 'Mariano Matamoros', 22234, 'Tijuana', '6644090457', true, 'Centro comunitario que recibe residuos reciclables como papel, cartón, plástico y vidrio.', 2),
 ('Arjamex', 'Buena Vista', 3471, 'Anexa 20 de Noviembre', 22100, 'Tijuana', '6646222290', true, 'Empresa recicladora que ofrece soluciones para el manejo adecuado de residuos sólidos.', 13),
 ('Bansus Internacional Recovery De Mexico S de RL de CV', 'Blvd. Díaz Ordaz', 12415, 'El Paraiso', 22106, 'Tijuana', '6646891141', true, 'Recicladora internacional que se especializa en recuperación de metales y componentes electrónicos.', 14),
-('Alan Recycling S.A de C.V', 'Camino Vecinal', 10152, 'Colonia Valle Redondo', 22226, 'Tijuana', '6646268035', true, 'Empresa local dedicada al reciclaje de materiales industriales, plásticos y metales.', 15);
+-- ('Alan Recycling S.A de C.V', 'Camino Vecinal', 10152, 'Colonia Valle Redondo', 22226, 'Tijuana', '6646268035', true, 'Empresa local dedicada al reciclaje de materiales industriales, plásticos y metales.', 15);
+('Alan Recycling S.A de C.V', 'Camino Vecinal', 10152, 'Colonia Valle Redondo', 22226, 'Tijuana', '6646268035', true, 'Empresa local dedicada al reciclaje de materiales industriales, plásticos y metales.', 5);
 
 
 --puntos de reciclaje
@@ -318,8 +321,8 @@ VALUES
 --entregas
 INSERT INTO entregas (id_usuario_e, punto_entrega, confirmada)
 VALUES 
-(16, 1, false),
-(4, 2, true),
+(16, 13, false),
+(4, 13, true),
 (4, 3, true);
 
 --material_entregado

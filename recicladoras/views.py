@@ -16,14 +16,57 @@ from core.auth import login_required
 def index(request):
     return render(request, "recicladoras/index.html")
 
-# En progreso
-def confirmar_entregas(request: HttpRequest):
-    user_id = int(request.session["user_id"])
+@login_required(role="recicladora")
+def confirmar_entregas(request):
+    user_id = request.user.id_usuario
+    success = False
 
-    print(request.session["user_id"])
-    return HttpResponse(request.session["user_id"] )
+    if request.method == 'POST':
+        for key, value in request.POST.items():
+            if key.startswith('confirmada_'):
+                entrega_id = key.split('_')[1]
+                try:
+                    entrega = Entregas.objects.get(pk=entrega_id)
+                    if entrega.punto_entrega and entrega.punto_entrega.id_recicladora.propietario.id_usuario == user_id:
+                        entrega.confirmada = True if value == 'true' else False
+                        entrega.save()
+                except Entregas.DoesNotExist:
+                    continue
+        success = True
 
-    # return render(request, "recicladoras/confirmar_entregas.html")
+    entregas_queryset = Entregas.objects.select_related(
+        'id_usuario_e',
+        'punto_entrega',
+        'punto_entrega__id_recicladora'
+    ).filter(
+        punto_entrega__id_recicladora__propietario__id_usuario=user_id
+    )
+
+    entregas = []
+    for entrega in entregas_queryset:
+        materiales_entregados = EntregaMaterialReciclado.objects.filter(id_entrega=entrega).select_related('id_material')
+
+        materiales = [
+            {
+                'nombre': m.id_material.nombre,
+                'cantidad': m.cantidad,
+                'condiciones': m.condiciones_entrega
+            }
+            for m in materiales_entregados
+        ]
+
+        entregas.append({
+            'entrega': entrega,
+            'correo': entrega.id_usuario_e.correo,
+            'materiales': materiales
+        })
+
+    return render(request, 'recicladoras/confirmar_entregas.html', {
+        'entregas': entregas,
+        'success': success
+    })
+
+
 
 def solicitud_registro_view(request):
     if request.method == 'POST':

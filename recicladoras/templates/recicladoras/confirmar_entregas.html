@@ -1,7 +1,70 @@
+
+
+
+
 {% extends "recicladoras/base.html" %}
 
-<title>{% block title %} Confirmar entregas {% endblock %}</title>
+{% block title %} Confirmar entregas {% endblock %}
 
-<!-- Contentido apartir de aqui sera insertado en base.html -->
 {% block content %}
+    <h1 class="text-center fw-bold p-4">Entregas</h1>
+
+    {% if success %}
+        <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+            Cambios aplicados de manera exitosa.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Fecha Entrega</th>
+                    <th scope="col">Usuario</th>
+                    <th scope="col">Correo</th>
+                    <th scope="col">Punto Entrega</th>
+                    <th scope="col">Materiales</th>
+                    <th scope="col">Confirmada</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in entregas %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ item.entrega.fecha_entrega|date:"Y-m-d H:i" }}</td>
+                        <td>
+                            {{ item.entrega.id_usuario_e.nombre }} {{ item.entrega.id_usuario_e.ap_paterno }}
+                        </td>
+                        <td>{{ item.correo }}</td>
+                        <td>{{ item.entrega.punto_entrega.nombre }}</td>
+                        <td>
+                            {% if item.materiales %}
+                                <ul class="mb-0 ps-3">
+                                    {% for material in item.materiales %}
+                                        <li>{{ material.nombre }} ({{ material.cantidad }})</li>
+                                        <small class="text-muted">Condición: {{ material.condiciones|default:"N/A" }}</small>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <em>No hay materiales</em>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <select name="confirmada_{{ item.entrega.id_entrega }}" class="form-select">
+                                <option value="true" {% if item.entrega.confirmada %}selected{% endif %}>Sí</option>
+                                <option value="false" {% if not item.entrega.confirmada %}selected{% endif %}>No</option>
+                            </select>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="text-end">
+            <button type="submit" class="btn btn-success mt-3 fw-bold">Actualizar Entregas</button>
+        </div>
+    </form>
 {% endblock %}
