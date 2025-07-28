@@ -1,0 +1,40 @@
+{% extends "administradores/base.html" %}
+
+{% block title %}Usuarios{% endblock %}
+
+{% block content %}
+    <h1>Usuarios registrados</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre completo</th>
+                <th>Correo</th>
+                <th>Fecha de registro</th>
+                <th>Rol</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+            <tr>
+                <td>{{ usuario.id_usuario }}</td>
+                <td>{{ usuario.nombre }} {{ usuario.ap_paterno }} {{ usuario.ap_materno }}</td>
+                <td>{{ usuario.correo }}</td>
+                <td>{{ usuario.fecha_registro }}</td>
+                <td>
+                    {% if usuario.id_rol %}
+                        {{ usuario.id_rol.nombre }}
+                    {% else %}
+                        Sin rol
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'administradores:editar_usuario' usuario.id_usuario %}">Editar</a> |
+                    <a href="{% url 'administradores:eliminar_usuario' usuario.id_usuario %}">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

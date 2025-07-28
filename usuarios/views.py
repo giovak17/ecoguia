@@ -1,4 +1,4 @@
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponseForbidden
 from django.shortcuts import redirect, render, get_object_or_404
 from core.models import Usuarios,Entregas
 from django.shortcuts import redirect, render
@@ -37,6 +37,25 @@ def logout(request: HttpRequest):
     request.session.flush()
     return redirect('usuarios:login')
 
+@login_required(role="usuario")
+def perfil_usuario(request):
+    usuario = get_object_or_404(Usuarios, pk=request.user.id_usuario)
+    modo_edicion = request.GET.get("editar") == "1"
+
+    if request.method == 'POST':
+        usuario.nombre = request.POST.get('nombre')
+        usuario.ap_paterno = request.POST.get('ap_paterno')
+        usuario.ap_materno = request.POST.get('ap_materno')
+        usuario.correo = request.POST.get('correo')
+        usuario.contrasena = request.POST.get('contrasena')
+        usuario.fecha_nacimiento = request.POST.get('fecha_nacimiento')
+        usuario.save()
+        return redirect('usuarios:perfil_usuario')
+
+    return render(request, 'usuarios/perfil.html', {
+        'usuario': usuario,
+        'modo_edicion': modo_edicion
+    })
 
 def contenido_educativo(request):
     contenidos = ContenidoEducativo.objects.all()

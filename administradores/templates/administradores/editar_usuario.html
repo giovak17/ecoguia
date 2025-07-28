@@ -1,0 +1,39 @@
+{% extends "administradores/base.html" %}
+
+{% block title %}Usuarios{% endblock %}
+
+{% block content %}
+    <h1>Editar Usuario: {{ usuario.nombre }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="id_nombre">Nombre:</label>
+        {{ form.nombre }}<br>
+
+        <label for="id_ap_paterno">Apellido paterno:</label>
+        {{ form.ap_paterno }}<br>
+
+        <label for="id_ap_materno">Apellido materno:</label>
+        {{ form.ap_materno }}<br>
+
+        <label for="id_correo">Correo:</label>
+        {{ form.correo }}<br>
+
+        <label for="id_contrasena">Contraseña:</label>
+        {{ form.contrasena }}<br>
+
+        <label for="id_fecha_nacimiento">Fecha de nacimiento:</label>
+        {{ form.fecha_nacimiento }}<br>
+
+        <label for="id_fecha_registro">Fecha de registro:</label>
+        {{ form.fecha_registro }}<br>
+
+        <label for="id_total_recompensas">Total recompensas:</label>
+        {{ form.total_recompensas }}<br>
+
+        <label for="id_id_rol">Rol:</label>
+        {{ form.id_rol }}<br>
+
+        <button type="submit">Guardar cambios</button>
+    </form>
+    <a href="{% url 'administradores:listar_usuarios' %}">Volver</a>
+{% endblock %}
