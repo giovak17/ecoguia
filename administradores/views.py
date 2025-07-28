@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import user_passes_test
 from core.auth import login_required
 import subprocess, datetime, os
 from django.conf import settings
+from .forms import UsuarioForm
 
 # Create your views here.
 
@@ -130,9 +131,35 @@ def recicladora_eliminar(request, pk):
     return render(request, 'administradores/recicladoras_confirm_delete.html', {'recicladora': recicladora})
 
 
+# def listar_usuarios(request):
+#     usuarios = Usuarios.objects.all()
+#     return render(request, 'administradores/listado_usuarios.html', {'usuarios': usuarios})
+
+@login_required(role="administrador")
 def listar_usuarios(request):
-    usuarios = Usuarios.objects.all()
-    return render(request, 'administradores/listado_usuarios.html', {'usuarios': usuarios})
+    usuarios = Usuarios.objects.select_related('id_rol').all()
+    return render(request, 'administradores/listar_usuarios.html', {'usuarios': usuarios})
+
+@login_required(role="administrador")
+def editar_usuario(request, id_usuario):
+    usuario = get_object_or_404(Usuarios, id_usuario=id_usuario)
+    if request.method == 'POST':
+        form = UsuarioForm(request.POST, instance=usuario)
+        if form.is_valid():
+            form.save()
+            return redirect('administradores:listar_usuarios')
+    else:
+        form = UsuarioForm(instance=usuario)
+    return render(request, 'administradores/editar_usuario.html', {'form': form, 'usuario': usuario})
+
+@login_required(role="administrador")
+def eliminar_usuario(request, id_usuario):
+    usuario = get_object_or_404(Usuarios, id_usuario=id_usuario)
+    if request.method == 'POST':
+        usuario.delete()
+        return redirect('administradores:listar_usuarios')
+    return render(request, 'administradores/confirmar_eliminacion.html', {'usuario': usuario})
+
   
 @login_required(role="administrador")
 def aprobar_recicladoras(request: HttpRequest):

@@ -27,7 +27,7 @@ class ContenidoEducativo(models.Model):
 
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'contenido_educativo'
 
 
@@ -98,7 +98,7 @@ class PuntosReciclaje(models.Model):
 class Recicladoras(models.Model):
     codigo_recicladora = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=50, blank=True, null=True)
-    propietario = models.ForeignKey('Usuarios', models.DO_NOTHING, db_column='propietario', blank=True, null=True)
+    propietario = models.ForeignKey('Usuarios', models.SET_NULL, db_column='propietario', blank=True, null=True)
     calle = models.CharField(max_length=50, blank=True, null=True)
     codigo_postal = models.IntegerField(blank=True, null=True)
     colonia = models.CharField(max_length=50, blank=True, null=True)
