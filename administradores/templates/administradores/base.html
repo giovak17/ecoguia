@@ -36,10 +36,10 @@
 				</a>
 			</li>
 
-			<li>
-			<a href="#">
-				<i class='bx bxs-factory'></i><span class="text">Recicladoras</span>
-			</a>
+			<li class="{% if request.resolver_match.url_name == 'ver_recicladoras' %}active{% endif %}">
+				<a href="{% url 'administradores:ver_recicladoras' %}">
+					<i class='bx bxs-factory'></i><span class="text">Recicladoras</span>
+				</a>
 			</li>
 			<li class="{% if request.resolver_match.url_name == 'backup' %}active{% endif %}">
 				<a href="{% url 'administradores:backup' %}">

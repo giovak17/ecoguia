@@ -3,15 +3,15 @@
 
 {% block content %}
 <div class="head-title">
-    <div class="left">
-      <h1>Gestión de Backups y Restauraciones</h1>
+  <div class="left">
+    <h1>Gestión de Backups y Restauraciones</h1>
       <ul class="breadcrumb">
         <li><a  href="{% url 'administradores:index' %}" >Administrador</a></li>
         <li><i class='bx bx-chevron-right'></i></li>
         <li><a class="active"  href="{% url 'administradores:index' %}" >Gestión B y R </a></li>
 		  </ul>
-    </div>
   </div>
+</div>
 <div class="container my-5" style="max-width: 1200px;">
   {% if error_message %}
     <div class="alert alert-danger shadow-sm">{{ error_message }}</div>

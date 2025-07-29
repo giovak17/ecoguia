@@ -3,6 +3,7 @@
 {% block title %}Usuarios{% endblock %}
 
 {% block content %}
+
     <h1>Editar Usuario: {{ usuario.nombre }}</h1>
     <form method="post">
         {% csrf_token %}
@@ -33,7 +34,7 @@
         <label for="id_id_rol">Rol:</label>
         {{ form.id_rol }}<br>
 
-        <button type="submit">Guardar cambios</button>
+        <button class="btn-download" type="submit">Guardar cambios</button>
     </form>
     <a href="{% url 'administradores:listar_usuarios' %}">Volver</a>
 {% endblock %}

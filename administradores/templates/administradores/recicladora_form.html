@@ -2,8 +2,20 @@
 {% load static %}
 
 {% block content %}
+<div class="head-title">
+	<div class="left">
+		<h1>{{title}}</h1>
+		<ul class="breadcrumb">
+			<li><a  href="{% url 'administradores:index' %}" >Administrador</a></li>
+			<li><i class='bx bx-chevron-right'></i></li>
+			<li><a  href="{% url 'administradores:index' %}" >Recicladoras</a></li>
+            <li><i class='bx bx-chevron-right'></i></li>
+            <li><a class="active"  href="{% url 'administradores:index' %}" >Editar</a></li>
+		</ul>
+	</div>
+</div>
+
 <div class="container mt-4">
-    <h2 class="mb-4">{{ titulo }}</h2>
     <form method="post" class="row g-3">
         {% csrf_token %}
 
@@ -77,8 +89,10 @@
         </div>
 
         <div class="col-12 text-end">
-            <button type="submit" class="btn btn-success">Guardar</button>
-            <a href="{% url 'administradores:ver_recicladoras' %}" class="btn btn-secondary">Cancelar</a>
+            <button class="btn btn-download" type="submit" style="background-color: #67AE6E; color:#ffff; border-radius: 30px">
+                <span class="text">Guardar cambios</span>
+            </button>
+            <a href="{% url 'administradores:ver_recicladoras' %}" class="btn btn-secondary" style="border-radius: 30px">Cancelar</a>
         </div>
     </form>
 </div>
