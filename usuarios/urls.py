@@ -1,6 +1,8 @@
 from django.urls import path
 
 from . import views
+from recicladoras import views as recicladoras_views
+
 
 app_name = "usuarios"
 urlpatterns = [
@@ -13,7 +15,8 @@ urlpatterns = [
     path('Entregas/<int:clave>/', views.confirmar_entrega, name='confirmar_entrega'),
     path("registro/", views.usuariosregistro, name="registro"),
     path('mapa/', views.mapa_puntos_google, name='mapa_puntos'),
-
+    path('clasificacion', recicladoras_views.clasificacion, name='clasificacion_materiales'),
+    
     path('mostrarentregas/', views.mostrarentregas, name='mostrarentregas'),
 
 ]
