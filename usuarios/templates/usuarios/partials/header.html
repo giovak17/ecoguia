@@ -54,26 +54,6 @@
           <a href="{% url 'usuarios:login' %}" class="btn">Iniciar sesión</a>
           <a href="{% url 'usuarios:registro' %}" class="btn btn-outline">Registrarse</a>
         {% endif %}
-      </div> {% endcomment %}
-
-      <div>
-        {% if request.user %}
-          <div class="user-menu">
-            <button id="userToggle" type="button">
-              {{ request.user.nombre }} {{ request.user.ap_paterno }} ▼
-            </button>
-            <ul id="userDropdown" class="menu hidden">
-              <li><a href="{% url 'usuarios:perfil_usuario' %}">Perfil</a></li>
-              <li><hr></li>
-              <li><a href="{% url 'usuarios:logout' %}">Cerrar Sesión</a></li>
-            </ul>
-          </div>
-        {% else %}
-          {% comment %} <a href="{% url 'usuarios:login' %}">Iniciar sesión</a>
-          <a href="{% url 'usuarios:registro' %}">Registrarse</a> {% endcomment %}
-          <a href="{% url 'usuarios:login' %}" class="btn btn-outline">Inicias sesion</a>
-          <a href="{% url 'usuarios:registro' %}" class="btn">Registrarse</a>
-        {% endif %}
       </div>
     </div>
   </nav>
