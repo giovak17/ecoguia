@@ -1,4 +1,4 @@
-{% extends "recicladoras/base.html" %}
+{% extends "administradores/base.html" %}
 {% block title %}Registrar Tipo de Material - EcoGuia{% endblock %}
 
 {% block content %}
@@ -9,7 +9,7 @@
         <div class="card-body">
           <h2 class="card-title text-center mb-4">Agrega un Tipo de Material</h2>
 
-          <form method="POST" action="{% url 'recicladoras:tipomaterial_registro' %}" class="needs-validation" enctype="multipart/form-data" novalidate>
+          <form method="POST" action="{% url 'administradores:tipomaterial_registro' %}" class="needs-validation" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
 
             <div class="mb-3">

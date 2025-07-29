@@ -9,7 +9,7 @@ from core.auth import login_required
 from django.db import connection
 from django.http import JsonResponse
 # usuarios/views.py
-from recicladoras.views import clasificacion
+
 from django.contrib import messages
 from django.utils.timezone import now
 
@@ -366,3 +366,7 @@ def vista_html_recicladoras_con_materiales(request):
         })
 
     return render(request, 'usuarios/recicladoras_materiales.html', {'datos': contexto})
+
+def clasificacion(request):
+    clasificacion = TipoMaterialReciclable.objects.all()
+    return render(request, "usuarios/clasificacion_materiales.html", {"clasificacion": clasificacion})

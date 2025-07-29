@@ -14,7 +14,11 @@ urlpatterns = [
     path('usuarios/editar/<int:id_usuario>/', views.editar_usuario, name='editar_usuario'),
     path('usuarios/eliminar/<int:id_usuario>/', views.eliminar_usuario, name='eliminar_usuario'),
 
-
+    # path('tipomaterial/', views.tipo_material_list, name='tipomaterial_list'),
+    path('tipomaterial/', views.tipo_material_list, name='tipomaterial_list'),
+    path('tipomaterial/registro/', views.tipo_material_registro, name='tipomaterial_registro'),
+    path('tipomaterial/<int:pk>/update/', views.tipo_material_actualizar, name='tipomaterial_actualizar'),
+    path('tipomaterial/<int:pk>/delete/', views.tipo_material_delete, name='tipomaterial_delete'),
 
     path('contenido/', views.contenido_educativo_admin, name='contenido_admin'),
     path('contenido/nuevo/', views.contenido_crear, name='contenido_crear'),

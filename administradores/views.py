@@ -1,9 +1,10 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from core.models import Recicladoras
-from core.models import Usuarios, Roles
+from django.urls import reverse, reverse_lazy
+from core.models import Usuarios, Roles, Recicladoras
 from django.contrib import messages
-from core.models import ContenidoEducativo
+from core.models import ContenidoEducativo, TipoMaterialReciclable
 from usuarios.views import convertir_a_embed
 from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import user_passes_test
@@ -11,15 +12,16 @@ from core.auth import login_required
 import subprocess, datetime, os
 from django.conf import settings
 from .forms import UsuarioForm
-from core.models import (
-    Entregas,
-    Publicaciones,
-    Recicladoras,
-    UsuariosRecompensas,
-    UsuariosRetos,
-    PuntosReciclaje,
-    EntregaMaterialReciclado
-)
+from .forms import TipoMaterialReciclableForm
+# from core.models import (
+#     Entregas,
+#     Publicaciones,
+#     Recicladoras,
+#     UsuariosRecompensas,
+#     UsuariosRetos,
+#     PuntosReciclaje,
+#     EntregaMaterialReciclado
+# )
 from django.db import transaction,  IntegrityError
 
 # Create your views here.
@@ -140,6 +142,71 @@ def recicladora_eliminar(request, pk):
         return redirect('administradores:ver_recicladoras')
     return render(request, 'administradores/recicladoras_confirm_delete.html', {'recicladora': recicladora})
 
+
+# Listar todos los tipos de material
+def tipo_material_list(request):
+    tipos_material = TipoMaterialReciclable.objects.all()
+    return render(request, "administradores/tipomaterial_list.html", {"tipos_material": tipos_material})
+
+def tipo_material_registro(request):
+    if request.method == "POST":
+        try:
+            nombre = request.POST.get("nombre")
+            descripcion = request.POST.get("descripcion")
+            tiempo_descomposicion = request.POST.get("tiempo_descomposicion")
+            imagen = request.FILES.get('imagen')
+            
+            # Validación manual de formato/size
+            if imagen:
+                ext = os.path.splitext(imagen.name)[1].lower()
+                if ext not in ['.jpg', '.jpeg', '.png']:
+                    raise Exception("Sólo imágenes JPG, JPEG y PNG.")
+                if imagen.size > 3 * 1024 * 1024 * 1024:
+                    raise Exception("Imagen demasiado grande. Máximo 10MB.")
+                
+                
+            
+            TipoMaterialReciclable.objects.create(
+                nombre=nombre,
+                descripcion = descripcion,
+                tiempo_descomposicion = tiempo_descomposicion,
+                imagen = imagen
+            )
+            
+            print("tipo de material insertado con éxito.")
+            return redirect("administradores:index")
+
+        except Exception as e:
+            print("Error al insertar:")
+            traceback.print_exc()
+            return redirect("administradores:tipomaterial_registro")
+
+    return render(request, "administradores/tipomaterial_registro.html")
+
+# Actualizar un tipo de material existente
+def tipo_material_actualizar(request, pk):
+    tipo_material = get_object_or_404(TipoMaterialReciclable, pk=pk)
+    if request.method == "POST":
+        form = TipoMaterialReciclableForm(request.POST, request.FILES, instance=tipo_material, is_update=True)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('administradores:tipomaterial_list'))
+        else:
+            print("Formulario inválido:", form.errors)
+    else:
+        form = TipoMaterialReciclableForm(instance=tipo_material, is_update=True)
+    return render(request, "administradores/tipomaterial_actualizar.html", {"form": form})
+
+
+def tipo_material_delete(request, pk):
+    tipo_material = get_object_or_404(TipoMaterialReciclable, pk=pk)
+
+    if request.method == "POST":
+        tipo_material.delete()
+        return redirect(reverse('administradores:tipomaterial_list'))
+
+    # Si es GET, renderiza la plantilla de confirmación
+    return render(request, "administradores/tipomaterial_delete.html", {"object": tipo_material})
 
 # def listar_usuarios(request):
 #     usuarios = Usuarios.objects.all()
