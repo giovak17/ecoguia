@@ -1,3 +1,4 @@
+
 create table roles (
  id_rol Serial Primary key,
  Nombre Varchar(20),
@@ -174,7 +175,8 @@ INSERT INTO usuarios (nombre, ap_paterno, ap_materno, correo, contrasena, fecha_
 ('Lucía', 'Fernández', 'Pérez', 'lucia@correo.com', 'lucia456', '1995-12-03', 0, 3),
 ('David', 'Torres', 'Hernández', 'admin@correo.com', 'admin123', '1985-05-30', 0, 1),
 -- RECICLADORA
-('Alan', 'Sanchez', 'Perez', 'recicladora@correo.com', 'rec123', '2000-03-30', 0, 3); 
+('Alan', 'Sanchez', 'Perez', 'recicladora@correo.com', 'rec123', '2000-03-30', 0, 3), 
+('arath', 'porcayo', 'mercado', 'arath@gmail.com', 'arath07', '2000-03-30', 0, 3); 
 ----mas registros para recicladoras
 INSERT INTO usuarios (nombre, ap_paterno, ap_materno, correo, contrasena, fecha_nacimiento, total_recompensas, id_rol) VALUES 
 

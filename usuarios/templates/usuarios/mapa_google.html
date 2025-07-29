@@ -4,53 +4,113 @@
 {% block content %}
 <div class="container mt-4">
   <h2 class="mb-4 text-center">Mapa de Puntos de Reciclaje</h2>
+
+  <!-- Botones para filtrar por materiales -->
+  <div class="filter-buttons text-center mb-3">
+    <button class="btn btn-primary mx-1" onclick="filtrarMaterial(null)">Todos</button>
+    <button class="btn btn-outline-primary mx-1" onclick="filtrarMaterial(1)">Aluminio</button>
+    <button class="btn btn-outline-primary mx-1" onclick="filtrarMaterial(2)">Plástico</button>
+    <button class="btn btn-outline-primary mx-1" onclick="filtrarMaterial(3)">Vidrio</button>
+    <!-- Cambia los ids y nombres según tus materiales en la base de datos -->
+  </div>
+
   <div id="map" style="height: 600px; width: 100%;" class="rounded shadow"></div>
 
-  {# INYECTA LOS DATOS COMO JSON (fuera del script principal) #}
-  {{ puntos|json_script:"puntosData" }}
+  {# Ya no inyectamos puntos en JSON inicial, ya usaremos Ajax para cargarlos #}
+  {# {{ puntos|json_script:"puntosData" }} #}
 </div>
 
 <script>
+  let map;
+  let markers = [];
+
   function initMap() {
     const centroMexico = { lat: 23.6345, lng: -102.5528 };
-    const map = new google.maps.Map(document.getElementById("map"), {
+    map = new google.maps.Map(document.getElementById("map"), {
       zoom: 5,
       center: centroMexico,
     });
 
-    const data = JSON.parse(document.getElementById('puntosData').textContent);
+    // Carga inicial: todos los puntos sin filtro
+    cargarPuntos();
+  }
 
-    data.forEach(punto => {
-      if (punto.latitud && punto.longitud) {
-        const marker = new google.maps.Marker({
-          position: {
-            lat: parseFloat(punto.latitud),
-            lng: parseFloat(punto.longitud)
-          },
-          map: map,
-          title: punto.nombre,
+  // Limpia todos los marcadores del mapa
+  function limpiarMarkers() {
+    markers.forEach(marker => marker.setMap(null));
+    markers = [];
+  }
+
+  // Carga puntos con filtro opcional de materialId desde backend vía AJAX
+  function cargarPuntos(materialId=null) {
+    let url = '/api/puntos/';
+    if (materialId !== null) {
+      url += `?material=${materialId}`;
+    }
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        limpiarMarkers();
+
+        data.forEach(punto => {
+          if (punto.latitud && punto.longitud) {
+            const marker = new google.maps.Marker({
+              position: {
+                lat: parseFloat(punto.latitud),
+                lng: parseFloat(punto.longitud),
+              },
+              map: map,
+              title: punto.nombre,
+            });
+
+            const info = `
+              <strong>${punto.nombre}</strong><br>
+              ${punto.ubicacion || ''}
+            `;
+
+            const infoWindow = new google.maps.InfoWindow({ content: info });
+
+            marker.addListener("click", () => {
+              infoWindow.open(map, marker);
+            });
+
+            markers.push(marker);
+          }
         });
+      })
+      .catch(error => {
+        console.error('Error cargando puntos:', error);
+        alert('Error al cargar los puntos de reciclaje.');
+      });
+  }
 
-        const info = `
-          <strong>${punto.nombre}</strong><br>
-          ${punto.ubicacion || ''}<br>
-          Ciudad: ${punto.ciudad || ''}
-        `;
+  // Función llamada por los botones para aplicar filtro dinámico
+  function filtrarMaterial(materialId) {
+    cargarPuntos(materialId);
+    actualizarBotones(materialId);
+  }
 
-        const infoWindow = new google.maps.InfoWindow({
-          content: info
-        });
-
-        marker.addListener("click", () => {
-          infoWindow.open(map, marker);
-        });
-      }
+  // Actualiza estilo de botones para visualizar el seleccionado
+  function actualizarBotones(materialId) {
+    document.querySelectorAll('.filter-buttons button').forEach(btn => {
+      btn.classList.remove('btn-primary');
+      btn.classList.add('btn-outline-primary');
     });
+    // Si materialId es null, marca el primer botón (Todos)
+    if (materialId === null) {
+      document.querySelector('.filter-buttons button:first-child').classList.add('btn-primary');
+    } else {
+      // Marca el botón con onclick correspondiente al materialId
+      const btn = Array.from(document.querySelectorAll('.filter-buttons button'))
+        .find(b => b.getAttribute('onclick') === `filtrarMaterial(${materialId})`);
+      if (btn) btn.classList.add('btn-primary');
+    }
   }
 </script>
 
 <!-- Carga de la API de Google Maps -->
 <script async defer
-  src="https://maps.googleapis.com/maps/api/js?AIzaSyCiBcErtVcaDxIf-wdwDLMRu4yktRoxIig&callback=initMap">
+  src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY_AQUI&callback=initMap">
 </script>
 {% endblock %}
