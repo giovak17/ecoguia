@@ -1,57 +1,64 @@
+
 {% extends "usuarios/base.html" %}
+{% load static %}
 
 {% block title %}Mi Perfil{% endblock %}
 
 {% block content %}
+<!-- Font Awesome CDN -->
+{% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-mQwJQ5EoQygIxD03JdKX7a6n3QWeH0T2CquCChYdSJyRWK/tVvQEDvcK7NE0vTYnWZfQxw7e8lz6EtZ+I71P1w==" crossorigin="anonymous" referrerpolicy="no-referrer" /> {% endcomment %}
+<link rel="stylesheet" href="{% static 'css/perfil.css' %}">
 
-{% comment %} Sin estilos temporalmente {% endcomment %}
-<div style="margin-top:10rem; padding: 4rem;">
-  <h2>Mi Perfil</h2>
-  <form method="post" action="">
+<div class="profile-container">
+  <div class="profile-header">
+    <h2>Mi Perfil</h2>
+
+    {% if modo_edicion %}
+      <!-- Submit via icon -->
+      <button type="submit" form="perfil-form" title="Guardar Cambios" class="icon-button">
+        <i class="fas fa-check"></i>
+      </button>
+    {% else %}
+      <!-- Edit mode via GET -->
+      <form method="get">
+        <button type="submit" name="editar" value="1" title="Editar Perfil" class="icon-button">
+          <i class="fas fa-pen"></i>
+        </button>
+      </form>
+    {% endif %}
+  </div>
+
+  <form method="post" action="" id="perfil-form">
     {% csrf_token %}
 
-    <div>
-      <label for="nombre">Nombre:</label>
-      <br>
+    <div class="form-group">
+      <label for="nombre"><i class="fas fa-user"></i> Nombre:</label>
       <input type="text" id="nombre" name="nombre" value="{{ usuario.nombre|default_if_none:'' }}"{% if not modo_edicion %} readonly{% endif %}>
     </div>
 
-    <div>
-      <label for="ap_paterno">Apellido Paterno:</label>
-      <br>
+    <div class="form-group">
+      <label for="ap_paterno"><i class="fas fa-user-tag"></i> Apellido Paterno:</label>
       <input type="text" id="ap_paterno" name="ap_paterno" value="{{ usuario.ap_paterno|default_if_none:'' }}"{% if not modo_edicion %} readonly{% endif %}>
     </div>
 
-    <div>
-      <label for="ap_materno">Apellido Materno:</label>
-      <br>
+    <div class="form-group">
+      <label for="ap_materno"><i class="fas fa-user-tag"></i> Apellido Materno:</label>
       <input type="text" id="ap_materno" name="ap_materno" value="{{ usuario.ap_materno|default_if_none:'' }}"{% if not modo_edicion %} readonly{% endif %}>
     </div>
 
-    <div>
-      <label for="correo">Correo Electrónico:</label>
-      <br>
+    <div class="form-group">
+      <label for="correo"><i class="fas fa-envelope"></i> Correo Electrónico:</label>
       <input type="email" id="correo" name="correo" value="{{ usuario.correo|default_if_none:'' }}"{% if not modo_edicion %} readonly{% endif %}>
     </div>
 
-    <div>
-      <label for="contrasena">Contraseña:</label>
-      <br>
-      <input type="password" id="contrasena" name="contrasena" value="{{ usuario.contrasena|default_if_none:'' }}"{% if not modo_edicion %} readonly{% endif %}>
+    <div class="form-group">
+      <label for="contrasena"><i class="fas fa-lock"></i> Contraseña:</label>
+      <input type="password" id="contrasena" name="contrasena" value="{{ usuario.contrasena|default_if_none:'' }}"{% if not modo_edicion %} readonly{% endif %} required>
     </div>
 
-    <div>
-      <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
-      <br>
+    <div class="form-group">
+      <label for="fecha_nacimiento"><i class="fas fa-calendar-alt"></i> Fecha de Nacimiento:</label>
       <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ usuario.fecha_nacimiento|date:'Y-m-d' }}"{% if not modo_edicion %} readonly{% endif %}>
-    </div>
-
-    <div>
-      {% if modo_edicion %}
-        <button type="submit">Guardar Cambios</button>
-      {% else %}
-        <a href="?editar=1"><button type="button">Editar Perfil</button></a>
-      {% endif %}
     </div>
   </form>
 </div>
