@@ -46,8 +46,8 @@
                     {% endif %}
                 </td>
                 <td>
-                    <a href="{% url 'administradores:editar_usuario' usuario.id_usuario %}">Editar</a> |
-                    <a href="{% url 'administradores:eliminar_usuario' usuario.id_usuario %}">Eliminar</a>
+                    <a href="{% url 'administradores:editar_usuario' usuario.id_usuario %}"><i class='bx bxs-edit-alt' style="color: #67AE6E;"></i></a> |
+                    <a href="{% url 'administradores:eliminar_usuario' usuario.id_usuario %}"><i class='bx bxs-trash-alt' style="color: #67AE6E;"></i></a>
                 </td>
             </tr>
             {% endfor %}

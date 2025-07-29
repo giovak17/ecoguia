@@ -26,10 +26,10 @@
                     <h5 class="card-title d-flex justify-content-between">
                         {{ r.nombre }}
                         <span>
-                            <a href="{% url 'administradores:recicladora_editar' r.codigo_recicladora %}" class="btn btn-sm btn-secondary me-2">
+                            <a href="{% url 'administradores:recicladora_editar' r.codigo_recicladora %}" class="btn btn-download" style="background-color: #67AE6E; color:#ffff; border-radius: 30px">
                                 <i class="bi bi-pencil"></i>Editar
                             </a>
-                            <a href="{% url 'administradores:recicladora_eliminar' r.codigo_recicladora %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de eliminar esta recicladora?');">
+                            <a href="{% url 'administradores:recicladora_eliminar' r.codigo_recicladora %}" class="btn btn-download" style="background-color: #328E6E; color:#ffff; border-radius: 30px" onclick="return confirm('¿Estás seguro de eliminar esta recicladora?');">
                                 Eliminar
                             </a>
                         </span>

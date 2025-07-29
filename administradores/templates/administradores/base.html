@@ -24,10 +24,10 @@
 				</a>
 			</li>
 
-			<li >
-			<a href="#">
-				<i class='bx bxs-check-square'></i><span class="text">Solicitud de Recicladoras</span>
-			</a>
+			<li class="{% if request.resolver_match.url_name == 'aprobar_recicladoras' %}active{% endif %}">
+				<a href="{% url 'administradores:aprobar_recicladoras' %}">
+					<i class='bx bxs-check-square'></i><span class="text">Solicitud de Recicladoras</span>
+				</a>
 			</li>
 			
 			<li class="{% if request.resolver_match.url_name == 'listar_usuarios' %}active{% endif %}">
