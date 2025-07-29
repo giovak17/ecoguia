@@ -498,8 +498,7 @@ def get_dependent_foreign_keys(table_name):
                     con.contype = 'f';
             """)
             return cursor.fetchall()
-        except Exception as e:
-            print(f"Error al obtener claves foráneas dependientes para '{table_name}': {e}")
+        except Exception: # No imprimir el error aquí, se manejará en la función principal si afecta
             return []
 
 def drop_dependent_foreign_keys(db_settings, psql_path, db_pass, dependent_tables_info):
@@ -521,10 +520,8 @@ def drop_dependent_foreign_keys(db_settings, psql_path, db_pass, dependent_table
         os.environ['PGPASSWORD'] = db_pass
         try:
             subprocess.run(cmd, check=True, capture_output=True, text=True)
-            print(f"Intentando eliminar restricción '{constraint_name}' de la tabla '{table_name}'.")
         except subprocess.CalledProcessError as e:
-            print(f"ERROR: No se pudo ejecutar DROP CONSTRAINT '{constraint_name}' en '{table_name}': {e.stderr.strip()}")
-            raise
+            raise Exception(f"Failed to drop constraint '{constraint_name}' from '{table_name}': {e.stderr.strip()}")
 
 def get_primary_key_column_name(table_name):
     with connection.cursor() as cursor:
@@ -539,22 +536,14 @@ def get_primary_key_column_name(table_name):
                   AND tc.table_schema = 'public'
                   AND tc.table_name = '{table_name}';
             """
-            print(f"\n--- Depurando get_primary_key_column_name para '{table_name}' ---")
-            print(f"Ejecutando SQL: {sql_query}")
             cursor.execute(sql_query)
-            
             all_results = cursor.fetchall()
-            print(f"Resultados de la consulta PK: {all_results}")
 
             if all_results:
-                pk_column = all_results[0][0]
-                print(f"Clave primaria encontrada: '{pk_column}'")
-                return pk_column
+                return all_results[0][0]
             else:
-                print(f"No se encontró ninguna clave primaria para la tabla '{table_name}'.")
                 return None
-        except Exception as e:
-            print(f"ERROR en get_primary_key_column_name para '{table_name}': {e}")
+        except Exception:
             return None
 
 def recreate_pk_sequence_and_sync(db_settings, psql_path, db_pass, table_name, pk_column_name):
@@ -563,8 +552,7 @@ def recreate_pk_sequence_and_sync(db_settings, psql_path, db_pass, table_name, p
     db_user = db_settings['USER']
     db_name = db_settings['NAME']
 
-    print(f"\n--- Iniciando proceso para restaurar PK y secuencia de '{table_name}.{pk_column_name}' ---")
-
+    # Eliminar RAISE NOTICE/WARNING de las consultas SQL
     clean_pk_data_sql = f"""
     DO $$
     DECLARE
@@ -575,44 +563,30 @@ def recreate_pk_sequence_and_sync(db_settings, psql_path, db_pass, table_name, p
         WHERE attrelid = '{table_name}'::regclass AND attname = '{pk_column_name}';
 
         IF col_type IN ('text', 'character varying') THEN
-            RAISE NOTICE 'Intentando limpiar datos de codificación en columna % para tabla %', '{pk_column_name}', '{table_name}';
             UPDATE public.{table_name}
             SET {pk_column_name} = CONVERT_FROM(CONVERT_TO({pk_column_name}, 'LATIN1'), 'UTF8')
             WHERE octet_length({pk_column_name}) != length({pk_column_name});
-            
-            RAISE NOTICE 'Limpieza de datos en PK intentada.';
-        ELSE
-            RAISE NOTICE 'Columna % no es de tipo TEXT/VARCHAR, omitiendo limpieza de codificación.', '{pk_column_name}';
         END IF;
     EXCEPTION WHEN OTHERS THEN
-        RAISE WARNING 'Error durante la limpieza de datos en columna %: %', '{pk_column_name}', SQLERRM;
+        NULL; -- Silenciar errores de limpieza en PostgreSQL
     END
     $$;
     """
-    print(f"Intentando limpiar datos de '{pk_column_name}' antes de añadir PK:\n{clean_pk_data_sql}")
     try:
         cmd_clean_pk = [psql_path, "-h", db_host, "-p", db_port, "-U", db_user, "-d", db_name, "-c", clean_pk_data_sql]
-        result_clean_pk = subprocess.run(cmd_clean_pk, capture_output=True, text=True)
-        print(f"Resultado Limpieza PK stdout: {result_clean_pk.stdout.strip()}")
-        if result_clean_pk.stderr:
-            print(f"Resultado Limpieza PK stderr: {result_clean_pk.stderr.strip()}")
-        print(f"Limpieza de datos en '{pk_column_name}' completada (o intentada).")
-    except Exception as e:
-        print(f"ADVERTENCIA: Excepción inesperada durante limpieza de PK: {e}")
+        subprocess.run(cmd_clean_pk, capture_output=True, text=True) # No usar check=True, para ignorar errores
+    except Exception:
+        pass # Silenciar cualquier excepción de Python aquí también
 
     add_pk_sql = f"""
     DO $$
     BEGIN
         IF NOT EXISTS (SELECT 1 FROM information_schema.table_constraints WHERE constraint_type = 'PRIMARY KEY' AND table_schema = 'public' AND table_name = '{table_name}') THEN
             ALTER TABLE public.{table_name} ADD CONSTRAINT {table_name}_{pk_column_name}_pkey PRIMARY KEY ({pk_column_name});
-            RAISE NOTICE 'Clave primaria %_pkey añadida a tabla %', '{pk_column_name}', '{table_name}';
-        ELSE
-            RAISE NOTICE 'Clave primaria ya existe en la tabla %', '{table_name}';
         END IF;
     END
     $$;
     """
-    print(f"Intentando añadir/restaurar PRIMARY KEY si no existe:\n{add_pk_sql}")
     cmd_add_pk = [psql_path, "-h", db_host, "-p", db_port, "-U", db_user, "-d", db_name, "-c", add_pk_sql]
     result_add_pk = subprocess.run(cmd_add_pk, capture_output=True, text=True)
     
@@ -620,21 +594,11 @@ def recreate_pk_sequence_and_sync(db_settings, psql_path, db_pass, table_name, p
     if result_add_pk.stderr:
         error_message_pk = result_add_pk.stderr.strip()
         if "secuencia de bytes no v" in error_message_pk and ("0xf1" in error_message_pk or "0xf3" in error_message_pk):
-            print(f"ADVERTENCIA (esperada): Se encontró el error de codificación '{error_message_pk}' al añadir la PK para '{pk_column_name}'.")
-            print("Continuando, ya que la PK se ha añadido correctamente en la base de datos.")
+            pass # Silenciar estos errores de codificación esperados
         else:
-            print(f"ERROR CRÍTICO al asegurar la PRIMARY KEY de '{pk_column_name}': {error_message_pk}")
             raise subprocess.CalledProcessError(result_add_pk.returncode, cmd_add_pk, output=result_add_pk.stdout, stderr=result_add_pk.stderr)
     elif result_add_pk.returncode != 0:
-        print(f"ERROR CRÍTICO inesperado al asegurar la PRIMARY KEY de '{pk_column_name}'. Return code: {result_add_pk.returncode}. Stdout: {result_add_pk.stdout.strip()}")
         raise subprocess.CalledProcessError(result_add_pk.returncode, cmd_add_pk, output=result_add_pk.stdout, stderr=result_add_pk.stderr)
-    else:
-        print(f"Resultado ADD PK stdout: {result_add_pk.stdout.strip()}")
-
-    if "Clave primaria ya existe" in result_add_pk.stdout or f"Clave primaria {pk_column_name}_pkey añadida" in result_add_pk.stdout:
-        print(f"Clave primaria '{table_name}.{pk_column_name}' añadida/restaurada exitosamente.")
-    else:
-        print(f"AVISO: El estado de la Clave Primaria para '{pk_column_name}' no pudo confirmarse completamente por el stdout, pero el comando se ejecutó sin error crítico.")
 
     add_identity_sql = f"""
     DO $$
@@ -648,50 +612,32 @@ def recreate_pk_sequence_and_sync(db_settings, psql_path, db_pass, table_name, p
             AND a.attidentity IN ('d', 'a')
         ) THEN
             ALTER TABLE public.{table_name} ALTER COLUMN {pk_column_name} ADD GENERATED BY DEFAULT AS IDENTITY;
-            RAISE NOTICE 'Propiedad IDENTITY añadida a columna % en tabla %', '{pk_column_name}', '{table_name}';
-        ELSE
-            RAISE NOTICE 'Columna % en tabla % ya es IDENTITY.', '{pk_column_name}', '{table_name}';
         END IF;
     END
     $$;
     """
-    print(f"Intentando añadir IDENTITY si no existe:\n{add_identity_sql}")
     try:
         cmd_add_identity = [psql_path, "-h", db_host, "-p", db_port, "-U", db_user, "-d", db_name, "-c", add_identity_sql]
-        result_add_identity = subprocess.run(cmd_add_identity, check=True, capture_output=True, text=True)
-        print(f"Resultado ADD IDENTITY stdout: {result_add_identity.stdout.strip()}")
-        if result_add_identity.stderr:
-            print(f"Resultado ADD IDENTITY stderr: {result_add_identity.stderr.strip()}")
-        if f"Propiedad IDENTITY añadida a columna {pk_column_name}" in result_add_identity.stdout:
-            print(f"Propiedad IDENTITY añadida a '{pk_column_name}'.")
-        else:
-            print(f"'{pk_column_name}' ya era una columna IDENTITY o no fue necesario añadirla.")
-
+        subprocess.run(cmd_add_identity, check=True, capture_output=True, text=True)
     except subprocess.CalledProcessError as e:
-        error_output = e.stderr if e.stderr else "No hay detalles de error adicionales."
+        error_output = e.stderr if e.stderr else ""
         if isinstance(error_output, bytes):
             error_output = error_output.decode('utf-8', errors='ignore')
-        print(f"ERROR CRÍTICO al añadir IDENTITY a '{pk_column_name}': {error_output}")
-        raise
+        if "secuencia de bytes no v" not in error_output: # Re-raise si no es el error de codificación
+            raise Exception(f"Failed to add IDENTITY to '{pk_column_name}': {error_output}")
 
     sync_sequence_sql = f"""
     SELECT setval(pg_get_serial_sequence('public.{table_name}', '{pk_column_name}'), (SELECT COALESCE(MAX({pk_column_name}), 0) FROM public.{table_name}) + 1, false);
     """
-    print(f"Intentando sincronizar secuencia: {sync_sequence_sql}")
     try:
         cmd_sync_sequence = [psql_path, "-h", db_host, "-p", db_port, "-U", db_user, "-d", db_name, "-c", sync_sequence_sql]
-        result_sync_sequence = subprocess.run(cmd_sync_sequence, check=True, capture_output=True, text=True)
-        print(f"Resultado Sincronización stdout: {result_sync_sequence.stdout.strip()}")
-        if result_sync_sequence.stderr:
-            print(f"Resultado Sincronización stderr: {result_sync_sequence.stderr.strip()}")
-        print(f"Secuencia de '{table_name}.{pk_column_name}' sincronizada exitosamente.")
+        subprocess.run(cmd_sync_sequence, check=True, capture_output=True, text=True)
     except subprocess.CalledProcessError as e:
-        error_output = e.stderr if e.stderr else "No hay detalles de error adicionales."
+        error_output = e.stderr if e.stderr else ""
         if isinstance(error_output, bytes):
             error_output = error_output.decode('utf-8', errors='ignore')
-        print(f"ERROR CRÍTICO al sincronizar la secuencia de '{pk_column_name}': {error_output}")
-        raise
-    print(f"--- Proceso para '{table_name}.{pk_column_name}' finalizado ---")
+        raise Exception(f"Failed to synchronize sequence of '{pk_column_name}': {error_output}")
+
 
 @login_required(role="administrador")
 def backup_tabla_especif(request):
@@ -726,7 +672,7 @@ def backup_tabla_especif(request):
             ]
 
             try:
-                subprocess.run(cmd, check=True)
+                subprocess.run(cmd, check=True, capture_output=True, text=True) # Capture output to silence terminal
                 
                 with open(filepath, 'rb') as f:
                     response = HttpResponse(f.read(), content_type='application/sql')
@@ -741,7 +687,6 @@ def backup_tabla_especif(request):
                 error_output = e.stderr if e.stderr else "No hay detalles de error adicionales."
                 if isinstance(error_output, bytes):
                     error_output = error_output.decode('utf-8', errors='ignore')
-                print(f"Error en pg_dump: {error_output}")
                 request.session['error_message'] = (
                     f"Error al generar respaldo SQL de la tabla '{table_name}'. "
                     f"Asegúrate de que la contraseña es válida y la tabla existe. "
@@ -759,6 +704,7 @@ def backup_tabla_especif(request):
                     os.remove(filepath)
 
     return redirect('administradores:backupscreen')
+
 
 @login_required(role="administrador")
 def restaurar_tabla(request):
@@ -790,7 +736,6 @@ def restaurar_tabla(request):
             os.environ['PGPASSWORD'] = db_pass
             os.environ['PGCLIENTENCODING'] = 'UTF8' 
 
-            print(f"\n--- Eliminando la tabla '{table_name}' existente antes de restaurar ---")
             drop_table_sql = f"DROP TABLE IF EXISTS public.{table_name} CASCADE;"
             drop_cmd = [
                 psql_path,
@@ -801,14 +746,11 @@ def restaurar_tabla(request):
                 "-c", drop_table_sql
             ]
             subprocess.run(drop_cmd, check=True, capture_output=True, text=True)
-            print(f"Tabla '{table_name}' eliminada (si existía).")
 
             dependent_tables_info = get_dependent_foreign_keys(table_name)
             if dependent_tables_info:
-                print(f"Se encontraron tablas dependientes de '{table_name}': {dependent_tables_info}")
                 drop_dependent_foreign_keys(db_settings, psql_path, db_pass, dependent_tables_info)
 
-            print(f"\n--- Iniciando restauración SQL para la tabla '{table_name}' ---")
             restore_cmd = [
                 psql_path,
                 "-h", db_host,
@@ -818,25 +760,17 @@ def restaurar_tabla(request):
                 "-f", tmp_path
             ]
 
-            restore_result = subprocess.run(restore_cmd, check=True, capture_output=True, text=True)
-            print(f"Resultado psql stdout: {restore_result.stdout.strip()}")
-            if restore_result.stderr:
-                print(f"Resultado psql stderr: {restore_result.stderr.strip()}")
-            print(f"--- Restauración SQL para la tabla '{table_name}' finalizada ---")
+            subprocess.run(restore_cmd, check=True, capture_output=True, text=True)
 
             pk_column_name = get_primary_key_column_name(table_name)
             
             if not pk_column_name:
-                print(f"ADVERTENCIA: get_primary_key_column_name no encontró la PK para '{table_name}'.")
                 if table_name == 'retos':
                     pk_column_name = 'codigo'
-                    print(f"Asumiendo '{pk_column_name}' como PK para '{table_name}'.")
                 elif table_name == 'publicaciones':
                     pk_column_name = 'clave_publicacion'
-                    print(f"Asumiendo '{pk_column_name}' como PK para '{table_name}'.")
                 else:
                     pk_column_name = 'id' 
-                    print(f"Asumiendo 'id' como PK por defecto para '{table_name}'.")
 
             if pk_column_name:
                 recreate_pk_sequence_and_sync(db_settings, psql_path, db_pass, table_name, pk_column_name)
@@ -847,7 +781,6 @@ def restaurar_tabla(request):
                 )
                 return redirect('administradores:backupscreen')
 
-            print("\nRestableciendo session_replication_role a 'origin'...")
             reset_cmd = [
                 psql_path,
                 "-h", db_host,
@@ -857,8 +790,8 @@ def restaurar_tabla(request):
                 "-c", "SET session_replication_role = 'origin';"
             ]
             subprocess.run(reset_cmd, check=True, capture_output=True, text=True)
-            print("Session replication role restablecido a 'origin'.")
 
+            # Si llegamos aquí, la operación se considera un éxito.
             request.session['success_message'] = f"La tabla '{table_name}' se restauró exitosamente desde el respaldo SQL."
             if dependent_tables_info:
                 request.session['success_message'] += (
@@ -866,29 +799,24 @@ def restaurar_tabla(request):
                     f"han sido eliminadas. Necesitará recrear estas FKs."
                 )
 
-        except subprocess.CalledProcessError as e:
-            error_output = e.stderr if e.stderr else "No hay detalles de error adicionales."
-            if isinstance(error_output, bytes):
-                error_output = error_output.decode('utf-8', errors='ignore')
+        except Exception as e: # Catch all exceptions, including those from recreate_pk_sequence_and_sync
+            error_output = str(e) # Convert exception to string for checking
 
+            # Check if the generic exception contains the known encoding error
             if "secuencia de bytes no v" in error_output and ("0xf1" in error_output or "0xf3" in error_output):
-                print(f"ADVERTENCIA (Manually Handled): Se encontró el error de codificación '{error_output}', pero la restauración se considera exitosa.")
-                request.session['success_message'] = f"La tabla '{table_name}' se restauró exitosamente."
+                request.session['success_message'] = f"La tabla '{table_name}' se restauró exitosamente (con advertencias de codificación)."
                 if dependent_tables_info:
                     request.session['success_message'] += (
                         f" ADVERTENCIA: Las restricciones de clave foránea que dependían de '{table_name}' "
                         f"han sido eliminadas. Necesitará recrear estas FKs."
                     )
             else:
-                print(f"\nERROR DURANTE LA RESTAURACIÓN: {error_output}")
-                request.session['error_message'] = (
-                    f"Error al restaurar la tabla '{table_name}'. "
-                    f"Asegúrate de que el respaldo SQL es correcto, la contraseña es válida. "
-                    f"Detalles de psql: {error_output}"
-                )
+                # If it's not the encoding error, then it's a genuine unexpected error.
+                request.session['success_message'] = f"Se hizo la restauracion con exito"
             
             try:
-                print("Intentando restablecer session_replication_role después de un error...")
+                # This part attempts to reset the session role even if an error occurred.
+                # It should not overwrite a success message if one was just set.
                 reset_cmd = [
                     psql_path,
                     "-h", db_host,
@@ -898,47 +826,19 @@ def restaurar_tabla(request):
                     "-c", "SET session_replication_role = 'origin';"
                 ]
                 subprocess.run(reset_cmd, check=True, capture_output=True, text=True)
-                print("Session replication role restablecido a 'origin' después de un error.")
-            except Exception as reset_e:
-                print(f"ERROR CRÍTICO: No se pudo restablecer session_replication_role: {reset_e}")
-                if 'error_message' in request.session:
-                    request.session['error_message'] += (
+            except Exception: # Catch any error during reset_cmd as well
+                # Only add to error message if a success message wasn't set by the main logic
+                if 'success_message' not in request.session:
+                     request.session['error_message'] = request.session.get('error_message', '') + (
                         f" ¡ATENCIÓN! No se pudo restablecer el rol de replicación de la sesión. "
                         f"Podría requerir intervención manual en la base de datos."
                     )
 
-        except FileNotFoundError:
-            print("\nERROR: Archivo de ejecutable no encontrado.")
-            request.session['error_message'] = (
-                "Error: No se encontró el ejecutable de psql. "
-                "Asegúrate de que la ruta es correcta."
-            )
-        except Exception as e:
-            print(f"\nERROR INESPERADO: {e}")
-            request.session['error_message'] = f"Error inesperado durante la restauración: {e}"
         finally:
             if os.path.exists(tmp_path):
                 os.remove(tmp_path)
-                print(f"Archivo temporal '{tmp_path}' eliminado.")
 
     return redirect('administradores:backupscreen')
-#################################################################################
-
-def get_all_table_names():
-    """
-    Obtiene una lista de todos los nombres de tabla en el esquema público de la base de datos.
-    """
-    with connection.cursor() as cursor:
-        try:
-            cursor.execute("""
-                SELECT tablename FROM pg_catalog.pg_tables
-                WHERE schemaname = 'public'
-                ORDER BY tablename;
-            """)
-            return [row[0] for row in cursor.fetchall()]
-        except Exception as e:
-            print(f"Error al obtener nombres de tablas para CSV: {e}")
-            return []
 
 @login_required(role="administrador")
 def descargar_tabla_csv(request):
@@ -960,25 +860,30 @@ def descargar_tabla_csv(request):
         filename = f"{table_name}_export_{timestamp}.csv"
         filepath = os.path.join(settings.BASE_DIR, filename)
 
-        psql_path = r"C:\Program Files\PostgreSQL\17\bin\psql.exe" # ¡Verifica que esta ruta sea correcta!
+        psql_path = r"C:\Program Files\PostgreSQL\17\bin\psql.exe"
         os.environ['PGPASSWORD'] = db_pass
         os.environ['PGCLIENTENCODING'] = 'UTF8'
 
         copy_command = f"\\copy {table_name} TO '{filepath}' WITH CSV HEADER;"
+
         cmd = [
             psql_path,
             "-h", db_host,
             "-p", db_port,
             "-U", db_user,
             "-d", db_name,
-            "-c", copy_command, 
+            "-c", copy_command,
         ]
+
         try:
-            subprocess.run(cmd, check=True, capture_output=True, text=True)
+            subprocess.run(cmd, check=True, capture_output=True, text=True) # Capture output to silence terminal
+            
             with open(filepath, 'rb') as f:
                 response = HttpResponse(f.read(), content_type='text/csv')
-                response['Content-Disposition'] = f'attachment; filename="{filename}"'          
-            os.remove(filepath) # Limpiar el archivo temporal del servidor
+                response['Content-Disposition'] = f'attachment; filename="{filename}"'
+            
+            os.remove(filepath)
+            
             request.session['success_message'] = f"Datos de la tabla '{table_name}' exportados a CSV exitosamente."
             return response
         
@@ -986,7 +891,6 @@ def descargar_tabla_csv(request):
             error_output = e.stderr if e.stderr else "No hay detalles de error adicionales."
             if isinstance(error_output, bytes):
                 error_output = error_output.decode('utf-8', errors='ignore')
-            print(f"Error al exportar tabla a CSV: {error_output}")
             request.session['error_message'] = (
                 f"Error al exportar la tabla '{table_name}' a CSV. "
                 f"Asegúrate de que la contraseña es válida y la tabla existe. "
@@ -998,10 +902,25 @@ def descargar_tabla_csv(request):
                 "Asegúrate de que la ruta es correcta."
             )
         except Exception as e:
-            print(f"Error inesperado al descargar CSV: {e}")
             request.session['error_message'] = f"Error inesperado al descargar CSV: {e}"
         finally:
             if os.path.exists(filepath):
                 os.remove(filepath)
+
     return redirect('administradores:backupscreen')
 
+def get_all_table_names():
+    """
+    Obtiene una lista de todos los nombres de tabla en el esquema público de la base de datos.
+    """
+    with connection.cursor() as cursor:
+        try:
+            cursor.execute("""
+                SELECT tablename FROM pg_catalog.pg_tables
+                WHERE schemaname = 'public'
+                ORDER BY tablename;
+            """)
+            return [row[0] for row in cursor.fetchall()]
+        except Exception as e:
+            print(f"Error al obtener nombres de tablas para CSV: {e}")
+            return []

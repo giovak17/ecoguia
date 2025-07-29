@@ -86,7 +86,7 @@
           <strong>Respaldo de Tabla</strong>
         </div>
         <div class="card-body bg-light rounded-bottom-4">
-          <p class="text-muted mb-4">Selecciona la tabla que deseas respaldar. Se generará un archivo <strong>.backup</strong>.</p>
+          <p class="text-muted mb-4">Selecciona la tabla que deseas respaldar. Se generará un archivo <strong>.sql</strong>.</p>
           <form action="{% url 'administradores:restaurar_tabla_archivo' %}" method="post">
             {% csrf_token %}
             <div class="mb-3">
@@ -118,7 +118,7 @@
           <strong>Restaurar Tabla Específica</strong>
         </div>
         <div class="card-body bg-light rounded-bottom-4">
-          <p class="text-muted mb-4">Sube un archivo <strong>.backup</strong> para restaurar una tabla específica.</p>
+          <p class="text-muted mb-4">Sube un archivo <strong>.sql</strong> para restaurar una tabla específica.</p>
           <form action="{% url 'administradores:restaurar_tabla_especifica' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="mb-3">
@@ -135,8 +135,8 @@
               </select>
             </div>
             <div class="mb-3">
-              <label class="form-label fw-semibold">Archivo de respaldo (.backup):</label>
-              <input type="file" name="backup_file" class="form-control" accept=".backup" required>
+              <label class="form-label fw-semibold">Archivo de respaldo (.sql):</label>
+              <input type="file" name="backup_file" class="form-control" accept=".sql" required>
             </div>
             <button type="submit" class="btn btn-warning text-dark w-100 fw-semibold" style="background-color: #328E6E; border-color: #328E6E; color: #ffff">
               Restaurar tabla
@@ -146,10 +146,10 @@
       </div>
     </section>
 
-<section class="section-card section-secondary"> {# Using 'section-secondary' or similar for custom styling, adjust as needed #}
+<section class="section-card section-secondary"> 
       <div class="card border-secondary shadow-sm rounded-4">
-        <div class="card-header rounded-top-4 d-flex align-items-center" style="color: #6c757d;"> {# Default secondary color #}
-          <i class="bi bi-file-earmark-spreadsheet me-2 fs-4"></i> {# Icon for spreadsheet/CSV #}
+        <div class="card-header rounded-top-4 d-flex align-items-center" style="color: #6c757d;"> 
+          <i class="bi bi-file-earmark-spreadsheet me-2 fs-4"></i> 
           <strong>Descargar Tabla a CSV</strong>
         </div>
         <div class="card-body bg-light rounded-bottom-4">
