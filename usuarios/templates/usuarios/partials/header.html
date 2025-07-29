@@ -18,40 +18,40 @@
       <!-- Menú colapsable -->
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="nav-links">
-          <li>
+          <!-- <li>
             <a class="{% if request.resolver_match.url_name == 'index' %}active{% endif %}" href="{% url 'usuarios:index' %}">Inicio</a>
-          </li>
+          </li> -->
           <li>
             <a class="{% if request.resolver_match.url_name == 'contenido_educativo' %}active{% endif %}" href="{% url 'usuarios:contenido_educativo' %}">Contenido Educativo</a>
           </li>
           <li>
-            <a class="{% if request.resolver_match.url_name == 'mostrarentregas' %}active{% endif %}" href="{% url 'usuarios:mostrarentregas' %}">Historial</a>
+            <a class="{% if request.resolver_match.url_name == 'mostrarentregas' %}active{% endif %}" href="{% url 'usuarios:mapa_puntos' %}">Mapa</a>
           </li>
           <li>
-            <a href="#">Acerca de</a>
+            <a class="{% if request.resolver_match.url_name == 'mostrarentregas' %}active{% endif %}" href="{% url 'usuarios:html_recicladoras_materiales' %}">Puntos de reciclaje</a>
           </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'recicladoras:clasificacion_materiales' %}">clasificaciones</a>
-                </li>
+          <li class="nav-item">
+              <a class="nav-link active" href="{% url 'recicladoras:clasificacion_materiales' %}">Clasificaciones</a>
+          </li>
         </ul>
       </div>
 
       <!-- Botones de usuario -->
-      <div class="d-flex ms-auto">
+      <div class="user-menu ms-auto">
         {% if request.user %}
           <div class="dropdown">
-            <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <button class="dropdown-toggle btn" id="userDropdown">
               {{ request.user.nombre }} {{ request.user.ap_paterno }}
             </button>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="{% url 'usuarios:perfil_usuario' %}">Perfil</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="{% url 'usuarios:logout' %}">Cerrar Sesión</a></li>
+            <ul class="dropdown-menu" id="dropdownMenu">
+              <li><a href="{% url 'usuarios:perfil_usuario' %}">👤 Perfil</a></li>
+              <li><hr></li>
+              <li><a class="logout" href="{% url 'usuarios:logout' %}">🚪 Cerrar Sesión</a></li>
             </ul>
           </div>
         {% else %}
-          <a href="{% url 'usuarios:login' %}" class="btn btn-outline">Inicias sesion</a>
-          <a href="{% url 'usuarios:registro' %}" class="btn">Registrarse</a>
+          <a href="{% url 'usuarios:login' %}" class="btn">Iniciar sesión</a>
+          <a href="{% url 'usuarios:registro' %}" class="btn btn-outline">Registrarse</a>
         {% endif %}
       </div>
 

@@ -1,0 +1,154 @@
+{% extends "usuarios/base.html" %}
+{% block title %}Puntos de Reciclaje{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="margin-top: 120px;">
+  <div class="section-title"><h3 >Puntos de reciclaje</h3></div>
+
+  <div class="grid-container">
+    {% for dato in datos %}
+      <section class="section-card full-height-card">
+        <div class="btn-center">
+          <h2 class="mb-2"  style="color: #67AE6E;">{{ dato.punto.nombre }}</h2>
+        </div>
+        <!-- Dirección -->
+        <div class="d-flex align-items-center gap-2">
+          <p class="mb-0"><i class='bx bxs-location-plus icon-style'></i> {{ dato.punto.ubicacion }}</p>
+        </div>
+
+        <!-- Ciudad -->
+        <div class="d-flex align-items-center gap-2">
+          <p class="mb-0"> <i class='bx bx-buildings icon-style'></i> {{ dato.punto.ciudad }}</p>
+        </div>
+
+        <!-- Teléfono -->
+        <div class="d-flex align-items-center gap-2">
+          
+          <p class="mb-0"> <i class='bx bx-phone icon-style'></i> {{ dato.punto.telefono }}</p>
+        </div>
+        <h5 class="mt-3">Materiales que acepta:</h5>
+        <ul>
+          {% for material in dato.materiales %}
+            <li class="btn btn-outline"><small>{{ material.nombre }}</small></li>
+          {% endfor %}
+        </ul>
+          <div class="btn-center mt-auto">
+            <button type="button" class="btn" style="background-color: #67AE6E; color: #fff;">
+              Ver más
+            </button>
+          </div>
+      </section>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 992px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.section-card {
+  padding: 1rem;
+  border-radius: 15px;
+  background: #f8f9fa;
+  box-shadow: 0 6px 15px rgba(100, 100, 100, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.section-card:hover {
+  box-shadow: 0 8px 25px rgba(100, 100, 100, 0.1);
+}
+
+label.form-label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #6c757d;
+}
+
+input.form-control {
+  border-radius: 8px;
+  box-shadow: inset 0 1px 3px rgba(100, 100, 100, 0.07);
+  transition: border-color 0.3s ease;
+  border: 1px solid #ced4da;
+}
+
+input.form-control:focus {
+  border-color: #adb5bd !important;
+  box-shadow: 0 0 6px #adb5bd;
+}
+
+.btn{
+    background-color: var(--primary-color);
+    display: inline-block;
+    padding: 12px 30px;
+    color: var(--white);
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s linear; 
+    margin-top: 20px;
+}
+
+.btn:hover{
+    background-color: var(--primary-color-dark);
+    transform: translateY(-3px);
+}
+
+.btn-outline{
+  margin-top: 10px;
+  padding: 6px 16px;      /* Menos espacio interno */
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+}
+
+.btn-outline:hover{
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.btn-center {
+  display: flex;
+  justify-content: center;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+input {
+  width: 50%;
+  padding: 12px 30px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.icon-style {
+  font-size: 1.5rem;       /* Tamaño del ícono */
+  color: #67AE6E;          /* Color verde a juego con tus botones */
+}
+
+.full-height-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.full-height-card ul {
+  margin-bottom: auto; /* Para que el espacio se use arriba del botón */
+}
+</style>
+{% endblock %}

@@ -2,14 +2,40 @@
 {% block title %}Mapa de Puntos de Reciclaje{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-  <h2 class="mb-4 text-center">Mapa de Puntos de Reciclaje</h2>
-  <div id="map" style="height: 600px; width: 100%;" class="rounded shadow"></div>
-
-  {# INYECTA LOS DATOS COMO JSON (fuera del script principal) #}
-  {{ puntos|json_script:"puntosData" }}
+<div class="container mt-4" style="margin-top: 120px;">
+  <div class="section-title"><h3>Mapa puntos de reciclaje</h3></div>
+    <!-- MAPA -->
+  <div id="map" style="height: 600px; width: 100%;" class="rounded shadow mt-4"></div>
+    {{ puntos|json_script:"puntosData" }}
+    <!-- FILTROS -->
+  <form method="GET" class="filtro-form mb-4">
+    <div class="row align-items-end">
+      <div class="col-md-4">
+        <label class="form-label">Material reciclable</label>
+        <select name="material" class="form-select">
+          <option value="">Todos</option>
+          {% for material in tipos_materiales %}
+            <option value="{{ material.nombre }}" {% if request.GET.material == material.nombre %}selected{% endif %}>
+              {{ material.nombre }}
+            </option>
+          {% empty %}
+            <option disabled>No hay materiales registrados</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Ciudad o ubicación</label>
+        <input type="text" name="ubicacion" class="form-control" value="{{ request.GET.ubicacion }}">
+      </div>
+      <div class="col-md-4">
+        <button type="submit" class="btn btn-success w-100">
+          <i class="bi bi-search"></i> Buscar
+        </button>
+      </div>
+    </div>
+  </form>
 </div>
-
+<!-- JS para el mapa -->
 <script>
   function initMap() {
     const centroMexico = { lat: 23.6345, lng: -102.5528 };
@@ -49,8 +75,8 @@
   }
 </script>
 
-<!-- Carga de la API de Google Maps -->
+<!-- Carga la API de Google Maps -->
 <script async defer
-  src="https://maps.googleapis.com/maps/api/js?AIzaSyCiBcErtVcaDxIf-wdwDLMRu4yktRoxIig&callback=initMap">
+  src="https://maps.googleapis.com/maps/api/js?key=api_key&callback=initMap">
 </script>
 {% endblock %}
