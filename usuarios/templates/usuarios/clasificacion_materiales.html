@@ -4,8 +4,6 @@
 <title>{% block title %} Clasificación de Materiales - EcoGuia {% endblock %}</title>
 {% block content %}
 
-
-
 <div class="cards-container">
   <h2>Material Reciclables</h2>
   <p>Selecciona el residuo que quieres conocer</p>
@@ -35,7 +33,6 @@
           <!-- Cuerpo del modal: texto y/o imagen -->
           <div class="modal-body modal-flex-body">
 
-
             <!-- Sección de texto con descripción y tiempo de descomposición -->
             <div class="modal-text-content">
               {% if material.descripcion %}
@@ -56,38 +53,53 @@
 <script>
   /* Función para resaltar la tarjeta seleccionada */
   function resaltar(card) {
-    document.querySelectorAll('.card-material').forEach(c => c.classList.remove('bg-light'));
+    // Quita la clase en todas, usa 'bg-light-green' según CSS
+    document.querySelectorAll('.card-material').forEach(c => c.classList.remove('bg-dark-green'));
     card.classList.add('bg-light-green');
   }
 
-  /* Abrir modal y bloquear scroll fondo */
-  function openModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
+ // Función para abrir modal
+function openModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden'; // Bloquea scroll cuando modal está abierto
   }
+}
 
-  /* Cerrar modal y restaurar scroll */
-  function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-      modal.classList.remove('active');
-      document.body.style.overflow = '';
-    }
+// Función para cerrar modal
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = ''; // Restaura scroll al cerrar modal
   }
+}
 
-  /* Cerrar modal cuando se hace click fuera del contenido */
-  document.addEventListener('click', function(event){
-    const modals = document.querySelectorAll('.modal-overlay.active');
-    modals.forEach(modal => {
-      if (event.target === modal) {
-        closeModal(modal.id);
-      }
-    });
+// Agregar listener a cada overlay para cerrar modal al hacer click fuera del contenido
+document.querySelectorAll('.modal-overlay').forEach(modal => {
+  modal.addEventListener('click', function(event) {
+    // Verifica que el clic fue en el overlay (no en el contenido interno)
+    if (event && event.target === modal) {
+      closeModal(modal.id);
+    }
   });
+});
+
+
+// Escuchar click en overlay para cerrar modal al clic fuera del contenido
+document.querySelectorAll('.modal-overlay').forEach(modal => {
+  modal.addEventListener('click', function(event) {
+    if (event && event.target === modal) {
+      closeModal(modal.id);
+    }
+  });
+});
+
+console.log('clic en', event.target);
+
 </script>
+
 <style>
 /* Estilo general para evitar que el body quede muy pegado arriba */
 body {
@@ -102,7 +114,7 @@ body {
   --light-blue: #E1EEBC;
   --dark-grey: #AAAAAA;
   --dark: #342E37;
-  --light-brillante: #f0faf6ff;
+  --light-brillante: #e0f3e9ff;
   --light-verde: #67AE6E;
 }
 
@@ -136,6 +148,7 @@ body {
   max-width: 240px; /* Limita el ancho para que no sea muy grande */
   margin: 0 auto;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative; /* necesario para ::before */
 }
 
 /* Hover y estado activo: cambio de color, sombra y zoom ligeramente la tarjeta */
@@ -308,15 +321,6 @@ body {
   padding: 1rem 0 0 0;
   text-align: center;
   color: var(--dark);
-}
-
-/* Imagen dentro del modal con tamaño fijo y borde redondeado */
-.modal-body img {
-  width: 220px;
-  height: 220px;
-  object-fit: cover;
-  border-radius: 1rem;
-  margin-bottom: 1rem;
 }
 
 /* Margen para párrafos dentro del modal */
