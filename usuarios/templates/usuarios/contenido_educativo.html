@@ -1,71 +1,222 @@
 {% extends 'usuarios/base.html' %}
 {% load static %}
 {% block content %}
-<div class="container">
-  <h1 class="mt-4 mb-4">Contenido Educativo</h1>
-  <div class="row g-4">
+<div class="contenedor">
+  <h1 class="titulo">Contenido Educativo</h1>
+  <div class="grid-contenido">
     {% for item in contenidos %}
-      <div class="col-12 col-md-6 col-lg-4 mb-4">
-        <div class="card" data-bs-toggle="modal" data-bs-target="#modal{{ forloop.counter }}" style="cursor: pointer;">
-          <div class="card-body">
-            <h5 class="card-title">{{ item.titulo }}</h5>
-            <p class="card-text">{{ item.descripcion }}</p>
+      <div class="tarjeta" onclick="abrirModal('modal{{ forloop.counter }}')">
+        <div class="tarjeta-cuerpo">
+          <h5 class="tarjeta-titulo">{{ item.titulo }}</h5>
+          <p class="tarjeta-texto">{{ item.descripcion }}</p>
 
-
-            {% if item.imagen %}
-              <!-- Imagen desde MEDIA -->
-              <img src="{{ item.imagen.url }}" class="img-fluid rounded" alt="{{ item.titulo }}">
-            
-            {% elif item.videos %}
-              <!-- Si el campo videos contiene un enlace de YouTube -->
-              {% if "youtube.com" in item.videos or "youtu.be" in item.videos %}
-                <div class="ratio ratio-16x9">
-                  <iframe src="{{item.videos_embed}}" allowfullscreen></iframe>
-                </div>
-              {% else %}
-                <!-- Si el campo videos es un archivo local -->
-                <div class="ratio ratio-16x9">
-                  <video controls class="w-100 rounded">
-                    <source src="{{ item.videos.url }}" type="video/mp4">
-                    Tu navegador no soporta videos.
-                  </video>
-                </div>
-              {% endif %}
+          {% if item.imagen %}
+            <img src="{{ item.imagen.url }}" class="imagen" alt="{{ item.titulo }}">
+          
+          {% elif item.videos %}
+            {% if "youtube.com" in item.videos or "youtu.be" in item.videos %}
+              <div class="video-container">
+                <iframe src="{{ item.videos_embed }}" allowfullscreen></iframe>
+              </div>
+            {% else %}
+              <div class="video-container">
+                <video controls>
+                  <source src="{{ item.videos.url }}" type="video/mp4">
+                  Tu navegador no soporta videos.
+                </video>
+              </div>
             {% endif %}
-          </div>
+          {% endif %}
         </div>
       </div>
 
       <!-- Modal -->
-      <div class="modal fade" id="modal{{ forloop.counter }}" tabindex="-1" aria-labelledby="modalLabel{{ forloop.counter }}" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="modalLabel{{ forloop.counter }}">{{ item.titulo }}</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body text-center">
-              {% if item.imagen %}
-                <img src="{{ item.imagen.url }}" class="img-fluid rounded mb-3" alt="{{ item.titulo }}">
-              {% elif item.videos %}
-                {% if "youtube.com" in item.videos or "youtu.be" in item.videos %}
-                  <div class="ratio ratio-16x9 rounded">
-                    <iframe src="{{item.videos_embed}}" allowfullscreen></iframe>
-                  </div>
-                {% else %}
-                  <video controls class="w-100 rounded">
-                    <source src="{{ item.videos.url }}" type="video/mp4">
-                    Tu navegador no soporta videos.
-                  </video>
-                {% endif %}
-              {% endif %}
-              <p class="mt-3">{{ item.descripcion }}</p>
-              <small class="text-muted">Fecha de publicación: {{ item.fecha|date:"d/m/Y" }}</small>
-            </div>
-          </div>
+      <div id="modal{{ forloop.counter }}" class="modal">
+        <div class="modal-contenido">
+          <span class="cerrar" onclick="cerrarModal('modal{{ forloop.counter }}')">&times;</span>
+          <h5>{{ item.titulo }}</h5>
+          {% if item.imagen %}
+            <img src="{{ item.imagen.url }}" class="imagen-modal" alt="{{ item.titulo }}">
+          {% elif item.videos %}
+            {% if "youtube.com" in item.videos or "youtu.be" in item.videos %}
+              <div class="video-container">
+                <iframe src="{{ item.videos_embed }}" allowfullscreen></iframe>
+              </div>
+            {% else %}
+              <video controls class="video-modal">
+                <source src="{{ item.videos.url }}" type="video/mp4">
+                Tu navegador no soporta videos.
+              </video>
+            {% endif %}
+          {% endif %}
+          <p>{{ item.descripcion }}</p>
+          <small class="fecha">Fecha de publicación: {{ item.fecha|date:"d/m/Y" }}</small>
         </div>
       </div>
     {% endfor %}
   </div>
 </div>
+
+<script>
+  function abrirModal(id) {
+    document.getElementById(id).style.display = 'block';
+  }
+
+  function cerrarModal(id) {
+    document.getElementById(id).style.display = 'none';
+  }
+
+  window.onclick = function(event) {
+    if (event.target.classList.contains('modal')) {
+      event.target.style.display = "none";
+    }
+  }
+</script>
+
+
+<style>
+  /* Estructura general */
+  .contenedor {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  .titulo {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  /* Grid */
+  .grid-contenido {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  
+  /* Tarjeta */
+  .tarjeta {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    background-color: #fff;
+    height: 350px; /* Tamaño fijo */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .tarjeta:hover {
+    transform: scale(1.02);
+  }
+  
+  .tarjeta-cuerpo {
+    padding: 15px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  
+  .tarjeta-titulo {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .tarjeta-texto {
+    font-size: 14px;
+    color: #444;
+    margin-bottom: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* máximo 3 líneas */
+    -webkit-box-orient: vertical;
+  }
+  
+  /* Imagen dentro de tarjeta: recortada */
+  .imagen {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  
+  /* Video dentro de tarjeta: recortado */
+  .video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  
+  .video-container iframe,
+  .video-container video {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    border: none;
+  }
+  
+  /* Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+  }
+  
+  .modal-contenido {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    max-width: 800px;
+    border-radius: 10px;
+    position: relative;
+    text-align: center;
+  }
+  
+  .cerrar {
+    position: absolute;
+    top: 10px; right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #999;
+  }
+  
+  .cerrar:hover {
+    color: #333;
+  }
+  
+  /* Imagen en modal: completa */
+  .imagen-modal {
+    width: 100%;
+    max-height: 500px;
+    object-fit: contain;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .video-modal {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .fecha {
+    color: #777;
+    font-size: 13px;
+  }
+  </style>
 {% endblock %}

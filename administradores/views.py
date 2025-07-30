@@ -20,6 +20,7 @@ def index(request):
 def ver_recicladoras(request):
     recicladoras = Recicladoras.objects.select_related('propietario').all()
     return render(request, 'administradores/recicladoras.html', {'recicladoras': recicladoras})
+
 def recicladora_crear(request):
     errores = {}
     recicladora_data = {}
