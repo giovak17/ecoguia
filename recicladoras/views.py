@@ -2,7 +2,7 @@ import os
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404, redirect
 import traceback
-from core.models import Entregas, Recicladoras, PuntosReciclaje, EntregaMaterialReciclado, TipoMaterialReciclable, Usuarios
+from core.models import Entregas, Recicladoras, PuntosReciclaje, EntregaMaterialReciclado, TipoMaterialReciclable, Usuarios, MaterialAceptado
 from core.auth import login_required
 
 # Create your views here.
@@ -75,7 +75,7 @@ def solicitud_registro_view(request):
         form = SolicitudRecicladoraForm()
     return render(request, 'recicladoras/solicitud_registro.html', {'form': form})
 
-def  agregar_punto(request):
+def agregar_punto(request):
     user_id = request.session.get("user_id")
 
     if request.method == 'POST':
@@ -84,33 +84,96 @@ def  agregar_punto(request):
         telefono = request.POST.get('telefono')
         horario_entrada = request.POST.get('horario_entrada')
         horario_salida = request.POST.get('horario_salida')
-        descripcion = request.POST.get('descripcion')
-        recicladora_codigo = request.POST.get('id_recicladora')
-        extras=request.POST.get('extras')
-        latitud =request.POST.get('latitud')
-        longitud= request.POST.get('longitud')
-        recicladora = Recicladoras.objects.get(codigo_recicladora=recicladora_codigo)
-
-        punto = PuntosReciclaje(
-            nombre=nombre,
-            ubicacion=ubicacion,
-            telefono=telefono,
-            horario_entrada=horario_entrada,
-            horario_salida=horario_salida,
-            descripcion=descripcion,
-            id_recicladora=recicladora,
-            extras=extras,
-            latitud=latitud,
-            longitud=longitud
-        )
-        punto.save()
         
-        return redirect('recicladoras:index')  
-    # Consulta para llenar el select:
+        # --- Campo 'ciudad' AGREGADO y capturado ---
+        ciudad = request.POST.get('ciudad')
+        
+        descripcion = request.POST.get('descripcion')
+        extras = request.POST.get('extras')
+        
+        # Conversión de latitud y longitud a float (esencial para FloatField)
+        latitud_str = request.POST.get('latitud')
+        longitud_str = request.POST.get('longitud')
+
+        latitud = None
+        longitud = None
+
+        if latitud_str:
+            try:
+                latitud = float(latitud_str)
+            except ValueError:
+                # Si el valor no es un número válido, se quedará como None
+                pass 
+        
+        if longitud_str:
+            try:
+                longitud = float(longitud_str)
+            except ValueError:
+                # Si el valor no es un número válido, se quedará como None
+                pass
+
+        recicladora_codigo = request.POST.get('id_recicladora')
+        
+        # --- Obtener IDs de materiales seleccionados del formulario ---
+        # request.POST.getlist() es para campos de selección múltiple
+        materiales_seleccionados_ids = request.POST.getlist('materiales_aceptados') 
+
+        try:
+            # Obtener el objeto Recicladora
+            recicladora = get_object_or_404(Recicladoras, codigo_recicladora=recicladora_codigo)
+
+            # Crear y guardar el nuevo PuntosReciclaje
+            punto = PuntosReciclaje(
+                nombre=nombre,
+                ubicacion=ubicacion,
+                telefono=telefono,
+                horario_entrada=horario_entrada,
+                horario_salida=horario_salida,
+                ciudad=ciudad,  # <-- Campo 'ciudad' asignado
+                descripcion=descripcion,
+                id_recicladora=recicladora,
+                extras=extras,
+                latitud=latitud,
+                longitud=longitud
+            )
+            punto.save() # Es crucial guardar el punto primero para obtener su id_punto
+
+            # --- Insertar los materiales aceptados en la tabla MaterialAceptado ---
+            if materiales_seleccionados_ids:
+                for material_id in materiales_seleccionados_ids:
+                    try:
+                        # Recuperar el objeto TipoMaterialReciclable usando su PK (id_tmr)
+                        tipo_material = get_object_or_404(TipoMaterialReciclable, id_tmr=material_id)
+                        
+                        # Crear la relación en MaterialAceptado
+                        MaterialAceptado.objects.create(
+                            id_punto=punto, # Usa el objeto PuntosReciclaje recién creado
+                            id_tipo_material=tipo_material # Usa el objeto TipoMaterialReciclable
+                        )
+                    except TipoMaterialReciclable.DoesNotExist:
+                        # Esto podría ocurrir si un ID de material no existe en la BD
+                        pass # No se loguea ni muestra mensaje según lo solicitado
+                    except Exception as e:
+                        # Otros errores al asociar el material
+                        pass # No se loguea ni muestra mensaje según lo solicitado
+
+            return redirect('recicladoras:index') 
+
+        except Recicladoras.DoesNotExist:
+            pass # No se loguea ni muestra mensaje según lo solicitado
+        except Exception as e:
+            pass # No se loguea ni muestra mensaje según lo solicitado
+
+    # Para peticiones GET o si hubo algún problema en POST (sin redirigir)
     recicladoras = Recicladoras.objects.filter(propietario=user_id)
-    return render(request, 'recicladoras/agregar_punto.html', {'recicladoras': recicladoras})
+    # Obtener todos los tipos de materiales para mostrarlos en el select del formulario
+    tipos_materiales = TipoMaterialReciclable.objects.all() 
 
-
+    context = {
+        'recicladoras': recicladoras,
+        'tipos_materiales': tipos_materiales, # Pasa la lista de materiales al contexto
+    }
+    return render(request, 'recicladoras/agregar_punto.html', context)
 
 
 def solicitar_recicladora(request):
