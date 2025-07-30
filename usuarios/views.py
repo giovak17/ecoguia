@@ -134,7 +134,7 @@ def map_user_rol(user: Usuarios):
             return redirect(preserve_request=True, to="administradores:index")
         # Usuario
         case 2:
-            return redirect(preserve_request=True, to="usuarios:mapa_puntos")
+            return redirect(preserve_request=True, to="usuarios:html_recicladoras_materiales")
         # Recicladora
         case 3:
             return redirect(preserve_request=True, to="recicladoras:index")
@@ -297,34 +297,34 @@ def mostrarentregas(request):
 })
     #return render(request, "usuarios/registro.html")
 
-def mapa_google(request):
-    material_filtro = request.GET.get('material')
-    ubicacion_filtro = request.GET.get('ubicacion')
+# def mapa_google(request):
+#     material_filtro = request.GET.get('material')
+#     ubicacion_filtro = request.GET.get('ubicacion')
 
-    # Consulta base
-    puntos_qs = PuntosReciclaje.objects.all()
+#     # Consulta base
+#     puntos_qs = PuntosReciclaje.objects.all()
 
-    # Filtro por ciudad o ubicación
-    if ubicacion_filtro:
-        puntos_qs = puntos_qs.filter(ciudad__icontains=ubicacion_filtro)
+#     # Filtro por ciudad o ubicación
+#     if ubicacion_filtro:
+#         puntos_qs = puntos_qs.filter(ciudad__icontains=ubicacion_filtro)
 
-    # Filtro por tipo de material (a través de recicladora → materialreciclable)
-    if material_filtro:
-        puntos_qs = puntos_qs.filter(
-            id_recicladora__materialreciclable__tipo_reciclaje__nombre__icontains=material_filtro
-        ).distinct()
+#     # Filtro por tipo de material (a través de recicladora → materialreciclable)
+#     if material_filtro:
+#         puntos_qs = puntos_qs.filter(
+#             id_recicladora__materialreciclable__tipo_reciclaje__nombre__icontains=material_filtro
+#         ).distinct()
 
-    # Convertir a lista de dict para usar en el template con json_script
-    puntos = list(puntos_qs.values(
-        'nombre', 'latitud', 'longitud', 'ubicacion', 'ciudad'
-    ))
+#     # Convertir a lista de dict para usar en el template con json_script
+#     puntos = list(puntos_qs.values(
+#         'nombre', 'latitud', 'longitud', 'ubicacion', 'ciudad'
+#     ))
 
-    tipos_materiales = TipoMaterialReciclable.objects.all()
+#     tipos_materiales = TipoMaterialReciclable.objects.all()
 
-    return render(request, 'usuarios/mapa_google.html', {
-        'puntos': puntos,
-        'tipos_materiales': tipos_materiales
-    })
+#     return render(request, 'usuarios/mapa_google.html', {
+#         'puntos': puntos,
+#         'tipos_materiales': tipos_materiales
+#     })
     
 def vista_json_recicladoras_con_materiales(request):
     datos = []
@@ -340,6 +340,8 @@ def vista_json_recicladoras_con_materiales(request):
             'ciudad': punto.ciudad,
             'ubicacion': punto.ubicacion,
             'telefono': punto.telefono,
+            'latitud':punto.latitud,
+            'longitud':punto.longitud,
             'materiales': [
                 {
                     'id': m.id_tipo_material.id_tmr,
@@ -355,17 +357,40 @@ def vista_json_recicladoras_con_materiales(request):
     return JsonResponse({'puntos_reciclaje': datos})
 
 def vista_html_recicladoras_con_materiales(request):
+    material_buscado = request.GET.get('material', '').strip().lower()
     puntos = PuntosReciclaje.objects.all()
     contexto = []
+    puntos_mapa = []
 
     for punto in puntos:
         materiales = MaterialAceptado.objects.filter(id_punto=punto).select_related('id_tipo_material')
-        contexto.append({
-            'punto': punto,
-            'materiales': [m.id_tipo_material for m in materiales]
-        })
+        materiales_filtrados = []
 
-    return render(request, 'usuarios/recicladoras_materiales.html', {'datos': contexto})
+        for m in materiales:
+            nombre_material = m.id_tipo_material.nombre.lower()
+            if not material_buscado or material_buscado in nombre_material:
+                materiales_filtrados.append(m.id_tipo_material)
+
+        # Si hay materiales que coinciden con la búsqueda, agregar a las cards
+        if materiales_filtrados:
+            contexto.append({
+                'punto': punto,
+                'materiales': materiales_filtrados
+            })
+
+        # Agregar al mapa SIEMPRE si tiene latitud y longitud
+        if punto.latitud and punto.longitud:
+            puntos_mapa.append({
+                'nombre': punto.nombre,
+                'latitud': float(punto.latitud),
+                'longitud': float(punto.longitud),
+                'ubicacion': punto.ubicacion or '',
+            })
+
+    return render(request, 'usuarios/recicladoras_materiales.html', {
+        'datos': contexto,
+        'puntos_mapa': puntos_mapa,
+    })
 
 def detalle_punto_reciclaje(request, id_punto):
     punto = get_object_or_404(PuntosReciclaje, id_punto=id_punto)
@@ -393,6 +418,7 @@ def detalle_punto_reciclaje(request, id_punto):
     }
 
     return render(request, 'usuarios/punto_detalle.html', {'punto': datos})
+
 def clasificacion(request):
     clasificacion = TipoMaterialReciclable.objects.all()
     return render(request, "usuarios/clasificacion_materiales.html", {"clasificacion": clasificacion})
