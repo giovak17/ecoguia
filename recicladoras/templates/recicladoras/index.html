@@ -1,8 +1,61 @@
 {% extends "recicladoras/base.html" %}
 
-<title>{% block title %} Recicladoras {% endblock %}</title>
+<title>{% block title %} Panel de Recicladoras {% endblock %}</title>
 
 <!-- Contentido apartir de aqui sera insertado en base.html -->
 {% block content %}
-<h1>Index recicladoras</h1>
+{% comment %} <h1>Bienvenido a recicladoras </h1> {% endcomment %}
+<div class="head-title">
+	<div class="left">
+		<h1>Panel de Recicladoras</h1>
+		<ul class="breadcrumb">
+			<li><a  href="{% url 'administradores:index' %}" >Recicladora</a></li>
+			<li><i class='bx bx-chevron-right'></i></li>
+			<li><a class="active"  href="{% url 'recicladoras:index' %}" >Inicio</a></li>
+		</ul>
+	</div>
+	{% comment %} <a href="#" class="btn-download">
+		<i class='bx bxs-cloud-download'></i>
+		<span class="text">Descargar Reporte</span>
+	</a> {% endcomment %}
+</div>
+
+<ul class="box-info">
+	<li><i class='bx bx-map'  ></i><span class="text"><h3>12</h3><p>Puntos de reciclaje</p></span></li>
+	<li><i class='bx bx-recycle'></i><span class="text"><h3>9</h3><p>Tipos de Material</p></span></li>
+	<li><i class='bx bxs-package'></i><span class="text"><h3>27</h3><p>Confirmaciones de entregas</p></span></li>
+</ul>
+
+<div class="table-data">
+	<div class="order">
+		<div class="head">
+			<h3>Localizacion de nuevos puntos de reciclaje</h3>
+			<i class='bx bx-search'></i>
+			<i class='bx bx-filter'></i>
+		</div>
+		<table>
+			<thead>
+				<tr><th>Colonia</th><th>Calle</th><th>Estado</th></tr>
+			</thead>
+			<tbody>
+				<tr><td><p>Las huertas 4ta seccion</p></td><td>C.datil</td><td><span class="status pending">Pendiente</span></td></tr>
+				<tr><td><p>Sanchez Taboada</p></td><td>Perseo</td><td><span class="status completed">Aprobada</span></td></tr>
+				<tr><td><p>Jardion Dorado</p></td><td>Camelias</td><td><span class="status rejected">Rechazada</span></td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="todo">
+		<div class="head">
+			<h3>Tareas Recicladora</h3>
+			<i class='bx bx-plus'></i>
+			<i class='bx bx-filter'></i>
+		</div>
+		<ul class="todo-list">
+			<li class="not-completed"><p>Revisar Puntos de reciclaje</p><i class='bx bx-dots-vertical-rounded'></i></li>
+			<li class="not-completed"><a href="{% url 'recicladoras:tipomaterial_list' %}"><p>Tipos de material por editar</p></a><i class='bx bx-dots-vertical-rounded'></i></li>
+			<li class="completed"><p>Revisar entregas</p><i class='bx bx-dots-vertical-rounded'></i></li>
+		</ul>
+	</div>
+</div>
 {% endblock %}
