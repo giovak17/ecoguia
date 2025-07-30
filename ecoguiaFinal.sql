@@ -91,7 +91,7 @@ CREATE TABLE publicaciones (
 	id_usuario_p INTEGER,
 	FOREIGN KEY (id_usuario_p) REFERENCES usuarios(id_usuario)
 );
-/*  */
+/* Arath Ramses Porcayo Mercado */
 CREATE TABLE tipo_material_reciclable (
     id_tmr SERIAL PRIMARY KEY,
     nombre VARCHAR(100),
@@ -100,7 +100,7 @@ CREATE TABLE tipo_material_reciclable (
     imagen VARCHAR(100)
 );
 
-/*  */
+/* Arath Ramses Porcayo Mercado */
 CREATE TABLE material_reciclable(
 	id_material SERIAL PRIMARY KEY,
 	nombre VARCHAR(100),
