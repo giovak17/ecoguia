@@ -3,26 +3,28 @@
 {% block title %}Historiales{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
 
-  <h3 class="text-success mb-4">Historial de Entregas</h3>
+
+<div class="container-custom"> {# Reemplaza .container #}
+
+  <h3 class="section-title">Historial de Entregas</h3> {# Reemplaza .text-success .mb-4 #}
   {% if entregas %}
-    <div class="row row-cols-1 row-cols-md-2 g-3 mb-5">
+    <div class="row-custom"> {# Reemplaza .row .row-cols-1 .row-cols-md-2 .g-3 .mb-5 #}
       {% for entrega in entregas %}
-        <div class="col">
-          <div class="card border-success shadow-sm h-100" style="font-size: 0.9rem;">
-            <div class="card-header bg-success text-white py-2">
+        <div class="col-custom"> {# Reemplaza .col #}
+          <div class="card-custom"> {# Reemplaza .card .border-success .shadow-sm .h-100 #}
+            <div class="card-header-custom"> {# Reemplaza .card-header .bg-success .text-white .py-2 #}
               Entrega #{{ entrega.id_entrega }}
             </div>
-            <div class="card-body py-2">
-              <p class="mb-1"><strong>Fecha:</strong> {{ entrega.fecha_entrega|date:"d/m/Y" }}</p>
-              <p class="mb-2"><strong>Punto de Entrega:</strong> {{ entrega.punto_entrega }}</p>
-              <p class="mb-1 fw-semibold text-success">Materiales:</p>
-              <ul class="list-group list-group-flush" style="font-size: 0.85rem;">
+            <div class="card-body-custom"> {# Reemplaza .card-body .py-2 #}
+              <p><strong>Fecha:</strong> {{ entrega.fecha_entrega|date:"d/m/Y" }}</p> {# .mb-1 #}
+              <p><strong>Punto de Entrega:</strong> {{ entrega.punto_entrega }}</p> {# .mb-2 #}
+              <p class="fw-semibold">Materiales:</p> {# .mb-1 .fw-semibold .text-success #}
+              <ul class="list-group-custom"> {# Reemplaza .list-group .list-group-flush #}
                 {% for material in entrega.materiales %}
-                  <li class="list-group-item d-flex justify-content-between align-items-center p-1">
+                  <li class="list-group-item-custom"> {# Reemplaza .list-group-item .d-flex .justify-content-between .align-items-center .p-1 #}
                     {{ material.nombre_material }}
-                    <span class="badge bg-success rounded-pill">{{ material.cantidad }}</span>
+                    <span class="badge-custom">{{ material.cantidad }}</span> {# Reemplaza .badge .bg-success .rounded-pill #}
                   </li>
                 {% endfor %}
               </ul>
@@ -32,23 +34,23 @@
       {% endfor %}
     </div>
   {% else %}
-    <div class="alert alert-info text-center mb-5">
+    <div class="alert-info-custom"> {# Reemplaza .alert .alert-info .text-center .mb-5 #}
       No hay entregas registradas.
     </div>
   {% endif %}
 
-  <h3 class="text-success mb-4">Historial de Retos Cumplidos</h3>
+  <h3 class="section-title">Historial de Retos Cumplidos</h3> {# Reemplaza .text-success .mb-4 #}
   {% if retos %}
-  <div class="row row-cols-1 row-cols-md-2 g-4">
+  <div class="row-custom"> {# Reemplaza .row .row-cols-1 .row-cols-md-2 .g-4 #}
     {% for reto in retos %}
-      <div class="col">
-        <div class="card border-success shadow-sm h-100" style="font-size: 0.9rem;">
-          <div class="card-header bg-success text-white py-2">
+      <div class="col-custom"> {# Reemplaza .col #}
+        <div class="card-custom"> {# Reemplaza .card .border-success .shadow-sm .h-100 #}
+          <div class="card-header-custom"> {# Reemplaza .card-header .bg-success .text-white .py-2 #}
             {{ reto.titulo }}
           </div>
-          <div class="card-body py-2">
+          <div class="card-body-custom"> {# Reemplaza .card-body .py-2 #}
             <p><strong>Fecha de Finalización:</strong> {{ reto.fecha_fin|date:"d/m/Y" }}</p>
-            <hr class="my-2" />
+            <hr class="hr-custom" /> {# Reemplaza .my-2 #}
             <p><strong>Descripción:</strong></p>
             <p>{{ reto.descripcion }}</p>
           </div>
@@ -57,7 +59,179 @@
     {% endfor %}
   </div>
 {% else %}
-  <p>No has completado retos todavía.</p>
+  <p class="no-retos-message">No has completado retos todavía.</p> {# Reemplaza .p #}
 {% endif %}
 </div>
+<style>
+    /* Reset básicos y variables si es necesario */
+    :root {
+        --primary-green: #28a745;
+        --secondary-green: #218838; /* Un verde más oscuro para hover */
+        --light-gray: #f8f9fa;
+        --medium-gray: #6c757d;
+        --dark-gray: #343a40;
+        --info-blue: #17a2b8;
+        --border-color: #dee2e6;
+        --shadow-color: rgba(0, 0, 0, 0.075);
+    }
+
+    /* ************************************************************ */
+    /* *** AJUSTES ESPECÍFICOS PARA EL ESPACIADO DEL HEADER/FOOTER *** */
+    /* ************************************************************ */
+    /* Ajusta estos valores según la altura real de tu header y footer para evitar superposiciones */
+    body {
+        padding-top: 80px; /* Espacio para el header fijo/alto */
+        padding-bottom: 60px; /* Espacio para el footer */
+        box-sizing: border-box; /* Asegura que padding y border no aumenten el tamaño total */
+    }
+
+    /* Contenedor principal */
+    .container-custom {
+        max-width: 960px; /* Ancho similar al container de Bootstrap */
+        margin: 40px auto; /* Centrar y dar espacio superior/inferior */
+        padding: 0 15px; /* Espacio a los lados */
+    }
+
+    /* Títulos de sección */
+    .section-title {
+        color: var(--primary-green);
+        margin-bottom: 30px;
+        font-size: 1.8rem;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    /* Contenedor de la rejilla (grid) */
+    .row-custom {
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: -15px; /* Compensa el padding de las columnas */
+        margin-right: -15px; /* Compensa el padding de las columnas */
+        margin-bottom: 50px; /* Espacio entre secciones */
+    }
+
+    /* Columna de la rejilla */
+    .col-custom {
+        flex: 0 0 auto;
+        width: 100%; /* Por defecto, una columna para móviles */
+        padding-left: 15px; /* Espacio entre columnas */
+        padding-right: 15px; /* Espacio entre columnas */
+        padding-bottom: 30px; /* Espacio entre filas de tarjetas */
+        box-sizing: border-box;
+    }
+
+    /* Media queries para responsive (simulando col-md-2) */
+    @media (min-width: 768px) { /* md */
+        .col-custom {
+            width: 50%; /* Dos columnas en pantallas medianas y grandes */
+        }
+    }
+
+    /* Estilos de la tarjeta */
+    .card-custom {
+        background-color: white;
+        border: 1px solid var(--primary-green); /* Borde verde */
+        border-radius: 8px;
+        box-shadow: 0 0.125rem 0.25rem var(--shadow-color); /* Sombra suave */
+        height: 100%; /* Ocupa toda la altura disponible en su columna */
+        font-size: 0.9rem;
+        overflow: hidden; /* Asegura que los bordes redondeados se respeten */
+    }
+
+    .card-header-custom {
+        background-color: var(--primary-green);
+        color: white;
+        padding: 8px 15px; /* py-2 */
+        font-weight: 600;
+        border-bottom: 1px solid var(--primary-green); /* Borde para el header */
+        border-top-left-radius: 7px; /* Para que el radio se vea bien */
+        border-top-right-radius: 7px;
+    }
+
+    .card-body-custom {
+        padding: 15px; /* py-2 */
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1; /* Permite que el cuerpo crezca */
+    }
+
+    .card-body-custom p {
+        margin-bottom: 5px; /* Menor margen entre párrafos */
+        line-height: 1.4;
+        color: var(--dark-gray);
+    }
+    .card-body-custom p strong {
+        color: var(--primary-green);
+    }
+    .card-body-custom p.fw-semibold {
+        font-weight: 600;
+        color: var(--primary-green);
+        margin-top: 10px; /* Espacio antes del título de Materiales */
+    }
+
+    /* Lista de materiales/elementos */
+    .list-group-custom {
+        list-style: none; /* Quitar viñetas */
+        padding: 0;
+        margin: 0;
+        border-top: 1px solid var(--border-color); /* Borde superior para la lista */
+    }
+
+    .list-group-item-custom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 15px; /* p-1 */
+        border-bottom: 1px solid var(--border-color); /* Separador entre ítems */
+        font-size: 0.85rem;
+        color: var(--medium-gray);
+    }
+    .list-group-item-custom:last-child {
+        border-bottom: none; /* No hay borde en el último ítem */
+    }
+
+    /* Badge para cantidad */
+    .badge-custom {
+        background-color: var(--primary-green);
+        color: white;
+        padding: 0.35em 0.65em;
+        border-radius: 50rem; /* pill-shaped */
+        font-size: 0.75em;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    /* Línea divisoria para retos */
+    .hr-custom {
+        border: 0;
+        height: 1px;
+        background-color: var(--border-color);
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    /* Estilos para el mensaje de "No hay entregas" */
+    .alert-info-custom {
+        background-color: #d1ecf1; /* Color de fondo claro */
+        color: #0c5460; /* Color del texto oscuro */
+        border: 1px solid #bee5eb; /* Borde */
+        border-radius: 0.25rem;
+        padding: 1rem;
+        margin-bottom: 3rem; /* mb-5 */
+        text-align: center;
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    /* Estilos para el mensaje de "No has completado retos" */
+    .no-retos-message {
+        color: var(--medium-gray);
+        text-align: center;
+        font-size: 1rem;
+        padding: 20px 0;
+    }
+
+</style>
 {% endblock %}

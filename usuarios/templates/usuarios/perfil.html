@@ -1,12 +1,9 @@
-
 {% extends "usuarios/base.html" %}
 {% load static %}
 
 {% block title %}Mi Perfil{% endblock %}
 
 {% block content %}
-<!-- Font Awesome CDN -->
-{% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-mQwJQ5EoQygIxD03JdKX7a6n3QWeH0T2CquCChYdSJyRWK/tVvQEDvcK7NE0vTYnWZfQxw7e8lz6EtZ+I71P1w==" crossorigin="anonymous" referrerpolicy="no-referrer" /> {% endcomment %}
 <link rel="stylesheet" href="{% static 'css/perfil.css' %}">
 
 <div class="profile-container">
@@ -14,12 +11,10 @@
     <h2>Mi Perfil</h2>
 
     {% if modo_edicion %}
-      <!-- Submit via icon -->
       <button type="submit" form="perfil-form" title="Guardar Cambios" class="icon-button">
         <i class="fas fa-check"></i>
       </button>
     {% else %}
-      <!-- Edit mode via GET -->
       <form method="get">
         <button type="submit" name="editar" value="1" title="Editar Perfil" class="icon-button">
           <i class="fas fa-pen"></i>
@@ -30,7 +25,6 @@
 
   <form method="post" action="" id="perfil-form">
     {% csrf_token %}
-
     <div class="form-group">
       <label for="nombre"><i class="fas fa-user"></i> Nombre:</label>
       <input type="text" id="nombre" name="nombre" value="{{ usuario.nombre|default_if_none:'' }}"{% if not modo_edicion %} readonly{% endif %}>
@@ -61,5 +55,33 @@
       <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ usuario.fecha_nacimiento|date:'Y-m-d' }}"{% if not modo_edicion %} readonly{% endif %}>
     </div>
   </form>
+
+  {% comment %} <hr style="margin: 2rem 0;"> {% endcomment %}
+
+  <div class="profile-stats">
+    <h3><i class="fas fa-star"></i> Puntos acumulados: 
+      <span class="puntos-count">{{ usuario.puntos|default:0 }}</span>
+    </h3>
+
+    <h3 style="margin-top: 1.5rem;"><i class="fas fa-gift"></i> Recompensas obtenidas:</h3>
+    {% if recompensas %}
+      <ul class="recompensa-lista">
+        {% for recompensa in recompensas %}
+          <li>
+            <div>
+              <strong>
+                <i class="fas fa-medal" style="margin-right: 0.5rem;"></i>
+                {{ recompensa.nombre }}
+                <small style="color: var(--text-light)">({{ recompensa.puntos_requeridos }} pts)</small>
+              </strong>
+              <p class="descripcion-recompensa">{{ recompensa.descripcion|default:"Sin descripción." }}</p>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p style="color: var(--text-light); font-style: italic;">Aún no has obtenido recompensas.</p>
+    {% endif %}
+  </div>
 </div>
 {% endblock %}
