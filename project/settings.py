@@ -105,16 +105,16 @@ WSGI_APPLICATION = "project.wsgi.application"
 # }
 
 #no lo borren el toño y yo no le supimos a lo otro jajajajjajajajajjaja
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ecoguia",
-        "USER": "postgres",
-        "PASSWORD": "chela",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
-    }
-}
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "ecoguia",
+#         "USER": "postgres",
+#         "PASSWORD": "chela",
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
 
 
 # DATABASES = {
@@ -128,6 +128,17 @@ DATABASES = {
 #     }
 # }
 
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("DB_NAME"),
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOST"),
+        "PORT": os.getenv("DB_PORT"),
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

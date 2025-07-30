@@ -80,7 +80,7 @@ CREATE TABLE tipo_material_reciclable (
     nombre VARCHAR(100),
     descripcion TEXT,	
     tiempo_descomposicion VARCHAR(100),
-    imagen VARCHAR(100),
+    imagen VARCHAR(100)
 );
 
 
