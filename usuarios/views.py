@@ -377,6 +377,9 @@ def detalle_punto_reciclaje(request, id_punto):
         'ciudad': punto.ciudad,
         'ubicacion': punto.ubicacion,
         'telefono': punto.telefono,
+        'descripcion': punto.descripcion,
+        'horario_entrada': punto.horario_entrada,
+        'horario_salida': punto.horario_salida,
         'materiales': [
             {
                 'id': m.id_tipo_material.id_tmr,

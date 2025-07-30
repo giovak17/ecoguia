@@ -11,9 +11,14 @@
         <div class="btn-center">
           <h2 class="mb-2"  style="color: #67AE6E;">{{ dato.punto.nombre }}</h2>
         </div>
-        <!-- Dirección -->
+       <!-- Dirección con enlace a Google Maps -->
         <div class="d-flex align-items-center gap-2">
-          <p class="mb-0"><i class='bx bxs-location-plus icon-style'></i> {{ dato.punto.ubicacion }}</p>
+          <p class="mb-0">
+            <i class='bx bx-location-plus icon-style'></i>
+            <a href="https://www.google.com/maps/search/?api=1&query={{ dato.punto.ubicacion|urlencode }}" target="_blank" style="text-decoration: none; color: inherit;">
+              {{ dato.punto.ubicacion }}
+            </a>
+          </p>
         </div>
 
         <!-- Ciudad -->

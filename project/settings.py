@@ -103,16 +103,30 @@ WSGI_APPLICATION = "project.wsgi.application"
 #         "PORT": os.getenv("DB_PORT"),
 #     }
 # }
+
+#no lo borren el toño y yo no le supimos a lo otro jajajajjajajajajjaja
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "Ecoguia",
+        "NAME": "ecoguia",
         "USER": "postgres",
-        "PASSWORD": "1234",
+        "PASSWORD": "chela",
         "HOST": "127.0.0.1",
         "PORT": "5432",
     }
 }
+
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "Ecoguia",
+#         "USER": "postgres",
+#         "PASSWORD": "1234",
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
 
 
 # Password validation
