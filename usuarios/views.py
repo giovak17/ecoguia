@@ -137,7 +137,7 @@ def map_user_rol(user: Usuarios):
             return redirect(preserve_request=True, to="administradores:index")
         # Usuario
         case 2:
-            return redirect(preserve_request=True, to="usuarios:html_recicladoras_materiales")
+            return redirect(preserve_request=True, to="usuarios:index")
         # Recicladora
         case 3:
             return redirect(preserve_request=True, to="recicladoras:index")

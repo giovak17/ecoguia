@@ -173,28 +173,25 @@ INSERT INTO usuarios (nombre, ap_paterno, ap_materno, correo, contrasena, fecha_
 --Administrador
 ('David', 'Torres', 'Hernández', 'admin@correo.com', 'admin123', '1985-05-30', 0, 1),
 -- RECICLADORA
-('Alan', 'Sanchez', 'Perez', 'recicladora@correo.com', 'rec123', '2000-03-30', 0, 3), 
-('Lucía', 'Fernández', 'Pérez', 'lucia@correo.com', 'lucia456', '1995-12-03', 0, 3),
-('Carlos', 'Ramírez', 'Vega', 'carlos@correo.com', 'car123', '1988-07-22', 15, 3),
-('Luis', 'Herrera', 'García', 'luis@correo.com', 'pass123', '1985-04-10', 0, 3),
-('Marta', 'González', 'Sánchez', 'marta@correo.com', 'pass123', '1990-06-12', 0, 3),
-('Eduardo', 'Sánchez', 'Martínez', 'eduardo@correo.com', 'pass123', '1988-02-25', 0, 3),
-('Ana', 'Pérez', 'Ramírez', 'ana@correo.com', 'pass123', '1993-09-18',  0, 3),
-('Carlos', 'Ramírez', 'Torres', 'carlos@correo.com', 'pass123', '1987-01-15', 0, 3),
-('Laura', 'Mendoza', 'Flores', 'laura@correo.com', 'pass123', '1991-12-01',  0, 3),
-('Roberto', 'Díaz', 'Moreno', 'roberto@correo.com', 'pass123', '1984-08-21', 0, 3),
-('Fernanda', 'López', 'Jiménez', 'fernanda@correo.com', 'pass123', '1995-03-05',0, 3),
+('Beatriz', 'Navarro', 'Salas', 'recicladora1@correo.com', 'rec321', '2000-03-30', 0, 3), 
+('Isabel', 'Luna', 'Domínguez', 'isabel@correo.com', 'isa789', '1995-12-03', 0, 3),
+('Manuel', 'Ortega', 'Fuentes', 'manuel@correo.com', 'man789', '1988-07-22', 15, 3),
+('Raúl', 'Pineda', 'Castillo', 'raul@correo.com', 'raul456', '1985-04-10', 0, 3),
+('Rosa', 'Camacho', 'Nieto', 'rosa@correo.com', 'rosa123', '1990-06-12', 0, 3),
+('Tomás', 'Vargas', 'Silva', 'tomas@correo.com', 'tom654', '1988-02-25', 0, 3),
+('Gabriela', 'Campos', 'Mejía', 'gabriela@correo.com', 'gab321', '1993-09-18', 0, 3),
+('Andrés', 'Velasco', 'Reyes', 'andres@correo.com', 'and123', '1987-01-15', 0, 3),
+('Cecilia', 'Rosales', 'Soto', 'cecilia@correo.com', 'cec987', '1991-12-01', 0, 3),
+('Jorge', 'Medina', 'Acosta', 'jorge@correo.com', 'jor456', '1984-08-21', 0, 3),
+('Verónica', 'Suárez', 'Ríos', 'veronica@correo.com', 'vero321', '1995-03-05', 0, 3),
 --RECICLADOR 
-('Ana', 'García', 'López', 'ana@correo.com', 'ana123', '1990-03-15', 5, 2),
-('Carlos', 'Ramírez', 'Vega', 'carlos@correo.com', 'car123', '1988-07-22', 15, 2),
-('Luis', 'Herrera', 'García', 'luis@correo.com', 'pass123', '1985-04-10', 0, 2),
-('Marta', 'González', 'Sánchez', 'marta@correo.com', 'pass123', '1990-06-12', 0, 2),
-('Eduardo', 'Sánchez', 'Martínez', 'eduardo@correo.com', 'pass123', '1988-02-25', 0, 2),
-('Ana', 'Pérez', 'Ramírez', 'ana@correo.com', 'pass123', '1993-09-18',  0, 2),
-('Carlos', 'Ramírez', 'Torres', 'carlos@correo.com', 'pass123', '1987-01-15', 0, 2),
-('Laura', 'Mendoza', 'Flores', 'laura@correo.com', 'pass123', '1991-12-01',  0, 2),
-('Roberto', 'Díaz', 'Moreno', 'roberto@correo.com', 'pass123', '1984-08-21', 0, 2),
-('Fernanda', 'López', 'Jiménez', 'fernanda@correo.com', 'pass123', '1995-03-05',0, 2);
+('Patricia', 'Gallardo', 'Cruz', 'patricia@correo.com', 'pat123', '1990-03-15', 0, 2),
+('Héctor', 'Núñez', 'Serrano', 'hector@correo.com', 'hec456', '1988-07-22', 0, 2),
+('Ricardo', 'Peña', 'Aguilar', 'ricardo@correo.com', 'ric321', '1985-04-10', 0, 2),
+('Leticia', 'Carrillo', 'Bautista', 'leticia@correo.com', 'let789', '1990-06-12', 0, 2),
+('Samuel', 'Cortés', 'Valdez', 'samuel@correo.com', 'sam654', '1988-02-25', 0, 2),
+('Daniela', 'Ramos', 'Molina', 'daniela@correo.com', 'dan111', '1993-09-18', 0, 2),
+('Ernesto', 'Blanco', 'Esquivel', 'ernesto@correo.com', 'ern789', '1987-01-15', 0, 2);
 
 --retos
 INSERT INTO retos (titulo, descripcion) VALUES 
