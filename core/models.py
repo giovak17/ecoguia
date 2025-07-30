@@ -117,6 +117,7 @@ class Recompensas(models.Model):
     codigo = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=30, blank=True, null=True)
     descripcion = models.TextField(blank=True, null=True)
+    puntos_requeridos = models.IntegerField(blank=True, null=True)
     clave_reto = models.ForeignKey('Retos', models.DO_NOTHING, db_column='clave_reto', blank=True, null=True)
 
     class Meta:
@@ -166,6 +167,7 @@ class Usuarios(models.Model):
     fecha_nacimiento = models.DateField(blank=True, null=True)
     fecha_registro = models.DateTimeField(blank=True, null=True)
     total_recompensas = models.IntegerField(blank=True, null=True)
+    puntos = models.IntegerField(blank=True, null=True)
     id_rol = models.ForeignKey(Roles, models.DO_NOTHING, db_column='id_rol', blank=True, null=True)
 
     class Meta:

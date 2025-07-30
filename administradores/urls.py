@@ -3,6 +3,7 @@ from . import views
 
 app_name = "administradores"
 urlpatterns = [
+     #path recicladoras
     path("", views.index, name="index"),
     path("recicladoras/aprobar/", views.aprobar_recicladoras, name="aprobar_recicladoras"),
     path('administradores/recicladoras/', views.ver_recicladoras, name='ver_recicladoras'),
@@ -20,6 +21,7 @@ urlpatterns = [
     path('tipomaterial/<int:pk>/update/', views.tipo_material_actualizar, name='tipomaterial_actualizar'),
     path('tipomaterial/<int:pk>/delete/', views.tipo_material_delete, name='tipomaterial_delete'),
 
+    #path contenidos educativos 
     path('contenido/', views.contenido_educativo_admin, name='contenido_admin'),
     path('contenido/nuevo/', views.contenido_crear, name='contenido_crear'),
     path('contenido/<int:pk>/editar/', views.contenido_editar, name='contenido_editar'),

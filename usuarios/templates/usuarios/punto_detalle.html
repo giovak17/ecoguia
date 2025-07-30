@@ -1,19 +1,22 @@
+<!-- Arista Pérez Graciela -->
 {% extends "usuarios/base.html" %}
 {% block title %}Detalles de {{ punto.nombre }}{% endblock %}
 
 {% block content %}
 <div class="profile-container">
-
+  <!-- Nombre del punto de reciclaje -->
    <div class="d-flex align-items-center gap-2">
     <div class="btn-center">
       <h2 class="mb-3" style="color: #67AE6E;"> <i class='bx bx-recycle'></i> {{ punto.nombre }}</h2>
     </div>
   </div>
 
+  <!-- Descripción -->
   <div class="d-flex align-items-center gap-2">
     <p class="mb-0">{{ punto.descripcion }}</p>
   </div>
 
+  <!-- Ubicación y ademas al seleccionar te lleva a la ubicacion de google maps -->
   <div class="d-flex align-items-center gap-2">
   <p class="mb-0">
     <i class='bx bx-location-plus icon-style'></i>
@@ -23,18 +26,22 @@
   </p>
   </div>
 
+  <!-- Horario entrada -->
   <div class="d-flex align-items-center gap-2">
     <p class="mb-0"><i class='bx bx-time-five icon-style' ></i> {{ punto.horario_entrada }} - {{ punto.horario_salida }}</p>
   </div>
 
+  <!-- Horario salida -->
   <div class="d-flex align-items-center gap-2">
     <p class="mb-0"><i class='bx bx-buildings icon-style'></i>{{ punto.ciudad }}</p>
   </div>
 
+  <!-- Telefono -->
   <div class="d-flex align-items-center gap-2">
     <p class="mb-0"><i class='bx bx-phone icon-style'></i>{{ punto.telefono }}</p>
   </div>
 
+  <!-- Materiales aceotados  -->
   <h4 class="mt-4">Materiales que acepta:</h4>
   <div class="grid-container">
     {% for material in punto.materiales %}

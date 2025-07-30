@@ -44,10 +44,41 @@
             </div>
           </div>
 
+    <div class="cards-grid">
+        {% for material in clasificacion %}
+        <div class="card-material" id="card{{ forloop.counter }}" onclick="resaltar(this); openModal('modal{{ forloop.counter }}')">
+            <h5>{{ material.nombre }}</h5>
+            {% if material.imagen and material.imagen.url %} {# Usar .url para ImageField #}
+                <img src="{{ material.imagen.url }}" alt="Imagen del material" />
+            {% else %}
+                <div class="no-image">No hay imagen</div>
+            {% endif %}
         </div>
-      </div>
-    {% endfor %}
-  </div>
+
+        <div class="modal-overlay" id="modal{{ forloop.counter }}">
+            <div class="modal" role="dialog" aria-modal="true"> {# Eliminado modal-lg y modal-dialog-centered (eran de Bootstrap) #}
+
+                <div class="modal-custom-header">
+                    <h5 class="modal-title">{{ material.nombre }}</h5>
+                    <button type="button" class="modal-close-btn" onclick="closeModal('modal{{ forloop.counter }}')">✖</button>
+                </div>
+
+                <div class="modal-body modal-flex-body">
+
+
+                    <div class="modal-text-content">
+                        {% if material.descripcion %}
+                            <p class="modal-description">{{ material.descripcion }}</p>
+                        {% endif %}
+                        {% if material.tiempo_descomposicion %}
+                            <p class="modal-time"><strong>Tiempo de descomposición:</strong> {{ material.tiempo_descomposicion }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 
 <script>

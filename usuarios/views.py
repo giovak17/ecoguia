@@ -1,6 +1,6 @@
 from django.http import HttpRequest, HttpResponseForbidden
 from django.shortcuts import redirect, render, get_object_or_404
-from core.models import Usuarios,Entregas
+from core.models import Recompensas, Usuarios,Entregas
 from django.shortcuts import redirect, render
 from core.models import Usuarios,Entregas, PuntosReciclaje,ContenidoEducativo,EntregaMaterialReciclado,TipoMaterialReciclable, MaterialAceptado
 from django.utils.timezone import now
@@ -16,6 +16,9 @@ from django.utils.timezone import now
 
 def index(request):
     return render(request, "usuarios/index.html")
+
+def info(request):
+    return render(request, "usuarios/infoecoguia.html")
 
 
 def login(request: HttpRequest):
@@ -43,6 +46,25 @@ def logout(request: HttpRequest):
     return redirect('usuarios:login')
 
 @login_required(role="usuario")
+# def perfil_usuario(request):
+#     usuario = get_object_or_404(Usuarios, pk=request.user.id_usuario)
+#     modo_edicion = request.GET.get("editar") == "1"
+
+#     if request.method == 'POST':
+#         usuario.nombre = request.POST.get('nombre')
+#         usuario.ap_paterno = request.POST.get('ap_paterno')
+#         usuario.ap_materno = request.POST.get('ap_materno')
+#         usuario.correo = request.POST.get('correo')
+#         usuario.contrasena = request.POST.get('contrasena')
+#         usuario.fecha_nacimiento = request.POST.get('fecha_nacimiento')
+#         usuario.save()
+#         return redirect('usuarios:perfil_usuario')
+
+#     return render(request, 'usuarios/perfil.html', {
+#         'usuario': usuario,
+#         'modo_edicion': modo_edicion
+#     })
+
 def perfil_usuario(request):
     usuario = get_object_or_404(Usuarios, pk=request.user.id_usuario)
     modo_edicion = request.GET.get("editar") == "1"
@@ -57,10 +79,21 @@ def perfil_usuario(request):
         usuario.save()
         return redirect('usuarios:perfil_usuario')
 
+    # Obtener recompensas del usuario
+    recompensas = Recompensas.objects.filter(
+        usuariosrecompensas__id_usuario=usuario.id_usuario
+    )
+
     return render(request, 'usuarios/perfil.html', {
         'usuario': usuario,
-        'modo_edicion': modo_edicion
+        'modo_edicion': modo_edicion,
+        'recompensas': recompensas
     })
+
+def ranking_usuarios(request):
+    usuarios = Usuarios.objects.filter(puntos__isnull=False).order_by('-puntos')[:50]  # top 50
+    return render(request, 'usuarios/ranking.html', {'usuarios': usuarios})
+
 
 def contenido_educativo(request):
     contenidos = ContenidoEducativo.objects.all()
@@ -68,7 +101,7 @@ def contenido_educativo(request):
         if contenido.videos:
          contenido.videos_embed = convertir_a_embed(contenido.videos)
     return render(request, 'usuarios/contenido_educativo.html', {'contenidos': contenidos})
-
+# vista para poder utilizar URLS embebidos para insertarlos
 def convertir_a_embed(url):
     # if "watch?v=" in url:
     #     return url.replace("watch?v=", "embed/")
@@ -134,7 +167,7 @@ def map_user_rol(user: Usuarios):
             return redirect(preserve_request=True, to="administradores:index")
         # Usuario
         case 2:
-            return redirect(preserve_request=True, to="usuarios:mapa_puntos")
+            return redirect(preserve_request=True, to="usuarios:index")
         # Recicladora
         case 3:
             return redirect(preserve_request=True, to="recicladoras:index")
@@ -206,13 +239,6 @@ def usuariosregistro(request):
             return render(request, "usuarios/registro.html", context)
 
     return render(request, "usuarios/registro.html")
-
-
-# def mapa_puntos_google(request):
-#     puntos = list(PuntosReciclaje.objects.values(
-#         'nombre', 'latitud', 'longitud', 'ubicacion', 'ciudad'
-#     ))
-#     return render(request, 'usuarios/mapa_google.html', {'puntos': puntos})
 
 def usuarios_delete(request, pk):
     usuarios = get_object_or_404(Usuarios, pk=pk)
@@ -296,35 +322,6 @@ def mostrarentregas(request):
     return render(request, "usuarios/mostrarentregas.html",{'entregas': entregas, 'retos': retos,
 })
     #return render(request, "usuarios/registro.html")
-
-def mapa_google(request):
-    material_filtro = request.GET.get('material')
-    ubicacion_filtro = request.GET.get('ubicacion')
-
-    # Consulta base
-    puntos_qs = PuntosReciclaje.objects.all()
-
-    # Filtro por ciudad o ubicación
-    if ubicacion_filtro:
-        puntos_qs = puntos_qs.filter(ciudad__icontains=ubicacion_filtro)
-
-    # Filtro por tipo de material (a través de recicladora → materialreciclable)
-    if material_filtro:
-        puntos_qs = puntos_qs.filter(
-            id_recicladora__materialreciclable__tipo_reciclaje__nombre__icontains=material_filtro
-        ).distinct()
-
-    # Convertir a lista de dict para usar en el template con json_script
-    puntos = list(puntos_qs.values(
-        'nombre', 'latitud', 'longitud', 'ubicacion', 'ciudad'
-    ))
-
-    tipos_materiales = TipoMaterialReciclable.objects.all()
-
-    return render(request, 'usuarios/mapa_google.html', {
-        'puntos': puntos,
-        'tipos_materiales': tipos_materiales
-    })
     
 def vista_json_recicladoras_con_materiales(request):
     datos = []

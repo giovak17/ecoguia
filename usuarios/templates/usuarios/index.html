@@ -1,3 +1,4 @@
+<!-- Arista Pérez Graciela -->
 <!-- templates/index.html -->
 {% extends "usuarios/base.html" %}
 {% load static %}
@@ -62,7 +63,7 @@
                 <h2>¿Qué es Ecoguía?</h2>
                 <p>Ecoguía es una plataforma creada para facilitar la educación ambiental y promover prácticas sostenibles entre las personas de todas las edades.</p>
                 <p>Proporcionamos información sobre reciclaje, puntos de recolección y artículos educativos para crear conciencia ecológica y fomentar una comunidad más responsable con el medio ambiente.</p>
-                <a href="#" class="btn">Más información</a>
+                <a href="{% url 'usuarios:info' %}" class="btn">Más información</a>
             </div>
         </div>
     </div>

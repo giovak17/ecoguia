@@ -1,71 +1,643 @@
 {% extends 'usuarios/base.html' %}
 {% load static %}
+
 {% block content %}
-<div class="container">
-  <h1 class="mt-4 mb-4">Contenido Educativo</h1>
-  <div class="row g-4">
+
+<<<<<<< HEAD
+<!-- Manejado por America Garcia Lara 
+      Muestra todos los contenidos Educativos -->
+<div class="contenedor">
+  <h1 class="titulo">Contenido Educativo</h1>
+  <div class="grid-contenido">
     {% for item in contenidos %}
-      <div class="col-12 col-md-6 col-lg-4 mb-4">
-        <div class="card" data-bs-toggle="modal" data-bs-target="#modal{{ forloop.counter }}" style="cursor: pointer;">
-          <div class="card-body">
-            <h5 class="card-title">{{ item.titulo }}</h5>
-            <p class="card-text">{{ item.descripcion }}</p>
+      <div class="tarjeta" onclick="abrirModal('modal{{ forloop.counter }}')">
+        <div class="tarjeta-cuerpo">
+          <h5 class="tarjeta-titulo">{{ item.titulo }}</h5>
+          <p class="tarjeta-texto">{{ item.descripcion }}</p>
 
-
-            {% if item.imagen %}
-              <!-- Imagen desde MEDIA -->
-              <img src="{{ item.imagen.url }}" class="img-fluid rounded" alt="{{ item.titulo }}">
-            
-            {% elif item.videos %}
-              <!-- Si el campo videos contiene un enlace de YouTube -->
-              {% if "youtube.com" in item.videos or "youtu.be" in item.videos %}
-                <div class="ratio ratio-16x9">
-                  <iframe src="{{item.videos_embed}}" allowfullscreen></iframe>
-                </div>
-              {% else %}
-                <!-- Si el campo videos es un archivo local -->
-                <div class="ratio ratio-16x9">
-                  <video controls class="w-100 rounded">
-                    <source src="{{ item.videos.url }}" type="video/mp4">
-                    Tu navegador no soporta videos.
-                  </video>
-                </div>
-              {% endif %}
+          {% if item.imagen %}
+          <!-- permite mostrar imagen -->
+            <img src="{{ item.imagen.url }}" class="imagen" alt="{{ item.titulo }}">
+          
+          {% elif item.videos %}
+            {% if "youtube.com" in item.videos or "youtu.be" in item.videos %}
+              <div class="video-container">
+                <iframe src="{{ item.videos_embed }}" allowfullscreen></iframe>
+              </div>
+            {% else %}
+             <!-- permite mostrar video-->
+              <div class="video-container">
+                <video controls>
+                  <source src="{{ item.videos.url }}" type="video/mp4">
+                  Tu navegador no soporta videos.
+                </video>
+              </div>
             {% endif %}
-          </div>
+          {% endif %}
         </div>
       </div>
 
       <!-- Modal -->
-      <div class="modal fade" id="modal{{ forloop.counter }}" tabindex="-1" aria-labelledby="modalLabel{{ forloop.counter }}" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="modalLabel{{ forloop.counter }}">{{ item.titulo }}</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      <div id="modal{{ forloop.counter }}" class="modal">
+        <div class="modal-contenido">
+          <span class="cerrar" onclick="cerrarModal('modal{{ forloop.counter }}')">&times;</span>
+          <h5>{{ item.titulo }}</h5>
+          {% if item.imagen %}
+            <img src="{{ item.imagen.url }}" class="imagen-modal" alt="{{ item.titulo }}">
+          {% elif item.videos %}
+            {% if "youtube.com" in item.videos or "youtu.be" in item.videos %}
+              <div class="video-container">
+                <iframe src="{{ item.videos_embed }}" allowfullscreen></iframe>
+              </div>
+            {% else %}
+              <video controls class="video-modal">
+                <source src="{{ item.videos.url }}" type="video/mp4">
+                Tu navegador no soporta videos.
+              </video>
+            {% endif %}
+          {% endif %}
+          <p>{{ item.descripcion }}</p>
+          <small class="fecha">Fecha de publicación: {{ item.fecha|date:"d/m/Y" }}</small>
+=======
+<div class="container-custom"> {# Usamos una clase custom ya que .container de Bootstrap no está #}
+  <h1 class="title-custom">📚 Contenido Educativo sobre Reciclaje</h1> {# Título personalizado #}
+  <div class="row-custom"> {# Usamos una clase custom ya que .row de Bootstrap no está #}
+    {% for item in contenidos %}
+      <div class="col-custom"> {# Usamos una clase custom ya que .col- de Bootstrap no está #}
+        <div class="card-custom" data-modal-target="#modal{{ forloop.counter }}"> {# Atributo custom para el modal #}
+          {# Contenedor de la imagen/video de vista previa #}
+          <div class="card-img-top-container-custom"> 
+            {% if item.imagen %}
+              <img src="{{ item.imagen.url }}" class="card-img-top-custom" alt="{{ item.titulo }}">
+            {% elif item.videos_embed %} {# Si existe videos_embed, es YouTube #}
+                <div class="video-placeholder-custom">
+                  <i class="bx bx-play-circle icon-large"></i> {# Usamos Boxicons #}
+                </div>
+            {% elif item.video_local %} {# Si existe video_local, es un archivo de video local #}
+                <div class="video-placeholder-custom">
+                    <i class="bx bx-video icon-large"></i> {# Usamos Boxicons #}
+                </div>
+            {% else %} {# Si no hay imagen ni video, es contenido solo de texto #}
+              <div class="no-media-placeholder-custom">
+                <i class="bx bx-file-text icon-medium"></i>
+                <p class="no-media-text">Contenido de texto</p>
+              </div>
+            {% endif %}
+          </div>
+          <div class="card-body-custom"> 
+            <h5 class="card-title-custom">{{ item.titulo }}</h5>
+            <p class="card-text-custom">{{ item.descripcion|truncatechars:100 }}</p>
+            <small class="card-link-custom">Ver más detalles <i class="bx bx-right-arrow-alt"></i></small> {# Usamos Boxicons #}
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-custom" id="modal{{ forloop.counter }}">
+        <div class="modal-dialog-custom">
+          <div class="modal-content-custom">
+            <div class="modal-header-custom">
+              <h5 class="modal-title-custom">{{ item.titulo }}</h5>
+              <button type="button" class="close-button-custom" data-close-modal="#modal{{ forloop.counter }}">&times;</button>
             </div>
-            <div class="modal-body text-center">
+            <div class="modal-body-custom">
               {% if item.imagen %}
-                <img src="{{ item.imagen.url }}" class="img-fluid rounded mb-3" alt="{{ item.titulo }}">
-              {% elif item.videos %}
-                {% if "youtube.com" in item.videos or "youtu.be" in item.videos %}
-                  <div class="ratio ratio-16x9 rounded">
-                    <iframe src="{{item.videos_embed}}" allowfullscreen></iframe>
-                  </div>
-                {% else %}
-                  <video controls class="w-100 rounded">
-                    <source src="{{ item.videos.url }}" type="video/mp4">
-                    Tu navegador no soporta videos.
-                  </video>
-                {% endif %}
+                <img src="{{ item.imagen.url }}" class="modal-img-custom" alt="{{ item.titulo }}">
+              {% elif item.videos_embed %} {# Si videos_embed tiene un valor, asume que es una URL de YouTube embebible #}
+                    <div class="video-responsive-custom">
+                        <iframe src="{{ item.videos_embed }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+              {% elif item.video_local %} {# Si video_local tiene valor, muestra el video local #}
+                    <div class="video-responsive-custom">
+                        <video controls class="video-player-custom">
+                            <source src="{{ item.video_local.url }}" type="video/mp4">
+                            Tu navegador no soporta videos locales.
+                        </video>
+                    </div>
               {% endif %}
-              <p class="mt-3">{{ item.descripcion }}</p>
-              <small class="text-muted">Fecha de publicación: {{ item.fecha|date:"d/m/Y" }}</small>
+              <p class="modal-description-custom">{{ item.descripcion }}</p>
+              {% if item.tiempo_descomposicion %}
+                  <p class="modal-decomposition-custom"><strong>Tiempo de descomposición:</strong> {{ item.tiempo_descomposicion }}</p>
+              {% endif %}
+              <small class="modal-date-custom">Publicado: {{ item.fecha|date:"d/m/Y" }}</small>
             </div>
           </div>
+>>>>>>> eafef8411908a67f6427f25b468f3321552beb62
         </div>
       </div>
     {% endfor %}
   </div>
 </div>
+
+<<<<<<< HEAD
+<script>
+  function abrirModal(id) {
+    document.getElementById(id).style.display = 'block';
+  }
+
+  function cerrarModal(id) {
+    document.getElementById(id).style.display = 'none';
+  }
+
+  window.onclick = function(event) {
+    if (event.target.classList.contains('modal')) {
+      event.target.style.display = "none";
+    }
+  }
+</script>
+
+<!-- Estilos para darle diseño a la estructura -->
+<style>
+  /* Estructura general */
+  .contenedor {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  .titulo {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  /* Grid */
+  .grid-contenido {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  
+  /* Tarjeta */
+  .tarjeta {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    background-color: #fff;
+    height: 350px; /* Tamaño fijo */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .tarjeta:hover {
+    transform: scale(1.02);
+  }
+  
+  .tarjeta-cuerpo {
+    padding: 15px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  
+  .tarjeta-titulo {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .tarjeta-texto {
+    font-size: 14px;
+    color: #444;
+    margin-bottom: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* máximo 3 líneas */
+    -webkit-box-orient: vertical;
+  }
+  
+  /* Imagen dentro de tarjeta: recortada */
+  .imagen {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  
+  /* Video dentro de tarjeta: recortado */
+  .video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  
+  .video-container iframe,
+  .video-container video {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    border: none;
+  }
+  
+  /* Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+  }
+  
+  .modal-contenido {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    max-width: 800px;
+    border-radius: 10px;
+    position: relative;
+    text-align: center;
+  }
+  
+  .cerrar {
+    position: absolute;
+    top: 10px; right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #999;
+  }
+  
+  .cerrar:hover {
+    color: #333;
+  }
+  
+  /* Imagen en modal: completa */
+  .imagen-modal {
+    width: 100%;
+    max-height: 500px;
+    object-fit: contain;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .video-modal {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .fecha {
+    color: #777;
+    font-size: 13px;
+  }
+  </style>
+=======
+{# --- Estilos CSS INCRUSTADOS AQUÍ --- #}
+<style>
+    /* Reset básicos y variables si es necesario */
+    :root {
+        --primary-green: #28a745;
+        --light-gray: #f8f9fa;
+        --medium-gray: #6c757d;
+        --dark-gray: #343a40;
+        --info-blue: #17a2b8;
+    }
+
+    /* ************************************************************ */
+    /* *** AJUSTES ESPECÍFICOS PARA EL ESPACIADO DEL HEADER/FOOTER *** */
+    /* ************************************************************ */
+
+    /* Importante: Estas reglas necesitan ser evaluadas junto con el CSS de tu header y footer.
+       Si tu header es fijo, esta es la forma de empujar el contenido hacia abajo.
+       Si tu footer es muy alto o tiene problemas de margen, el padding-bottom ayudará. */
+    body {
+        padding-top: 80px; /* Ajusta este valor. Es el espacio que el contenido deja para el header.
+                              80px es un valor inicial, puede que necesites más o menos. */
+        padding-bottom: 60px; /* Ajusta este valor. Espacio que el contenido deja por encima del footer.
+                                 60px es un valor inicial, puede que necesites más o menos. */
+    }
+
+    /* Puedes intentar añadir un margen superior directamente al contenedor principal también,
+       en lugar de (o además de) padding-top al body, si eso funciona mejor con tu layout.
+    */
+    .container-custom {
+        max-width: 1200px; /* Ancho máximo similar a Bootstrap container */
+        margin: 0 auto; /* Centrar horizontalmente. Los márgenes verticales los da el body padding. */
+        padding: 0 15px; /* Padding a los lados */
+        /* margin-top: 80px; /* Alternativa o complemento al padding-top del body */
+        /* margin-bottom: 60px; /* Alternativa o complemento al padding-bottom del body */
+    }
+
+
+    /* Título principal */
+    .title-custom {
+        text-align: center;
+        margin-bottom: 50px;
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: var(--primary-green);
+    }
+
+    /* Estilos de la rejilla (grid) de tarjetas */
+    .row-custom {
+        display: flex;
+        flex-wrap: wrap;
+        margin: -10px; /* Margen negativo para compensar padding de columnas */
+        justify-content: center; /* Centrar tarjetas si hay pocas */
+    }
+
+    .col-custom {
+        flex: 0 0 auto;
+        width: 100%; /* Por defecto 100% para móviles */
+        padding: 10px; /* Espacio entre columnas */
+        box-sizing: border-box; /* Incluir padding en el ancho */
+    }
+
+    /* Media queries para responsive (simulando col-sm-6, col-md-6, col-lg-4) */
+    @media (min-width: 576px) { /* sm */
+        .col-custom {
+            width: 50%; /* 2 columnas */
+        }
+    }
+    @media (min-width: 768px) { /* md */
+        .col-custom {
+            width: 50%; /* 2 columnas */
+        }
+    }
+    @media (min-width: 992px) { /* lg */
+        .col-custom {
+            width: 33.333%; /* 3 columnas */
+        }
+    }
+
+    /* Estilos para las tarjetas de contenido educativo */
+    .card-custom {
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.075); /* Sombra ligera */
+        overflow: hidden;
+        height: 100%; /* Asegura que todas las tarjetas tengan la misma altura en la fila */
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        cursor: pointer;
+    }
+
+    .card-custom:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-img-top-container-custom {
+        width: 100%;
+        height: 180px;
+        overflow: hidden;
+        background-color: #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .card-img-top-custom {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .card-custom:hover .card-img-top-custom {
+        transform: scale(1.05);
+    }
+
+    .video-placeholder-custom, .no-media-placeholder-custom {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 15px;
+        text-align: center;
+    }
+    .video-placeholder-custom {
+        background-color: var(--dark-gray);
+        color: white;
+    }
+    .no-media-placeholder-custom {
+        background-color: var(--light-gray);
+        color: var(--medium-gray);
+    }
+    .icon-large {
+        font-size: 3rem;
+        margin-bottom: 10px; /* Espacio entre icono y texto/nada */
+    }
+    .icon-medium {
+        font-size: 2.5rem;
+        margin-bottom: 5px;
+    }
+    .no-media-text {
+        font-size: 0.9rem;
+        margin-top: 5px;
+        margin-bottom: 0;
+    }
+
+    .card-body-custom {
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1; /* Permite que el cuerpo ocupe el espacio restante */
+    }
+
+    .card-title-custom {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--primary-green);
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+    }
+
+    .card-text-custom {
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: var(--medium-gray);
+        margin-bottom: 1rem;
+        flex-grow: 1; /* Permite que el texto crezca y empuje el link hacia abajo */
+    }
+
+    .card-link-custom {
+        font-size: 0.85rem;
+        color: var(--info-blue);
+        font-weight: 600;
+        text-align: right;
+        display: block; /* Para aplicar text-align */
+        margin-top: auto; /* Empuja el enlace hacia abajo */
+    }
+
+    /* Estilos del Modal */
+    .modal-custom {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+        display: none; /* Oculto por defecto */
+        align-items: center; /* Centrar verticalmente */
+        justify-content: center; /* Centrar horizontalmente */
+        z-index: 1050; /* Z-index alto para estar encima de todo */
+        overflow-y: auto; /* Para permitir scroll si el contenido es largo */
+        padding: 20px; /* Espaciado alrededor del modal */
+        box-sizing: border-box;
+    }
+
+    .modal-custom.show {
+        display: flex; /* Mostrar el modal */
+    }
+
+    .modal-dialog-custom {
+        background-color: white;
+        border-radius: 8px;
+        max-width: 800px; /* Ancho máximo del modal */
+        width: 100%;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        animation: fadeIn 0.3s ease-out; /* Animación de aparición */
+        margin: auto; /* Asegura el centrado */
+    }
+
+    .modal-content-custom {
+        display: flex;
+        flex-direction: column;
+        height: 100%; /* Ocupar la altura disponible en el dialog */
+    }
+
+    .modal-header-custom {
+        background-color: var(--primary-green);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #eee; /* Separador */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+
+    .modal-title-custom {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .close-button-custom {
+        background: none;
+        border: none;
+        font-size: 2rem;
+        color: white;
+        cursor: pointer;
+        padding: 0;
+        line-height: 1; /* Asegura que la 'x' se vea bien */
+        opacity: 0.7; /* Para que se distinga */
+        transition: opacity 0.2s ease;
+    }
+    .close-button-custom:hover {
+        opacity: 1;
+    }
+
+    .modal-body-custom {
+        padding: 1.5rem;
+        text-align: center; /* Centrar imágenes/videos */
+        overflow-y: auto; /* Permitir scroll dentro del body si es muy largo */
+        flex-grow: 1; /* Para que ocupe el espacio si es necesario */
+    }
+
+    .modal-img-custom, .video-player-custom {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .video-responsive-custom {
+        position: relative;
+        width: 100%;
+        padding-bottom: 56.25%; /* 16:9 aspect ratio */
+        height: 0;
+        overflow: hidden;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .video-responsive-custom iframe, .video-responsive-custom video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    .modal-description-custom, .modal-decomposition-custom {
+        text-align: left; /* Descripción y descomposición alineadas a la izquierda */
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        color: var(--medium-gray);
+        line-height: 1.6;
+    }
+    .modal-decomposition-custom strong {
+        color: var(--dark-gray);
+    }
+
+    .modal-date-custom {
+        font-size: 0.8rem;
+        color: #999;
+        display: block;
+        text-align: right;
+    }
+
+    /* Animación para el modal */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Responsive adjustments para el modal */
+    @media (max-width: 768px) {
+        .modal-dialog-custom {
+            max-width: 95%; /* Un poco más de margen en pantallas pequeñas */
+        }
+    }
+</style>
+{# --- JavaScript para el funcionamiento del modal (sin Bootstrap JS) --- #}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Abrir modal
+    document.querySelectorAll('.card-custom').forEach(card => {
+        card.addEventListener('click', function() {
+            const modalId = this.getAttribute('data-modal-target');
+            const modal = document.querySelector(modalId);
+            if (modal) {
+                modal.classList.add('show');
+                document.body.style.overflow = 'hidden'; // Evita scroll en el body
+            }
+        });
+    });
+
+    // Cerrar modal
+    document.querySelectorAll('.close-button-custom, .modal-custom').forEach(element => {
+        element.addEventListener('click', function(event) {
+            // Si el clic es en el botón de cerrar o en el fondo oscuro del modal
+            if (event.target.classList.contains('close-button-custom') || event.target.classList.contains('modal-custom')) {
+                const modal = event.target.closest('.modal-custom');
+                if (modal) {
+                    modal.classList.remove('show');
+                    document.body.style.overflow = ''; // Restaura scroll en el body
+                }
+            }
+        });
+    });
+});
+</script>
+>>>>>>> eafef8411908a67f6427f25b468f3321552beb62
 {% endblock %}

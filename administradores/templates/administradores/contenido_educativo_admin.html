@@ -1,14 +1,16 @@
 {% extends 'administradores/base.html' %}
 {% load static %}
 {% block content %}
+<!-- Manejado por America Garcia Lara
+ Muestra todos los contenidos educativos y permite realizar acciones como Editar, crear y eliminar   -->
 <div class="container">
   <h1 class="mt-4 mb-4">Contenido Educativo - Administración</h1>
   <div class="d-flex justify-content-end mb-3">
   <a href="{% url 'administradores:contenido_crear' %}" class="btn btn-success">
-    <i class="bi bi-plus-lg"></i> Agregar Nuevo Contenido
+    <i class="bi bi-plus-lg"></i> Agregar Nuevo Contenido <!--  Boton de agregar   -->
   </a>
-</div>
-
+</div>  
+<!-- Permite mostrar todos los contenidos educativos existentes -->
   <div class="row g-4">
     {% for item in contenidos %}
       <div class="col-12 col-md-6 col-lg-4 mb-4">
@@ -39,6 +41,7 @@
             <a href="{% url 'administradores:contenido_editar' item.pk %}" class="btn btn-sm btn-secondary">
               <i class="bi bi-pencil"></i>Editar
           </a>
+          <!-- Confirmar borrar -->
             <form action="{% url 'administradores:contenido_borrar' item.pk %}" method="post" onsubmit="return confirm('¿Eliminar este contenido?');">
               {% csrf_token %}
               <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>

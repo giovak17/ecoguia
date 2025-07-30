@@ -6,7 +6,7 @@ from core.models import Usuarios, Roles, Recicladoras
 from django.contrib import messages
 from core.models import ContenidoEducativo, TipoMaterialReciclable
 from usuarios.views import convertir_a_embed
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, NON_FIELD_ERRORS 
 from django.contrib.auth.decorators import user_passes_test
 from core.auth import login_required
 import subprocess, datetime, os
@@ -14,6 +14,7 @@ from django.conf import settings
 from .forms import UsuarioForm
 from .forms import TipoMaterialReciclableForm
 from django.db import connection
+
 
 # from core.models import (
 #     Entregas,
@@ -31,10 +32,13 @@ from django.db import transaction,  IntegrityError
 @login_required(role="administrador")
 def index(request):
     return render(request, "administradores/index.html")
-
+# manejado por America Lara 
+# vista para mostrar recicladoras
 def ver_recicladoras(request):
     recicladoras = Recicladoras.objects.select_related('propietario').all()
     return render(request, 'administradores/recicladoras.html', {'recicladoras': recicladoras})
+# manejado por America Lara 
+# vista para crear recicladoras
 def recicladora_crear(request):
     errores = {}
     recicladora_data = {}
@@ -91,7 +95,6 @@ def recicladora_crear(request):
     })
 
 
-
 def recicladora_editar(request, pk):
     recicladora = get_object_or_404(Recicladoras, pk=pk)
     errores = {}
@@ -136,7 +139,8 @@ def recicladora_editar(request, pk):
         'propietarios': propietarios,
         'titulo': 'Editar Recicladora'
     })
-
+# manejado por America Lara 
+# vista para eliminar recicladoras
 def recicladora_eliminar(request, pk):
     recicladora = get_object_or_404(Recicladoras, pk=pk)
     if request.method == 'POST':
@@ -262,45 +266,44 @@ def aprobar_recicladoras(request: HttpRequest):
 
     return render(request, "administradores/aprobar_recicladoras.html", {"recicladoras":recicladoras, "success": success })
 
-# Solo admins pueden entrar
 
-
-# @user_passes_test(lambda u: u.is_staff)
 def validar_campos(titulo, descripcion, videos):
     errores = {}
 
     # Validar título
     if not titulo:
-        errores['titulo'] = "El título es obligatorio."
+        errores['titulo'] = ["El título es obligatorio."] # <-- Cambiado a lista
     elif len(titulo) > 25:
-        errores['titulo'] = "El título no debe exceder 25 caracteres."
+        errores['titulo'] = ["El título no debe exceder 25 caracteres."] # <-- Cambiado a lista
 
     # Validar descripción
     if not descripcion:
-        errores['descripcion'] = "La descripción es obligatoria."
+        errores['descripcion'] = ["La descripción es obligatoria."] # <-- Cambiado a lista
     elif len(descripcion) < 10:
-        errores['descripcion'] = "La descripción debe tener al menos 10 caracteres."
+        errores['descripcion'] = ["La descripción debe tener al menos 10 caracteres."] # <-- Cambiado a lista
 
     # Validar enlace de video (si existe)
     if videos and not videos.startswith(('http://', 'https://')):
-        errores['videos'] = "El enlace de video debe ser una URL válida."
+        errores['videos'] = ["El enlace de video debe ser una URL válida (http:// o https://)."] # <-- Cambiado a lista
 
     # Si hay errores, lanzar excepción
     if errores:
         raise ValidationError(errores)
-
+# manejado por America Lara 
+# vista para mostrar contenidos educativos
 def contenido_educativo_admin(request):
     contenidos = ContenidoEducativo.objects.all()
     for contenido in contenidos:
         if contenido.videos:
             contenido.videos_embed = convertir_a_embed(contenido.videos)
     return render(request, 'administradores/contenido_educativo_admin.html', {'contenidos': contenidos})
-
+# manejado por America Lara 
+# vista para crear Contendios educativos
 def contenido_crear(request):
     if request.method == 'POST':
         titulo = request.POST.get('titulo')
         descripcion = request.POST.get('descripcion')
-        id_usuario_ce = request.user.id  # o lo que uses para relacionar usuario
+        id_usuario_ce = request.user.id_usuario
         imagen = request.FILES.get('imagen')
         videos = request.POST.get('videos')
         video_local = request.FILES.get('video_local')
@@ -324,30 +327,68 @@ def contenido_crear(request):
             return render(request, 'administradores/contenido_form.html', {'errores': errores, 'contenido': nuevo})
 
     return render(request, 'administradores/contenido_form.html')
-
+# manejado por America Lara 
+# vista para editar contendios educativos
 def contenido_editar(request, pk):
     contenido = get_object_or_404(ContenidoEducativo, pk=pk)
 
     if request.method == 'POST':
+        # Actualiza los campos directamente desde POST
         contenido.titulo = request.POST.get('titulo')
         contenido.descripcion = request.POST.get('descripcion')
-        contenido.videos = request.POST.get('videos')
+        contenido.videos = request.POST.get('videos') # URL de YouTube
 
+        # Lógica para subir nueva imagen o mantener existente/eliminar
         if 'imagen' in request.FILES:
             contenido.imagen = request.FILES['imagen']
+        elif request.POST.get('imagen-clear'):
+            contenido.imagen = None
+        
         if 'video_local' in request.FILES:
             contenido.video_local = request.FILES['video_local']
+        elif request.POST.get('video_local-clear'):
+            contenido.video_local = None
 
         try:
+            # Primero las validaciones de campos básicos (de validar_campos)
+            # Esto lanzará ValidationError con un diccionario si hay errores de campo.
             validar_campos(contenido.titulo, contenido.descripcion, contenido.videos)
-            contenido.clean()
+            
+            # Luego, la validación del modelo. Esto lanzará ValidationError con una cadena simple.
+            contenido.clean() 
+
             contenido.save()
+            messages.success(request, 'Contenido educativo actualizado correctamente.')
             return redirect('administradores:contenido_admin')
         except ValidationError as e:
-            errores = e.message_dict
-            return render(request, 'administradores/contenido_form.html', {'errores': errores, 'contenido': contenido})
+            # ***************************************************************
+            # *********** GESTIÓN DE ERRORES UNIFICADA ********************
+            # ***************************************************************
+            errores_para_template = {} # Diccionario para pasar al template
 
+            if hasattr(e, 'message_dict'):
+                # Si la excepción viene de validar_campos o un Form de Django
+                errores_para_template = e.message_dict
+            else:
+                # Si la excepción viene del contenido.clean() del modelo (que lanza una cadena)
+                # o cualquier otra ValidationError lanzada como una lista o cadena simple.
+                # Lo convertimos a un formato de diccionario bajo la clave __all__ o NON_FIELD_ERRORS.
+                if isinstance(e.message, dict): # Si por alguna razón es un dict (raro para ValidationError simple)
+                    errores_para_template = e.message
+                elif isinstance(e.message, list): # Si es una lista de mensajes
+                    errores_para_template[NON_FIELD_ERRORS] = e.message
+                else: # Si es una cadena simple (como la de tu clean())
+                    errores_para_template[NON_FIELD_ERRORS] = [e.message]
+            
+            # Pasamos el diccionario de errores al template
+            return render(request, 'administradores/contenido_form.html', {
+                'errores': errores_para_template,
+                'contenido': contenido
+            })
+
+    # Para la solicitud GET
     return render(request, 'administradores/contenido_form.html', {'contenido': contenido})
+
 
 def contenido_borrar(request, pk):
     contenido = get_object_or_404(ContenidoEducativo, pk=pk)
@@ -422,7 +463,8 @@ def restaurar_toda_db(request):
 
         db_pass = request.POST.get('db_password')
 
-        respaldo_fijo = os.path.join(settings.BASE_DIR, "administradores", "backup", "backup_2025-07-29_12-42-54.backup")
+        # respaldo_fijo = os.path.join(settings.BASE_DIR, "administradores", "backup", "backup_2025-07-29_12-42-54.backup")
+        respaldo_fijo = os.path.join(settings.BASE_DIR, "administradores", "backup", "backup_2025-07-30_04-23-41.backup")
 
         pg_restore_path = r"C:\Program Files\PostgreSQL\17\bin\pg_restore.exe"
 

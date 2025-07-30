@@ -19,21 +19,22 @@
       <!-- Menú colapsable -->
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="nav-links">
-          <li>
-            <a class="{% if request.resolver_match.url_name == 'index' %}active{% endif %}" href="{% url 'usuarios:mostrarentregas' %}">Inicio</a>
-          </li> 
+         <li>
+            <a class="{% if request.resolver_match.url_name == 'mostrarentregas' %}active{% endif %}" href="{% url 'usuarios:html_recicladoras_materiales' %}">Puntos de reciclaje</a>
+          </li>
           <li>
             <a class="{% if request.resolver_match.url_name == 'contenido_educativo' %}active{% endif %}" href="{% url 'usuarios:contenido_educativo' %}">Contenido Educativo</a>
           </li>
+           <li>
+            <a class="{% if request.resolver_match.url_name == 'index' %}active{% endif %}" href="{% url 'usuarios:mostrarentregas' %}">Historial de reciclaje</a>
+          </li> 
           <li>
-            <a class="{% if request.resolver_match.url_name == 'mostrarentregas' %}active{% endif %}" href="{% url 'usuarios:mapa_puntos' %}">Mapa</a>
+              <a class="nav-link active" href="{% url 'usuarios:clasificacion_materiales' %}">Clasificacion de materiales</a>
           </li>
-          <li>
-            <a class="{% if request.resolver_match.url_name == 'mostrarentregas' %}active{% endif %}" href="{% url 'usuarios:html_recicladoras_materiales' %}">Puntos de reciclaje</a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link active" href="{% url 'usuarios:clasificacion_materiales' %}">Clasificaciones</a>
-          </li>
+           <li>
+            <a class="{% if request.resolver_match.url_name == 'ranking' %}active{% endif %}" href="{% url 'usuarios:ranking_usuarios' %}">Ranking de usuarios</a>
+          </li> 
+
         </ul>
       </div>
 
