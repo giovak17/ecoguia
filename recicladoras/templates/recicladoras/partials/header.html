@@ -24,6 +24,18 @@
                 <li class="nav-item">
                     <a class="nav-link active" href="{% url 'recicladoras:confirmar_entregas' %}">Confirmar entregas</a>
                 </li>
+                <div class="d-flex ms-auto">
+        {% if request.user %}
+          <div class="dropdown">
+            <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ request.user.nombre }} {{ request.user.ap_paterno }}
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{% url 'usuarios:logout' %}">Cerrar Sesión</a></li>
+            </ul>
+            {% else %}
+            {% endif %}
+
             </ul>
         </div>
     </div>
