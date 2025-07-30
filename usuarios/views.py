@@ -17,6 +17,9 @@ from django.utils.timezone import now
 def index(request):
     return render(request, "usuarios/index.html")
 
+def info(request):
+    return render(request, "usuarios/infoecoguia.html")
+
 
 def login(request: HttpRequest):
     if request.method == "GET":
@@ -207,13 +210,6 @@ def usuariosregistro(request):
 
     return render(request, "usuarios/registro.html")
 
-
-# def mapa_puntos_google(request):
-#     puntos = list(PuntosReciclaje.objects.values(
-#         'nombre', 'latitud', 'longitud', 'ubicacion', 'ciudad'
-#     ))
-#     return render(request, 'usuarios/mapa_google.html', {'puntos': puntos})
-
 def usuarios_delete(request, pk):
     usuarios = get_object_or_404(Usuarios, pk=pk)
 
@@ -296,35 +292,6 @@ def mostrarentregas(request):
     return render(request, "usuarios/mostrarentregas.html",{'entregas': entregas, 'retos': retos,
 })
     #return render(request, "usuarios/registro.html")
-
-# def mapa_google(request):
-#     material_filtro = request.GET.get('material')
-#     ubicacion_filtro = request.GET.get('ubicacion')
-
-#     # Consulta base
-#     puntos_qs = PuntosReciclaje.objects.all()
-
-#     # Filtro por ciudad o ubicación
-#     if ubicacion_filtro:
-#         puntos_qs = puntos_qs.filter(ciudad__icontains=ubicacion_filtro)
-
-#     # Filtro por tipo de material (a través de recicladora → materialreciclable)
-#     if material_filtro:
-#         puntos_qs = puntos_qs.filter(
-#             id_recicladora__materialreciclable__tipo_reciclaje__nombre__icontains=material_filtro
-#         ).distinct()
-
-#     # Convertir a lista de dict para usar en el template con json_script
-#     puntos = list(puntos_qs.values(
-#         'nombre', 'latitud', 'longitud', 'ubicacion', 'ciudad'
-#     ))
-
-#     tipos_materiales = TipoMaterialReciclable.objects.all()
-
-#     return render(request, 'usuarios/mapa_google.html', {
-#         'puntos': puntos,
-#         'tipos_materiales': tipos_materiales
-#     })
     
 def vista_json_recicladoras_con_materiales(request):
     datos = []

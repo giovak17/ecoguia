@@ -9,6 +9,7 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("login/", views.login, name="login"),
     path("logout/", views.logout, name="logout"),
+    path("info/", views.info, name="info"),
     path("perfil/", views.perfil_usuario, name="perfil_usuario"),
     path('contenido-educativo/', views.contenido_educativo, name='contenido_educativo'),
     path('Entregas/', views.lista_entregas, name='lista_entregas'),
@@ -21,7 +22,7 @@ urlpatterns = [
     
     path('api/recicladoras-materiales/', views.vista_json_recicladoras_con_materiales, name='api_recicladoras_materiales'),
     path('recicladoras-materiales/', views.vista_html_recicladoras_con_materiales, name='html_recicladoras_materiales'),
+    path('recicladoras/<int:id_punto>/', views.detalle_punto_reciclaje, name='punto_detalle'),
     
-    path('punto/<int:id_punto>/', views.detalle_punto_reciclaje, name='punto_detalle'),
 
 ]
