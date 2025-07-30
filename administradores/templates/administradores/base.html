@@ -37,6 +37,12 @@
 				</a>
 			</li>
 
+			<li class="{% if request.resolver_match.url_name == 'contenido_admin' %}active{% endif %}">
+				<a href="{% url 'administradores:contenido_admin' %}">
+					<i class='bx bxs-factory'></i><span class="text">Crear contenido Educativo</span>
+				</a>
+			</li>
+
 			<li class="{% if request.resolver_match.url_name == 'ver_recicladoras' %}active{% endif %}">
 				<a href="{% url 'administradores:ver_recicladoras' %}">
 					<i class='bx bxs-factory'></i><span class="text">Recicladoras</span>

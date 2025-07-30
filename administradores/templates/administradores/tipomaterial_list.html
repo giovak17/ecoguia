@@ -1,5 +1,5 @@
 
-{% extends 'recicladoras/base.html' %}
+{% extends 'administradores/base.html' %}
 
 {% load static %}
 
@@ -10,7 +10,7 @@
 <div class="container py-4" style="max-width: 1200px; margin: 0 auto;">
   <h2 class="mb-4" style="font-weight: bold; color: #2c3e50;">Tipos de Material Reciclable</h2>
 
-  <a href="{% url 'recicladoras:tipomaterial_registro' %}" 
+  <a href="{% url 'administradores:tipomaterial_registro' %}" 
      class="btn mb-4 px-3 py-2" 
      style="background-color: #27ae60; color: white; font-size: 0.95rem; border-radius: 6px;">
     Crear Nuevo
@@ -44,12 +44,12 @@
           </td>
           <td style="padding: 8px;">
             <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-              <a href="{% url 'recicladoras:tipomaterial_actualizar' tipo.pk %}" 
+              <a href="{% url 'administradores:tipomaterial_actualizar' tipo.pk %}" 
                  class="btn btn-info " 
                  style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
                 Editar
               </a>
-              <a href="{% url 'recicladoras:tipomaterial_delete' tipo.pk %}" 
+              <a href="{% url 'administradores:tipomaterial_delete' tipo.pk %}" 
                  class="btn btn-danger " 
                  style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
                 Eliminar
