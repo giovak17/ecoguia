@@ -41,8 +41,13 @@
 					<i class='bx bxs-factory'></i><span class="text">Recicladoras</span>
 				</a>
 			</li>
-			<li class="{% if request.resolver_match.url_name == 'backup' %}active{% endif %}">
-				<a href="{% url 'administradores:backup' %}">
+			<li class="{% if request.resolver_match.url_name == 'tipomaterial_list' %}active{% endif %}">
+				<a href="{% url 'administradores:tipomaterial_list' %}">
+					<i class='bx bxs-user-minus'></i><span class="text">Agregar nuevos materiales reciclables</span>
+				</a>
+			</li>
+			<li class="{% if request.resolver_match.url_name == 'backupscreen' %}active{% endif %}">
+				<a href="{% url 'administradores:backupscreen' %}">
 					<i class='bx bxs-user-minus'></i><span class="text">Respaldar datos</span>
 				</a>
 			</li>

@@ -78,8 +78,9 @@ CREATE TABLE publicaciones (
 CREATE TABLE tipo_material_reciclable (
     id_tmr SERIAL PRIMARY KEY,
     nombre VARCHAR(100),
-    descripcion TEXT,
-    tiempo_descomposicion VARCHAR(100)
+    descripcion TEXT,	
+    tiempo_descomposicion VARCHAR(100),
+    imagen VARCHAR(100)
 );
 
 
@@ -215,16 +216,16 @@ INSERT INTO publicaciones (titulo, contenido, id_usuario_p) VALUES ('Limpieza en
 INSERT INTO publicaciones (titulo, contenido, id_usuario_p) VALUES ('Reciclar es fácil', 'Solo necesitas separar tus residuos y llevarlos al punto más cercano.', 4);
 
 --tipo material
-INSERT INTO tipo_material_reciclable (nombre, descripcion, tiempo_descomposicion) VALUES
-('Metales', 'Materiales como aluminio, acero y cobre comúnmente reciclados por su valor y durabilidad.', '200-500 años'),
-('Electrónicos', 'Dispositivos eléctricos como celulares, computadoras y electrodomésticos, que contienen metales y componentes peligrosos.', '1 millón de años (componentes no biodegradables)'),
-('Baterías', 'Acumuladores de energía como pilas y baterías recargables, que pueden contener sustancias tóxicas.', '100-1000 años'),
-('Papel', 'Material de origen vegetal usado en impresión, embalaje y escritura. Altamente reciclable.', '2-6 semanas'),
-('Cartón', 'Derivado del papel, utilizado comúnmente para embalajes. Biodegradable y reciclable.', '2 meses'),
-('Plástico', 'Material sintético derivado del petróleo, muy usado en envases y productos diarios.', '100-1000 años'),
-('Vidrio', 'Material inorgánico usado en botellas, frascos y ventanas. Reciclable infinitamente.', '1 millón de años'),
-('Madera', 'Material orgánico usado en muebles y construcción. Biodegradable bajo condiciones naturales.', '1-3 años'),
-('Materiales Peligrosos', 'Residuos con componentes tóxicos o reactivos como solventes, aceites, químicos industriales.', 'Depende del tipo, algunos son indefinidamente tóxicos');
+INSERT INTO tipo_material_reciclable (nombre, descripcion, tiempo_descomposicion, imagen) VALUES
+('Metales', 'Materiales como aluminio, acero y cobre comúnmente reciclados por su valor y durabilidad.', '200-500 años', 'clasificacion/metal_AOeT0PQ.jpeg' ),
+('Electrónicos', 'Dispositivos eléctricos como celulares, computadoras y electrodomésticos, que contienen metales y componentes peligrosos.', '1 millón de años (componentes no biodegradables)', 'clasificacion/electronico.jpeg'),
+('Baterías', 'Acumuladores de energía como pilas y baterías recargables, que pueden contener sustancias tóxicas.', '100-1000 años','clasificacion/baterias.jpeg'),
+('Papel', 'Material de origen vegetal usado en impresión, embalaje y escritura. Altamente reciclable.', '2-6 semanas','clasificacion/papel.jpeg'),
+('Cartón', 'Derivado del papel, utilizado comúnmente para embalajes. Biodegradable y reciclable.', '2 meses','clasificacion/carton_Z3Nsfg5.jpeg'),
+('Plástico', 'Material sintético derivado del petróleo, muy usado en envases y productos diarios.', '100-1000 años','clasificacion/plastico.jpeg'),
+('Vidrio', 'Material inorgánico usado en botellas, frascos y ventanas. Reciclable infinitamente.', '1 millón de años','clasificacion/vidrio.jpeg'),
+('Madera', 'Material orgánico usado en muebles y construcción. Biodegradable bajo condiciones naturales.', '1-3 años','clasificacion/madera.jpeg'),
+('Materiales Peligrosos', 'Residuos con componentes tóxicos o reactivos como solventes, aceites, químicos industriales.', 'Depende del tipo, algunos son indefinidamente tóxicos','clasificacion/materialpeligroso.jpeg');
 
 
 --materiales

@@ -85,6 +85,7 @@ class PuntosReciclaje(models.Model):
     horario_entrada = models.TimeField(blank=True, null=True)
     horario_salida = models.TimeField(blank=True, null=True)
     id_recicladora = models.ForeignKey('Recicladoras', models.DO_NOTHING, db_column='id_recicladora', blank=True, null=True)
+    ciudad = models.CharField(max_length=50, blank=True, null=True)
     #se usaran para que funcione google maps 
     extras = models.TextField(blank=True, null=True)
     latitud = models.FloatField(blank=True, null=True)
@@ -201,3 +202,12 @@ class SolicitudRegistro(models.Model):
     telefono_contacto = models.CharField(max_length=20)
     materiales_aceptados = models.TextField()
     aprobado = models.BooleanField(default=False)
+    
+class MaterialAceptado(models.Model):
+    id_ma = models.AutoField(primary_key=True)
+    id_punto = models.ForeignKey('PuntosReciclaje', on_delete=models.CASCADE, db_column='id_punto')
+    id_tipo_material = models.ForeignKey('TipoMaterialReciclable', on_delete=models.CASCADE, db_column='id_tipo_material')
+
+    class Meta:
+        managed = False
+        db_table = 'material_aceptado'

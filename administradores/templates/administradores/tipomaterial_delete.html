@@ -1,4 +1,4 @@
-{% extends 'recicladoras/base.html' %}
+{% extends 'administradores/base.html' %}
 
 {% block title %}Eliminar Tipo de Material{% endblock %}
 
@@ -7,6 +7,6 @@
 <form method="post">
     {% csrf_token %}
     <button type="submit" class="btn btn-danger">Eliminar</button>
-    <a href="{% url 'recicladoras:tipomaterial_list' %}" class="btn btn-info">Cancelar</a>
+    <a href="{% url 'administradores:tipomaterial_list' %}" class="btn btn-info">Cancelar</a>
 </form>
 {% endblock %}

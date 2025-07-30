@@ -91,6 +91,43 @@ WSGI_APPLICATION = "project.wsgi.application"
 #     }
 # }
 
+# Crear archivo .env, basarse en .env.example
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": os.getenv("DB_NAME"),
+#         "USER": os.getenv("DB_USER"),
+#         "PASSWORD": os.getenv("DB_PASSWORD"),
+#         "HOST": os.getenv("DB_HOST"),
+#         "PORT": os.getenv("DB_PORT"),
+#     }
+# }
+
+#no lo borren el toño y yo no le supimos a lo otro jajajajjajajajajjaja
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "ecoguia",
+#         "USER": "postgres",
+#         "PASSWORD": "chela",
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
+
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "Ecoguia",
+#         "USER": "postgres",
+#         "PASSWORD": "1234",
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
+
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -129,16 +166,16 @@ LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 
 #Conexion del toño
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "ecoguia",
-#         "USER": "postgres",
-#         "PASSWORD": "chela",
-#         "HOST": "127.0.0.1",
-#         "PORT": "5432",
-#     }
-# }
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "ecoguia",
+        "USER": "postgres",
+        "PASSWORD": "chela",
+        "HOST": "127.0.0.1",
+        "PORT": "5432",
+    }
+}
 
 USE_I18N = True
 

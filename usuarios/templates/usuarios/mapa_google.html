@@ -19,7 +19,7 @@
   {# Ya no inyectamos puntos en JSON inicial, ya usaremos Ajax para cargarlos #}
   {# {{ puntos|json_script:"puntosData" }} #}
 </div>
-
+<!-- JS para el mapa -->
 <script>
   let map;
   let markers = [];
@@ -109,7 +109,7 @@
   }
 </script>
 
-<!-- Carga de la API de Google Maps -->
+<!-- Carga la API de Google Maps -->
 <script async defer
   src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY_AQUI&callback=initMap">
 </script>
