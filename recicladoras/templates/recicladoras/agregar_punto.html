@@ -13,7 +13,6 @@
       <form method="post" action="{% url 'recicladoras:agregar_punto' %}" class="needs-validation" novalidate>
         {% csrf_token %}
 
-        <!-- Nombre -->
         <div class="row align-items-center mb-2">
           <label for="nombre" class="col-sm-4 col-form-label small fw-semibold">Nombre</label>
           <div class="col-sm-8">
@@ -22,7 +21,6 @@
           </div>
         </div>
 
-        <!-- Ubicación -->
         <div class="row align-items-start mb-2">
           <label for="ubicacion" class="col-sm-4 col-form-label small fw-semibold">Ubicación</label>
           <div class="col-sm-8">
@@ -31,7 +29,6 @@
           </div>
         </div>
 
-        <!-- Teléfono, Entrada, Salida -->
         <div class="row mb-2 g-2">
           <div class="col-5 col-sm-4">
             <label for="telefono" class="form-label small fw-semibold">Teléfono</label>
@@ -49,8 +46,15 @@
             <div class="invalid-feedback">Obligatorio</div>
           </div>
         </div>
+        
+        <div class="row align-items-center mb-2">
+            <label for="ciudad" class="col-sm-4 col-form-label small fw-semibold">Ciudad</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control form-control-sm" id="ciudad" name="ciudad" placeholder="Ej. Tijuana" required>
+                <div class="invalid-feedback">Obligatorio</div>
+            </div>
+        </div>
 
-        <!-- Descripción -->
         <div class="row align-items-start mb-2">
           <label for="descripcion" class="col-sm-4 col-form-label small fw-semibold">Descripción</label>
           <div class="col-sm-8">
@@ -59,7 +63,6 @@
           </div>
         </div>
 
-        <!-- Latitud y Longitud -->
         <div class="row mb-2 g-2">
           <div class="col-6 col-sm-6">
             <label for="latitud" class="form-label small fw-semibold">Latitud</label>
@@ -73,7 +76,6 @@
           </div>
         </div>
 
-        <!-- Extras -->
         <div class="row align-items-start mb-3">
           <label for="extras" class="col-sm-4 col-form-label small fw-semibold">Extras</label>
           <div class="col-sm-8">
@@ -81,7 +83,20 @@
           </div>
         </div>
 
-        <!-- Recicladora -->
+        <div class="row align-items-start mb-3">
+          <label class="col-sm-4 col-form-label small fw-semibold">Materiales Aceptados</label>
+          <div class="col-sm-8">
+            <div class="border p-2 rounded bg-light" style="max-height: 150px; overflow-y: auto;">
+              {% for material in tipos_materiales %}
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="material_{{ material.id_tmr }}" name="materiales_aceptados" value="{{ material.id_tmr }}">
+                  <label class="form-check-label small" for="material_{{ material.id_tmr }}">{{ material.nombre }}</label>
+                </div>
+              {% endfor %}
+            </div>
+            <div class="form-text text-muted small">Selecciona todos los materiales que este punto acepta.</div>
+          </div>
+        </div>
         <div class="row align-items-center mb-3">
           <label for="id_recicladora" class="col-sm-4 col-form-label small fw-semibold">Recicladora</label>
           <div class="col-sm-8">
@@ -95,7 +110,6 @@
           </div>
         </div>
 
-        <!-- Botón Guardar -->
         <div class="text-center">
           <button type="submit" class="btn btn-success btn-sm px-4 fw-semibold d-flex align-items-center mx-auto">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-check2-circle me-2" viewBox="0 0 16 16">
