@@ -1,70 +1,43 @@
 
-
-
-
 {% extends "recicladoras/base.html" %}
-
-{% block title %} Confirmar entregas {% endblock %}
+{% load static %}
+{% block title %}Confirmar Entregas - EcoGuia{% endblock %}
 
 {% block content %}
-    <h1 class="text-center fw-bold p-4">Entregas</h1>
+    <link rel="stylesheet" href="{% static 'recicladoras/css/confirmar_entregas.css' %}">
+    <script src="{% static 'recicladoras/js/confirmar_entregas.js' %}"></script>
 
-    {% if success %}
-        <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
-            Cambios aplicados de manera exitosa.
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-        </div>
-    {% endif %}
+    <div class="entrega-page">
+        <h1 class="entrega-title">Registrar Entrega de Material</h1>
 
-    <form method="POST">
-        {% csrf_token %}
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Fecha Entrega</th>
-                    <th scope="col">Usuario</th>
-                    <th scope="col">Correo</th>
-                    <th scope="col">Punto Entrega</th>
-                    <th scope="col">Materiales</th>
-                    <th scope="col">Confirmada</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in entregas %}
-                    <tr>
-                        <th scope="row">{{ forloop.counter }}</th>
-                        <td>{{ item.entrega.fecha_entrega|date:"Y-m-d H:i" }}</td>
-                        <td>
-                            {{ item.entrega.id_usuario_e.nombre }} {{ item.entrega.id_usuario_e.ap_paterno }}
-                        </td>
-                        <td>{{ item.correo }}</td>
-                        <td>{{ item.entrega.punto_entrega.nombre }}</td>
-                        <td>
-                            {% if item.materiales %}
-                                <ul class="mb-0 ps-3">
-                                    {% for material in item.materiales %}
-                                        <li>{{ material.nombre }} ({{ material.cantidad }})</li>
-                                        <small class="text-muted">Condición: {{ material.condiciones|default:"N/A" }}</small>
-                                    {% endfor %}
-                                </ul>
-                            {% else %}
-                                <em>No hay materiales</em>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <select name="confirmada_{{ item.entrega.id_entrega }}" class="form-select">
-                                <option value="true" {% if item.entrega.confirmada %}selected{% endif %}>Sí</option>
-                                <option value="false" {% if not item.entrega.confirmada %}selected{% endif %}>No</option>
-                            </select>
-                        </td>
-                    </tr>
+        {% if messages %}
+            <ul class="entrega-messages">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form method="post" class="entrega-form">
+            {% csrf_token %}
+
+            <label class="entrega-label">Correo del Usuario:</label>
+            <input type="email" name="correo" required class="entrega-input">
+
+            <label class="entrega-label">Punto de Reciclaje:</label>
+            <select name="punto_entrega" id="punto_entrega" required class="entrega-select">
+                <option value="">-- Selecciona un punto --</option>
+                {% for punto in puntos %}
+                    <option value="{{ punto.id_punto }}">{{ punto.nombre }} ({{ punto.ciudad }})</option>
                 {% endfor %}
-            </tbody>
-        </table>
+            </select>
 
-        <div class="text-end">
-            <button type="submit" class="btn btn-success mt-3 fw-bold">Actualizar Entregas</button>
-        </div>
-    </form>
+            <div id="materiales-container" class="entrega-materiales">
+                <!-- Aquí se agregan los materiales dinámicamente -->
+            </div>
+
+            <button type="button" onclick="agregarMaterial()" class="entrega-button">+ Agregar Material</button>
+            <button type="submit" class="entrega-button">Registrar Entrega</button>
+        </form>
+    </div>
 {% endblock %}

@@ -8,6 +8,7 @@ app_name = "recicladoras"
 urlpatterns = [
     path("", views.index, name="index"),
     path("entregas/", views.confirmar_entregas, name="confirmar_entregas"),
+    path('entregas/get-materiales/<int:punto_id>/', views.get_materiales_aceptados, name='get_materiales'),
     path("agregar_punto/", views.agregar_punto, name="agregar_punto"),
     # path('tipomaterial/', views.tipo_material_list, name='tipomaterial_list'),
     # path('tipomaterial/', views.tipo_material_list, name='tipomaterial_list'),
@@ -18,6 +19,8 @@ urlpatterns = [
 
     path('solicitar/', views.solicitar_recicladora, name='solicitar_recicladora'),
     path('verpuntosreciclaje/',views.verpuntosreciclaje,name='verpuntosreciclaje'),
+
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

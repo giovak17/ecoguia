@@ -16,6 +16,7 @@ create table roles (
   fecha_nacimiento DATE, 
   fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   total_recompensas INTEGER,
+  puntos INTEGER DEFAULT 0,
   id_rol INTEGER,
   CONSTRAINT fk_rol FOREIGN KEY (id_rol) REFERENCES Roles(id_rol)
  );
