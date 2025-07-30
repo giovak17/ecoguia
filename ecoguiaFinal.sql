@@ -1,4 +1,5 @@
-/*  */
+-- SQLBook: Code
+/*  martinez gonzalez jesus antonio */
 create table roles (
  id_rol Serial Primary key,
  Nombre Varchar(20),
@@ -21,7 +22,7 @@ create table roles (
   CONSTRAINT fk_rol FOREIGN KEY (id_rol) REFERENCES Roles(id_rol)
  );
 
-/*  */
+/* */
  CREATE TABLE retos(
 	codigo SERIAL PRIMARY KEY,
 	Titulo VARCHAR(30),
@@ -83,7 +84,7 @@ ADD COLUMN videos VARCHAR(200);
 ALTER TABLE contenido_educativo
 ADD COLUMN video_local VARCHAR(1000);
 
-/*  */
+/* Martinez GonzaLez Jesus Antonio  */
 CREATE TABLE publicaciones (
 	clave_publicacion SERIAL PRIMARY KEY,
 	titulo VARCHAR(30),
