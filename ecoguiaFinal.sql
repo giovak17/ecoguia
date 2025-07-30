@@ -495,9 +495,10 @@ VALUES
 (17, 2, '2025-06-02', '2025-06-11'),
 (18, 3, '2025-06-03', '2025-06-15');
 
+-- Dejar comentado, las recompensas se calcularan automaticamente segun los puntos del usuario
 --usuarios recompensas
-INSERT INTO usuarios_recompensas (id_usuario, id_recompensa, fecha_canjeo)
-VALUES 
-(16, 1, '2025-06-10'),
-(17, 2, '2025-06-11'),
-(18, 3, '2025-06-15');
+-- INSERT INTO usuarios_recompensas (id_usuario, id_recompensa, fecha_canjeo)
+-- VALUES 
+-- (16, 1, '2025-06-10'),
+-- (17, 2, '2025-06-11'),
+-- (18, 3, '2025-06-15');
