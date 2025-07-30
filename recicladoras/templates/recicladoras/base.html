@@ -39,16 +39,16 @@
 				</a>
 			</li>
 
-			<li class="{% if request.resolver_match.url_name == 'tipomaterial_list' %}active{% endif %}">
+			{% comment %} <li class="{% if request.resolver_match.url_name == 'tipomaterial_list' %}active{% endif %}">
 				<a href="{% url 'recicladoras:tipomaterial_list' %}">
 					<i class='bx bx-recycle''></i><span class="text">Crear tipos de material</span>
 				</a>
-			</li>
-			<li class="{% if request.resolver_match.url_name == 'clasificacion_materiales' %}active{% endif %}">
+			</li> {% endcomment %}
+			{% comment %} <li class="{% if request.resolver_match.url_name == 'clasificacion_materiales' %}active{% endif %}">
 				<a href="{% url 'recicladoras:clasificacion_materiales' %}">
 					<i class='bx bx-filter'></i><span class="text">clasificacion materiales</span>
 				</a>
-			</li>
+			</li> {% endcomment %}
             <li class="{% if request.resolver_match.url_name == 'confirmar_entregas' %}active{% endif %}">
 				<a href="{% url 'recicladoras:confirmar_entregas' %}">
 					<i class='bx bxs-package'></i><span class="text">confirmar entregas</span>
