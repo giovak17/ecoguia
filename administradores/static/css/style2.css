@@ -590,3 +590,131 @@ body {
 		min-width: 420px;
 	}
 }
+
+/* es de lista de materiales*/
+/* Tipografía y título */
+.title {
+  font-weight: bold;
+  color: #2c3e50;
+  font-family: var(--poppins);
+}
+
+/* Botón Crear Nuevo */
+.btn-create {
+  background-color: var(--blue); /* usa tu variable para verde */
+  color: var(--light);
+  font-size: 0.95rem;
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-block;
+  margin-bottom: 1rem;
+  text-decoration: none;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.btn-create:hover {
+  background-color: #549a5e; /* verde más oscuro al pasar */
+}
+
+/* Tabla personalizada */
+.table-custom {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--poppins);
+  background-color: var(--light);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  font-size: 0.9rem;
+}
+
+.table-custom thead {
+  background-color: var(--dark);
+  color: var(--light);
+}
+
+.table-custom th,
+.table-custom td {
+  padding: 8px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--grey);
+}
+
+.table-custom tbody tr:hover {
+  background-color: var(--grey);
+}
+
+.center-text {
+  text-align: center;
+}
+
+/* Imagen material */
+.img-material {
+  width: 120px;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  object-fit: cover;
+}
+
+/* Contenedor botones acciones */
+.actions-container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+/* Botones Editar y Eliminar */
+.btn-edit {
+  background-color: var(--blue);
+  color: var(--light);
+  border: none;
+  border-radius: 30px;
+  padding: 6px 18px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  text-align: center;
+  display: inline-block;
+  min-width: 80px;
+  user-select: none;
+  text-decoration: none;
+}
+
+.btn-edit:hover {
+  background-color: #549a5e;
+}
+
+.btn-delete {
+  background-color: var(--red);
+  color: var(--light);
+  border: none;
+  border-radius: 30px;
+  padding: 6px 18px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  text-align: center;
+  display: inline-block;
+  min-width: 80px;
+  user-select: none;
+  text-decoration: none;
+}
+
+.btn-delete:hover {
+  background-color: #b53a34;
+}
+
+/* Texto para filas vacías */
+.empty-text {
+  text-align: center;
+  color: var(--dark-grey);
+  font-style: italic;
+  padding: 12px;
+}

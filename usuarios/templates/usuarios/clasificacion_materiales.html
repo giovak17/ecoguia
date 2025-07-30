@@ -1,320 +1,18 @@
-<<<<<<< HEAD:recicladoras/templates/recicladoras/clasificacion_materiales.html
-{% extends "recicladoras/base.html" %}
-=======
 {% extends "usuarios/base.html" %}
 {% load static %}
-{% block content %}
->>>>>>> 010d1caa53e2d04d1bf3239915a78d2807d15e22:usuarios/templates/usuarios/clasificacion_materiales.html
-
-<title>{% block title %} CLasificación de Materiales - EcoGuia {% endblock %}</title>
+/* @author arath Ramses Porcayo Mercado */
+<title>{% block title %} Clasificación de Materiales - EcoGuia {% endblock %}</title>
 {% block content %}
 
-<style>
-  :root {
-    --poppins: 'Poppins', sans-serif;
-    --light: #F9F9F9;
-    --blue: #67AE6E;
-    --light-blue: #E1EEBC;
-    --dark-grey: #AAAAAA;
-    --dark: #342E37;
-  }
 
-  .cards-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-  font-family: var(--poppins);
-  text-align: center;
-}
-
-.cards-grid {
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  margin-bottom: 3rem;
-}
-
-.card-material {
-  background: var(--light);
-  border-radius: 1rem;
-  box-shadow: 0 4px 15px rgba(103,174,110,0.15);
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1rem;
-  max-width: 240px;   /* Limita ancho para que no sea muy grande */
-  margin: 0 auto;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card-material:hover, 
-.card-material.bg-light-green {
-  background: var(--light-blue);
-  box-shadow: 0 8px 24px rgba(103,174,110,0.3);
-  transform: scale(1.05);
-  z-index: 10;
-}
-
-.card-material h5 {
-  color: var(--dark);
-  font-weight: 700;
-  font-size: 1.2rem;
-  margin-bottom: 0.75rem;
-  text-align: center;  /* Asegura que el nombre esté centrado */
-  width: 100%;
-}
-
-.card-material img {
-  width: 180px;     /* Reduce tamaño de la imagen */
-  height: 180px;
-  object-fit: cover;
-  border-radius: 1rem;
-  box-shadow: 0 3px 12px rgba(103,174,110,.18);
-  margin-bottom: 0.75rem;
-  transition: transform 0.25s ease;
-}
-
-.card-material img:hover {
-  transform: scale(1.07) rotate(-1.5deg);
-}
-
-.card-material .no-image {
-  color: var(--dark-grey);
-  font-style: italic;
-  margin-bottom: 1rem;
-}
-
-/* Responsivo para pantallas pequeñas */
-@media (max-width: 600px) {
-  .cards-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  .card-material {
-    max-width: 240px;
-    width: 100%;
-    padding: 1rem 0.5rem;
-  }
-  .card-material img {
-  width: 100%;
-  max-width: 180px;            /* El máximo absoluto en desktop */
-  height: auto;
-  aspect-ratio: 1 / 1;         /* Mantén cuadrada pero flexible */
-  object-fit: cover;
-  border-radius: 1rem;
-  box-shadow: 0 3px 12px rgba(103,174,110,.18);
-  margin-bottom: 0.75rem;
-  transition: transform 0.25s;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-}
-
-
-  .card-material img:hover {
-    transform: scale(1.06) rotate(-1deg);
-  }
-
-  .card-material .no-image {
-    color: var(--dark-grey);
-    font-style: italic;
-    margin-bottom: 1rem;
-  }
-
-  .card-material:hover, .card-material.bg-light-green {
-    background: var(--light-blue);
-    box-shadow: 0 8px 32px rgba(103,174,110,0.27);
-    transform: scale(1.03) translateY(-4px) rotate(-2deg);
-    z-index: 2;
-  }
-
-  .card-material::before {
-    content: '';
-    display: block;
-    position: absolute;
-    left: 50%;
-    top: -8px;
-    transform: translateX(-50%);
-    width: 62px;
-    height: 8px;
-    border-radius: 0 0 24px 24px;
-    background: var(--blue);
-    opacity: 0;
-    transition: opacity .25s;
-    z-index: 3;
-  }
-
-  .card-material:hover::before,
-  .card-material.bg-light-green::before {
-    opacity: 1;
-  }
-
-  /* Modal base styles */
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-  }
-
-  .modal-overlay.active {
-    display: flex;
-  }
-
-  .modal {
-    background: var(--light);
-    border-radius: 1rem;
-    max-width: 600px;
-    width: 90%;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 4px 28px rgba(103,174,110,0.18);
-    position: relative;
-    padding: 1rem 1.5rem 2rem 1.5rem;
-  }
-
-.modal-custom-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  background: var(--blue);
-  color: var(--light);
-  border-radius: 1rem 1rem 0 0;
-  padding: 2rem 1rem 2.5rem 1rem;
-  font-weight: 700;
-  font-size: 1.3rem;
-  text-align: center;
-}
-
-.modal-title {
-  margin: 0;
-  width: 100%;
-  text-align: center;
-}
-
-.modal-close-btn {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: transparent;
-  border: none;
-  color: var(--light);
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-
-  .modal-body {
-    padding: 1rem 0 0 0;
-    text-align: center;
-    color: var(--dark);
-  }
-
-  .modal-body img {
-    width: 220px;
-    height: 220px;
-    object-fit: cover;
-    border-radius: 1rem;
-    margin-bottom: 1rem;
-  }
-
-  .modal-body p {
-    margin-top: 1rem;
-  }
-
-  @media (max-width: 600px) {
-    .cards-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .card-material img,
-    .modal-body img {
-      width: 90vw;
-      height: auto;
-    }
-  }
-  /* Estilos base ya deberían estar */
-
-.modal-body.modal-flex-body {
-  display: flex;
-  gap: 1.5rem;
-  padding: 1rem 1.5rem;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.modal-image-container {
-  flex: 0 0 300px; /* fijo 300px de ancho para la imagen */
-  max-width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-image {
-  width: 300px;
-  height: 300px;
-  object-fit: cover;
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.modal-text-content {
-  flex: 1 1 300px; /* ocupa el resto del espacio, minimo 300px */
-  color: var(--dark);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  font-size: 1rem;
-  line-height: 1.5;
-}
-
-.modal-description {
-  margin-bottom: 1rem;
-}
-
-.modal-time {
-  font-weight: 600;
-  color: var(--blue);
-}
-
-/* Ajustes responsive para pantallas pequeñas */
-@media (max-width: 650px) {
-  .modal-body.modal-flex-body {
-    flex-direction: column;
-    align-items: center;
-  }
-  .modal-image-container,
-  .modal-text-content {
-    flex: none;
-    width: 100%;
-    max-width: 100%;
-  }
-  .modal-image {
-    width: 90vw;
-    height: auto;
-  }
-}
-
-</style>
 
 <div class="cards-container">
-  <h2>Reciclables</h2>
+  <h2>Material Reciclables</h2>
   <p>Selecciona el residuo que quieres conocer</p>
 
   <div class="cards-grid">
     {% for material in clasificacion %}
+      {# Tarjeta por cada material reciclable: nombre, imagen o texto "No hay imagen" #}
       <div class="card-material" id="card{{ forloop.counter }}" onclick="resaltar(this); openModal('modal{{ forloop.counter }}')">
         <h5>{{ material.nombre }}</h5>
         {% if material.imagen and material.imagen.name %}
@@ -324,31 +22,21 @@
         {% endif %}
       </div>
 
-      <!-- Modal -->
+      <!-- Modal asociado a cada tarjeta (oculto por defecto) -->
       <div class="modal-overlay" id="modal{{ forloop.counter }}">
         <div class="modal modal-lg modal-dialog-centered" role="dialog" aria-modal="true">
 
-          <!-- ✅ Cabecera con nombre centrado y botón cerrar -->
+          <!-- Cabecera del modal con nombre y botón cerrar -->
           <div class="modal-custom-header">
             <h5 class="modal-title">{{ material.nombre }}</h5>
             <button type="button" class="modal-close-btn" onclick="closeModal('modal{{ forloop.counter }}')">✖</button>
           </div>
 
-          <!-- ✅ Cuerpo con texto y/o imagen -->
+          <!-- Cuerpo del modal: texto y/o imagen -->
           <div class="modal-body modal-flex-body">
 
-            <!-- Imagen a la izquierda si la quieres visible -->
-            {% comment %}
-            <div class="modal-image-container">
-              {% if material.imagen and material.imagen.name %}
-                <img src="{{ material.imagen.url }}" alt="Imagen del material" class="modal-image" />
-              {% else %}
-                <span class="text-muted fst-italic">No hay imagen</span>
-              {% endif %}
-            </div>
-            {% endcomment %}
 
-            <!-- Texto: descripción y tiempo de descomposición -->
+            <!-- Sección de texto con descripción y tiempo de descomposición -->
             <div class="modal-text-content">
               {% if material.descripcion %}
                 <p class="modal-description">{{ material.descripcion }}</p>
@@ -365,22 +53,23 @@
   </div>
 </div>
 
-
-
 <script>
+  /* Función para resaltar la tarjeta seleccionada */
   function resaltar(card) {
-    document.querySelectorAll('.card-material').forEach(c => c.classList.remove('bg-light-green'));
+    document.querySelectorAll('.card-material').forEach(c => c.classList.remove('bg-light'));
     card.classList.add('bg-light-green');
   }
 
+  /* Abrir modal y bloquear scroll fondo */
   function openModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
       modal.classList.add('active');
-      document.body.style.overflow = 'hidden'; // evitar scroll background
+      document.body.style.overflow = 'hidden';
     }
   }
 
+  /* Cerrar modal y restaurar scroll */
   function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
@@ -389,7 +78,7 @@
     }
   }
 
-  // Cerrar modal cuando click afuera del contenido
+  /* Cerrar modal cuando se hace click fuera del contenido */
   document.addEventListener('click', function(event){
     const modals = document.querySelectorAll('.modal-overlay.active');
     modals.forEach(modal => {
@@ -399,5 +88,321 @@
     });
   });
 </script>
+<style>
+/* Estilo general para evitar que el body quede muy pegado arriba */
+body {
+  padding-top: 60px;
+}
+
+/* Variables CSS con colores y fuente principal */
+:root {
+  --poppins: 'Poppins', sans-serif;
+  --light: #F9F9F9;
+  --blue: #67AE6E;
+  --light-blue: #E1EEBC;
+  --dark-grey: #AAAAAA;
+  --dark: #342E37;
+  --light-brillante: #f0faf6ff;
+  --light-verde: #67AE6E;
+}
+
+/* Contenedor principal de tarjetas */
+.cards-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  font-family: var(--poppins);
+  text-align: center;
+}
+
+/* Grid para colocar las tarjetas con espacios y tamaño adaptable */
+.cards-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin-bottom: 3rem;
+}
+
+/* Estilo individual de cada tarjeta de material */
+.card-material {
+  background: var(--light-brillante);
+  border-radius: 1rem;
+  box-shadow: 0 4px 15px rgba(103,174,110,0.15);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  max-width: 240px; /* Limita el ancho para que no sea muy grande */
+  margin: 0 auto;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover y estado activo: cambio de color, sombra y zoom ligeramente la tarjeta */
+.card-material:hover, 
+.card-material.bg-light-green {
+  background: var(--light-verde);
+  box-shadow: 0 8px 24px rgba(103,174,110,0.3);
+  transform: scale(1.05);
+  z-index: 10;
+}
+
+/* Título dentro de tarjeta centrado y con estilo */
+.card-material h5 {
+  color: var(--dark);
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+  text-align: center;
+  width: 100%;
+}
+
+/* Imagen dentro de la tarjeta con tamaño fijo y efectos suaves */
+.card-material img {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 1rem;
+  box-shadow: 0 3px 12px rgba(103,174,110,.18);
+  margin-bottom: 0.75rem;
+  transition: transform 0.25s ease;
+}
+
+/* Efecto hover para la imagen: escalado y pequeña rotación */
+.card-material img:hover {
+  transform: scale(1.07) rotate(-1.5deg);
+}
+
+/* Texto que indica que no hay imagen disponible */
+.card-material .no-image {
+  color: var(--dark-grey);
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+/* Estilos responsivos para dispositivos pequeños: tarjetas en columna, imágenes flexibles */
+@media (max-width: 600px) {
+  .cards-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .card-material {
+    max-width: 240px;
+    width: 100%;
+    padding: 1rem 0.5rem;
+  }
+  .card-material img {
+    width: 100%;
+    max-width: 180px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 1rem;
+    box-shadow: 0 3px 12px rgba(103,174,110,.18);
+    margin-bottom: 0.75rem;
+    transition: transform 0.25s;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Cambios de hover para versión móvil con menor rotación */
+.card-material img:hover {
+  transform: scale(1.06) rotate(-1deg);
+}
+
+/* Cambios alternativos en hover y estado activo para tarjetas */
+.card-material:hover, .card-material.bg-light-green {
+  background: var(--light-blue);
+  box-shadow: 0 8px 32px rgba(103,174,110,0.27);
+  transform: scale(1.03) translateY(-4px) rotate(-2deg);
+  z-index: 2;
+}
+
+/* Decoración visual extra en top de la tarjeta con animación de opacidad */
+.card-material::before {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: -8px;
+  transform: translateX(-50%);
+  width: 62px;
+  height: 8px;
+  border-radius: 0 0 24px 24px;
+  background: var(--blue);
+  opacity: 0;
+  transition: opacity .25s;
+  z-index: 3;
+}
+
+/* Mostrar la decoración cuando la tarjeta está hover o activa */
+.card-material:hover::before,
+.card-material.bg-light-green::before {
+  opacity: 1;
+}
+
+/* Estilos base para el modal (fondo semi-transparente que ocupa pantalla completa) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999; /* Siempre encima del resto */
+}
+
+/* Mostrar el modal al tener la clase active */
+.modal-overlay.active {
+  display: flex;
+}
+
+/* Caja del modal con fondo claro, bordes redondeados y sombra */
+.modal {
+  background: var(--light);
+  border-radius: 1rem;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 28px rgba(103,174,110,0.18);
+  position: relative;
+  padding: 1rem 1.5rem 2rem 1.5rem;
+}
+
+/* Cabecera del modal con fondo azul, texto blanco y botón cerrar */
+.modal-custom-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: var(--blue);
+  color: var(--light);
+  border-radius: 1rem 1rem 0 0;
+  padding: 1rem 0 1rem 0;
+  font-weight: 700;
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+/* Botón para cerrar modal, ubicado arriba a la derecha */
+.modal-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  color: var(--light);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Cuerpo del modal con padding, texto centrado y color oscuro */
+.modal-body {
+  padding: 1rem 0 0 0;
+  text-align: center;
+  color: var(--dark);
+}
+
+/* Imagen dentro del modal con tamaño fijo y borde redondeado */
+.modal-body img {
+  width: 220px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Margen para párrafos dentro del modal */
+.modal-body p {
+  margin-top: 1rem;
+}
+
+/* Media queries para adaptar imágenes y grid a dispositivos pequeños */
+@media (max-width: 600px) {
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .card-material img,
+  .modal-body img {
+    width: 90vw;
+    height: auto;
+  }
+}
+
+/* Modal cuerpo con diseño flex para texto e imagen lado a lado */
+.modal-body.modal-flex-body {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Contenedor para imagen del modal con ancho fijo y centrado */
+.modal-image-container {
+  flex: 0 0 300px; /* ancho fijo */
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Imagen grande dentro del modal */
+.modal-image {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Contenedor para el texto del modal con flex para centro y orden */
+.modal-text-content {
+  flex: 1 1 300px; /* ocupa el espacio restante */
+  color: var(--dark);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Margen inferior para descripción */
+.modal-description {
+  margin-bottom: 1rem;
+}
+
+/* Estilo del tiempo resaltado (color y peso) */
+.modal-time {
+  font-weight: 600;
+  color: var(--blue);
+}
+
+/* Ajustes responsive para el cuerpo modal en pantallas pequeñas */
+@media (max-width: 650px) {
+  .modal-body.modal-flex-body {
+    flex-direction: column;
+    align-items: center;
+  }
+  .modal-image-container,
+  .modal-text-content {
+    flex: none;
+    width: 100%;
+    max-width: 100%;
+  }
+  .modal-image {
+    width: 90vw;
+    height: auto;
+  }
+}
+</style>
 
 {% endblock %}

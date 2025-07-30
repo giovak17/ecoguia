@@ -1,55 +1,75 @@
 {% extends "administradores/base.html" %}
 {% block title %}Registrar Tipo de Material - EcoGuia{% endblock %}
+/* @author arath Ramses Porcayo Mercado */
 
 {% block content %}
 <div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-6">
-      <div class="card shadow-lg">
-        <div class="card-body">
-          <h2 class="card-title text-center mb-4">Agrega un Tipo de Material</h2>
 
-          <form method="POST" action="{% url 'administradores:tipomaterial_registro' %}" class="needs-validation" enctype="multipart/form-data" novalidate>
+  <div class="row justify-content-center">
+
+    <div class="col-lg-6">
+
+      <div class="card shadow-lg">
+
+        <div class="card-body">
+
+          <h2 class="card-title text-center mb-4">Agrega un Tipo de Material</h2>
+          {# Título del formulario centrado con margen inferior #}
+
+          <form method="POST" action="{% url 'administradores:tipomaterial_registro' %}" 
+                class="needs-validation" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
+            {# Formulario que envía datos para crear nuevo tipo de material, con validación Bootstrap y protección CSRF #}
 
             <div class="mb-3">
+              {# Grupo de formulario con margen inferior #}
               <label for="nombre" class="form-label">Nombre</label>
+              {# Etiqueta para campo nombre #}
               <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del material" required>
+              {# Input tipo texto, obligatorio con validación #}
               <div class="invalid-feedback">Este campo es obligatorio.</div>
+              {# Mensaje que aparece si el campo es inválido #}
             </div>
 
             <div class="mb-3">
+              {# Grupo para descripción #}
               <label for="descripcion" class="form-label">Descripción</label>
               <textarea class="form-control" id="descripcion" name="descripcion" rows="3" placeholder="Descripción del material" required></textarea>
               <div class="invalid-feedback">Este campo es obligatorio.</div>
             </div>
 
             <div class="mb-3">
+              {# Grupo para tiempo de descomposición #}
               <label for="tiempo_descomposicion" class="form-label">Tiempo de Descomposición (días)</label>
               <input type="text" class="form-control" id="tiempo_descomposicion" name="tiempo_descomposicion" placeholder="Ej: tiempo" required>
             </div>
+
             <div class="mb-3">
-                <label for="imagen" class="form-label">Imagen (archivo)</label>
-                <input
-                  type="file"
-                  class="form-control"
-                  id="imagen"
-                  name="imagen"
-                  accept="image/png, image/jpeg,image/jpg"
-                  required>
-                <div class="form-text">Solo se permiten archivos JPG, JPEG o PNG de máximo 10MB.</div>
-                <div class="invalid-feedback">Por favor selecciona una imagen válida.</div>
-              </div>
+              {# Grupo para subir imagen #}
+              <label for="imagen" class="form-label">Imagen (archivo)</label>
+              <input
+                type="file"
+                class="form-control"
+                id="imagen"
+                name="imagen"
+                accept="image/png, image/jpeg,image/jpg"
+                required>
+              <div class="form-text">Solo se permiten archivos JPG, JPEG o PNG de máximo 10MB.</div>
+              <div class="invalid-feedback">Por favor selecciona una imagen válida.</div>
+            </div>
+
             <div class="d-grid">
+              {# Contenedor para botón que ocupa 100% del ancho #}
               <button type="submit" class="btn btn-success fw-bold">Registrar Tipo de Material</button>
+              {# Botón verde para enviar formulario, con texto en negrita #}
             </div>
           </form>
 
-        </div>
+        </div> 
       </div>
-    </div>
-  </div>
-</div>
+    </div> 
+  </div> 
+</div> 
 
 <script>
   (() => {
@@ -66,4 +86,5 @@
     });
   })();
 </script>
+
 {% endblock %}

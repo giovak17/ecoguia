@@ -165,17 +165,17 @@ LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
 
-#Conexion del toño
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ecoguia",
-        "USER": "postgres",
-        "PASSWORD": "chela",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
-    }
-}
+# #Conexion del toño
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "ecoguia",
+#         "USER": "postgres",
+#         "PASSWORD": "chela",
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
 
 USE_I18N = True
 

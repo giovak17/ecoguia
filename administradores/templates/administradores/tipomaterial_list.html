@@ -1,69 +1,158 @@
-
-{% extends 'recicladoras/base.html' %}
-
+{% extends 'administradores/base.html' %}
+/* @author arath Ramses Porcayo Mercado */
 {% load static %}
 
-
 {% block title %}Lista de Tipos de Material Reciclable{% endblock %}
+{# Título que aparecerá en la pestaña o encabezado del navegador #}
 
 {% block content %}
+<div class="head-title">
+	<div class="left">
+		<h2 class="mb-4" style="font-weight: bold; color: #2c3e50; font-family: 'Poppins', sans-serif;">
+    Tipos de Material Reciclable
+  </h2>
+		<ul class="breadcrumb">
+			<li><a  href="{% url 'administradores:index' %}" >Administrador</a></li>
+			<li><i class='bx bx-chevron-right'></i></li>
+			<li><a  class="active"  href="{% url 'administradores:index' %}" >Tipo de material</a></li>
+	</div>
+</div>
 <div class="container py-4" style="max-width: 1200px; margin: 0 auto;">
-  <h2 class="mb-4" style="font-weight: bold; color: #2c3e50;">Tipos de Material Reciclable</h2>
-
-  <a href="{% url 'recicladoras:tipomaterial_registro' %}" 
-     class="btn mb-4 px-3 py-2" 
-     style="background-color: #27ae60; color: white; font-size: 0.95rem; border-radius: 6px;">
+  <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
+  <a href="{% url 'administradores:tipomaterial_registro' %}"
+     style="
+       background-color: #67AE6E;
+       color: #fff;
+       font-size: 0.95rem;
+       padding: 10px 20px;
+       border-radius: 6px;
+       border: none;
+       font-weight: 600;
+       cursor: pointer;
+       display: inline-block;
+       text-decoration: none;
+       user-select: none;
+       font-family: 'Poppins', sans-serif;
+       transition: background-color 0.2s;
+     ">
     Crear Nuevo
   </a>
-
+</div>
   <div class="table-responsive">
-    <table class="table table-bordered table-hover"
-           style="background-color: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); font-size: 0.9rem;">
-      <thead style="background-color: #2c3e50; color: white;">
-        <tr>
+    {# Contenedor para hacer la tabla responsiva (scroll horizontal si es necesario) #}
+
+    <table
+      style="
+        height:1100px;
+        width:1200px;
+        border-collapse: collapse;
+        font-family: 'Poppins', sans-serif;
+        background-color: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        font-size: 1rem;
+      ">
+      {# Tabla con estilo inline que controla dimensiones, fuente, colores y sombra #}
+
+      <thead>
+        <tr style="background-color: #fdfafaff;">
           <th style="padding: 8px;">Nombre</th>
-          <th style="padding: 8px;">Descripción</th>
-          <th style="padding: 8px;">Descomposición (días)</th>
-          <th style="padding: 8px;">Imagen</th>
+          <th style="padding: 8px; ">Descripción</th>
+          <th style="padding: 8px; ">Descomposición (días)</th>
+          <th style="padding: 8px; ">Imagen</th>
           <th style="padding: 8px;">Acciones</th>
         </tr>
       </thead>
+      {# Cabecera de la tabla con columnas especificadas, cada celda con padding para separación #}
+
       <tbody>
         {% for tipo in tipos_material %}
-        <tr style="vertical-align: middle;">
-          <td style="padding: 8px;">{{ tipo.nombre }}</td>
-          <td style="padding: 8px;">{{ tipo.descripcion }}</td>
-          <td style="padding: 8px; text-align: center;">{{ tipo.tiempo_descomposicion }}</td>
+        {# Bucle que iterará por cada tipo de material reciclable enviado desde la vista #}
+        <tr style="vertical-align: middle; border-bottom: 1px solid #eee; transition: background 0.2s;"
+            onmouseover="this.style.backgroundColor='#f9f9f9';"
+            onmouseout="this.style.backgroundColor='#fff';"
+        >
+          {# Cada fila tiene borde inferior, alineación vertical y cambio de color al pasar el cursor #}
+
+          <td style="padding: 8px;">{{ tipo.nombre }}</td> 
+          {# Celda que muestra el nombre del tipo de material #}
+
+          <td style="padding: 8px;">{{ tipo.descripcion }}</td> 
+          {# Celda que muestra la descripción del material #}
+
+          <td style="padding: 8px; text-align: center;">{{ tipo.tiempo_descomposicion }}</td> 
+          {# Celda con tiempo estimado de descomposición, centrado #}
+
           <td style="padding: 8px; text-align: center;">
             {% if tipo.imagen and tipo.imagen.name %}
               <img src="{{ tipo.imagen.url }}" alt="Imagen del material"
-                   style="width: 120px; height: auto; border-radius: 6px; border: 1px solid #ccc;" />
+                   style="width: 120px; height: auto; border-radius: 6px; border: 1px solid #ccc; object-fit: cover;" />
             {% else %}
-              <span class="text-muted fst-italic">No hay imagen</span>
+              <span style="color: #AAAAAA; font-style: italic;">No hay imagen</span>
             {% endif %}
           </td>
+          {# Muestra la imagen del material reciclable si existe, sino muestra texto en gris e cursiva #}
+
           <td style="padding: 8px;">
-            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-              <a href="{% url 'recicladoras:tipomaterial_actualizar' tipo.pk %}" 
-                 class="btn btn-info " 
-                 style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-start; align-items: center;">
+              {# Contenedor flex para mantener los botones alineados con espacio entre ellos y ajuste responsivo #}
+
+              <a href="{% url 'administradores:tipomaterial_actualizar' tipo.pk %}"
+                  style="
+                  background-color: #67AE6E;
+                  color: #fff;
+                  border: none;
+                  border-radius: 30px;
+                  padding: 6px 18px;
+                  font-weight: 500;
+                  cursor: pointer;
+                  text-align: center;
+                  display: inline-block;
+                  min-width: 80px;
+                  user-select: none;
+                  text-decoration: none;
+                  transition: background 0.2s;"
+                  onmouseover="this.style.backgroundColor='#549a5e';"
+                  onmouseout="this.style.backgroundColor='#67AE6E';"
+              >
                 Editar
               </a>
-              <a href="{% url 'recicladoras:tipomaterial_delete' tipo.pk %}" 
-                 class="btn btn-danger " 
-                 style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+              {# Botón verde para editar el tipo de material, cambia a un verde más oscuro al pasar el mouse #}
+
+              <a href="{% url 'administradores:tipomaterial_delete' tipo.pk %}"
+                 style="
+                   background-color: #328E6E;;
+                   color: #fff;
+                   border: none;
+                   border-radius: 30px;
+                   padding: 6px 18px;
+                   font-weight: 500;
+                   cursor: pointer;
+                   text-align: center;
+                   display: inline-block;
+                   min-width: 80px;
+                   user-select: none;
+                   text-decoration: none;
+                   transition: background 0.2s;"
+                 onmouseover="this.style.backgroundColor='#b53a34';"
+                 onmouseout="this.style.backgroundColor='#67AE6E';"
+                 onclick="return confirm('¿Estás seguro de eliminar este material?');"
+              >
                 Eliminar
               </a>
+              {# Botón para eliminar, con confirmación previa y cambio de color al pasar el mouse #}
             </div>
           </td>
         </tr>
         {% empty %}
         <tr>
-          <td colspan="5" class="text-center text-muted fst-italic" style="padding: 12px;">
+          <td colspan="5" style="text-align: center; color: #AAAAAA; font-style: italic; padding: 12px;">
             No hay tipos de material.
           </td>
         </tr>
         {% endfor %}
+        {# Mensaje que se muestra si no hay registros en la lista #}
       </tbody>
     </table>
   </div>
