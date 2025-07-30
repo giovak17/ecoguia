@@ -33,9 +33,9 @@
           {% endfor %}
         </ul>
           <div class="btn-center mt-auto">
-            <button type="button" class="btn" style="background-color: #67AE6E; color: #fff;">
+            <a href="{% url 'usuarios:punto_detalle' dato.punto.id_punto %}" class="btn" style="background-color: #67AE6E; color: #fff;">
               Ver más
-            </button>
+            </a>
           </div>
       </section>
     {% endfor %}
@@ -58,7 +58,7 @@
 .section-card {
   padding: 1rem;
   border-radius: 15px;
-  background: #f8f9fa;
+  background: #f9f9f9;
   box-shadow: 0 6px 15px rgba(100, 100, 100, 0.05);
   transition: box-shadow 0.3s ease;
 }

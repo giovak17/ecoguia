@@ -1,0 +1,41 @@
+{% extends "usuarios/base.html" %}
+{% block title %}Detalles de {{ punto.nombre }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-3" style="color: #67AE6E;">{{ punto.nombre }}</h2>
+
+  <div class="d-flex align-items-center gap-2">
+    <i class='bx bxs-location-plus icon-style'></i>
+    <p class="mb-0">{{ punto.ubicacion }}</p>
+  </div>
+
+  <div class="d-flex align-items-center gap-2">
+    <i class='bx bx-buildings icon-style'></i>
+    <p class="mb-0">{{ punto.ciudad }}</p>
+  </div>
+
+  <div class="d-flex align-items-center gap-2">
+    <i class='bx bx-phone icon-style'></i>
+    <p class="mb-0">{{ punto.telefono }}</p>
+  </div>
+
+  <h4 class="mt-4">Materiales que acepta:</h4>
+  <div class="grid-container">
+    {% for material in punto.materiales %}
+      <div class="section-card">
+        <h5 style="color: #67AE6E;">{{ material.nombre }}</h5>
+        {% if material.imagen %}
+          <img src="{{ material.imagen }}" alt="{{ material.nombre }}" style="max-width: 100%; height: auto;">
+        {% endif %}
+        <p><strong>Descripción:</strong> {{ material.descripcion }}</p>
+        <p><strong>Tiempo de descomposición:</strong> {{ material.tiempo_descomposicion }}</p>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="btn-center">
+    <a href="{% url 'usuarios:html_recicladoras_materiales' %}" class="btn-outline">← Volver</a>
+  </div>
+</div>
+{% endblock %}

@@ -366,3 +366,27 @@ def vista_html_recicladoras_con_materiales(request):
         })
 
     return render(request, 'usuarios/recicladoras_materiales.html', {'datos': contexto})
+
+def detalle_punto_reciclaje(request, id_punto):
+    punto = get_object_or_404(PuntosReciclaje, id_punto=id_punto)
+    materiales = MaterialAceptado.objects.filter(id_punto=punto).select_related('id_tipo_material')
+
+    datos = {
+        'id': punto.id_punto,
+        'nombre': punto.nombre,
+        'ciudad': punto.ciudad,
+        'ubicacion': punto.ubicacion,
+        'telefono': punto.telefono,
+        'materiales': [
+            {
+                'id': m.id_tipo_material.id_tmr,
+                'nombre': m.id_tipo_material.nombre,
+                'descripcion': m.id_tipo_material.descripcion,
+                'tiempo_descomposicion': m.id_tipo_material.tiempo_descomposicion,
+                'imagen': m.id_tipo_material.imagen.url if m.id_tipo_material.imagen else None
+            }
+            for m in materiales
+        ]
+    }
+
+    return render(request, 'usuarios/punto_detalle.html', {'punto': datos})
