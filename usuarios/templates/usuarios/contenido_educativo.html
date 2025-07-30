@@ -1,6 +1,9 @@
 {% extends 'usuarios/base.html' %}
 {% load static %}
 {% block content %}
+
+<!-- Manejado por America Garcia Lara 
+      Muestra todos los contenidos Educativos -->
 <div class="contenedor">
   <h1 class="titulo">Contenido Educativo</h1>
   <div class="grid-contenido">
@@ -11,6 +14,7 @@
           <p class="tarjeta-texto">{{ item.descripcion }}</p>
 
           {% if item.imagen %}
+          <!-- permite mostrar imagen -->
             <img src="{{ item.imagen.url }}" class="imagen" alt="{{ item.titulo }}">
           
           {% elif item.videos %}
@@ -19,6 +23,7 @@
                 <iframe src="{{ item.videos_embed }}" allowfullscreen></iframe>
               </div>
             {% else %}
+             <!-- permite mostrar video-->
               <div class="video-container">
                 <video controls>
                   <source src="{{ item.videos.url }}" type="video/mp4">
@@ -73,7 +78,7 @@
   }
 </script>
 
-
+<!-- Estilos para darle diseño a la estructura -->
 <style>
   /* Estructura general */
   .contenedor {

@@ -60,6 +60,14 @@ CREATE TABLE contenido_educativo(
 	id_usuario_ce INTEGER,
 	FOREIGN KEY (id_usuario_ce) REFERENCES usuarios(id_usuario)
 );
+--------Campos nuevos a la tabla Contenido_educativo
+ALTER TABLE contenido_educativo
+ADD COLUMN imagen VARCHAR(1000);--------Se guarda solo la ruta del archivo, por eso usamos VARCHAR(
+ALTER TABLE contenido_educativo
+ADD COLUMN videos VARCHAR(200);
+
+ALTER TABLE contenido_educativo
+ADD COLUMN video_local VARCHAR(1000);
 
 CREATE TABLE publicaciones (
 	clave_publicacion SERIAL PRIMARY KEY,
@@ -82,7 +90,8 @@ CREATE TABLE tipo_material_reciclable (
     tiempo_descomposicion VARCHAR(100),
     imagen VARCHAR(100)
 );
-
+ALTER TABLE tipo_material_reciclable
+ADD COLUMN imagen VARCHAR(100)
 
 CREATE TABLE material_reciclable(
 	id_material SERIAL PRIMARY KEY,

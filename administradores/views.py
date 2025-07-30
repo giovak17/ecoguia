@@ -31,11 +31,13 @@ from django.db import transaction,  IntegrityError
 @login_required(role="administrador")
 def index(request):
     return render(request, "administradores/index.html")
-
+# manejado por America Lara 
+# vista para mostrar recicladoras
 def ver_recicladoras(request):
     recicladoras = Recicladoras.objects.select_related('propietario').all()
     return render(request, 'administradores/recicladoras.html', {'recicladoras': recicladoras})
-
+# manejado por America Lara 
+# vista para crear recicladoras
 def recicladora_crear(request):
     errores = {}
     recicladora_data = {}
@@ -92,7 +94,8 @@ def recicladora_crear(request):
     })
 
 
-
+# manejado por America Lara 
+# vista para editar recicladoras
 def recicladora_editar(request, pk):
     recicladora = get_object_or_404(Recicladoras, pk=pk)
     errores = {}
@@ -137,7 +140,8 @@ def recicladora_editar(request, pk):
         'propietarios': propietarios,
         'titulo': 'Editar Recicladora'
     })
-
+# manejado por America Lara 
+# vista para eliminar recicladoras
 def recicladora_eliminar(request, pk):
     recicladora = get_object_or_404(Recicladoras, pk=pk)
     if request.method == 'POST':
@@ -289,14 +293,16 @@ def validar_campos(titulo, descripcion, videos):
     # Si hay errores, lanzar excepción
     if errores:
         raise ValidationError(errores)
-
+# manejado por America Lara 
+# vista para mostrar contenidos educativos
 def contenido_educativo_admin(request):
     contenidos = ContenidoEducativo.objects.all()
     for contenido in contenidos:
         if contenido.videos:
             contenido.videos_embed = convertir_a_embed(contenido.videos)
     return render(request, 'administradores/contenido_educativo_admin.html', {'contenidos': contenidos})
-
+# manejado por America Lara 
+# vista para crear Contendios educativos
 def contenido_crear(request):
     if request.method == 'POST':
         titulo = request.POST.get('titulo')
@@ -325,7 +331,8 @@ def contenido_crear(request):
             return render(request, 'administradores/contenido_form.html', {'errores': errores, 'contenido': nuevo})
 
     return render(request, 'administradores/contenido_form.html')
-
+# manejado por America Lara 
+# vista para editar contendios educativos
 def contenido_editar(request, pk):
     contenido = get_object_or_404(ContenidoEducativo, pk=pk)
 
@@ -349,7 +356,8 @@ def contenido_editar(request, pk):
             return render(request, 'administradores/contenido_form.html', {'errores': errores, 'contenido': contenido})
 
     return render(request, 'administradores/contenido_form.html', {'contenido': contenido})
-
+# manejado por America Lara 
+# vista para borrar Contendios educativos
 def contenido_borrar(request, pk):
     contenido = get_object_or_404(ContenidoEducativo, pk=pk)
     if request.method == 'POST':

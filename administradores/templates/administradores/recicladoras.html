@@ -2,6 +2,8 @@
 {% load static %}
 
 {% block content %}
+<!-- Manejado por America Garcia Lara
+ Muestra todas las recicladoras creadas y permite realizar acciones como Editar, crear y eliminar   -->
 <div class="head-title">
 	<div class="left">
 		<h1>Recicladoras registradas</h1>
@@ -25,6 +27,7 @@
                 <div class="card-body">
                     <h5 class="card-title d-flex justify-content-between">
                         {{ r.nombre }}
+                        <!-- Botones para edicion y eliminar -->
                         <span>
                             <a href="{% url 'administradores:recicladora_editar' r.codigo_recicladora %}" class="btn btn-download" style="background-color: #67AE6E; color:#ffff; border-radius: 30px">
                                 <i class="bi bi-pencil"></i>Editar

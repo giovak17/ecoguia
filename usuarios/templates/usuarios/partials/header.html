@@ -26,9 +26,6 @@
             <a class="{% if request.resolver_match.url_name == 'contenido_educativo' %}active{% endif %}" href="{% url 'usuarios:contenido_educativo' %}">Contenido Educativo</a>
           </li>
           <li>
-            <a class="{% if request.resolver_match.url_name == 'mostrarentregas' %}active{% endif %}" href="{% url 'usuarios:mapa_puntos' %}">Mapa</a>
-          </li>
-          <li>
             <a class="{% if request.resolver_match.url_name == 'mostrarentregas' %}active{% endif %}" href="{% url 'usuarios:html_recicladoras_materiales' %}">Puntos de reciclaje</a>
           </li>
           <li class="nav-item">

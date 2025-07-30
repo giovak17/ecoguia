@@ -1,11 +1,20 @@
 {% extends "usuarios/base.html" %}
+
 {% block title %}Puntos de Reciclaje{% endblock %}
 
 {% block content %}
 <div class="container mt-4" style="margin-top: 120px;">
   <div class="section-title"><h3 >Puntos de reciclaje</h3></div>
+  <!-- Aqui esta el mapa -->
+  <div id="map" style="height: 500px; width: 100%;" class="rounded shadow mb-4"></div>
+  <!-- Esto inserta los datos para el mapa -->
+  {{ puntos_mapa|json_script:"puntos-data" }}
 
-  <div class="grid-container">
+  <div class="busqueda d-flex justify-content-center mb-4 btn-center ">
+    <input type="text" id="busqueda-material" class="form-control w-50" placeholder="Buscar material (metal, plástico, papél, etc.)..." style="border: 1px solid  #67AE6E; ">
+  </div>
+
+  <div id="contenedor-recicladoras" class="grid-container" >
     {% for dato in datos %}
       <section class="section-card full-height-card">
         <div class="btn-center">
@@ -47,11 +56,117 @@
   </div>
 </div>
 
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const inputBusqueda = document.getElementById('busqueda-material');
+  const contenedor = document.getElementById('contenedor-recicladoras');
+
+  let datosPuntos = [];
+
+  // Obtener datos desde la vista JSON
+  fetch("{% url 'usuarios:api_recicladoras_materiales' %}")
+    .then(response => response.json())
+    .then(data => {
+      datosPuntos = data.puntos_reciclaje;
+      renderizarCards(datosPuntos);
+    });
+
+  // Evento de escritura
+  inputBusqueda.addEventListener('input', () => {
+    const texto = inputBusqueda.value.toLowerCase();
+    const filtrados = datosPuntos.filter(punto =>
+      punto.materiales.some(m => m.nombre.toLowerCase().includes(texto))
+    );
+    renderizarCards(filtrados);
+  });
+
+  // Renderiza las cards dinámicamente
+  function renderizarCards(datos) {
+    contenedor.innerHTML = ''; // limpiar
+
+    if (datos.length === 0) {
+      contenedor.innerHTML = '<p class="text-center">No se encontraron puntos de reciclaje.</p>';
+      return;
+    }
+
+    datos.forEach(dato => {
+      const card = document.createElement('section');
+      card.className = 'section-card full-height-card';
+      card.innerHTML = `
+        <div class="btn-center">
+          <h2 class="mb-2" style="color: #67AE6E;">${dato.nombre}</h2>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <p class="mb-0">
+            <i class='bx bx-location-plus icon-style'></i>
+            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dato.ubicacion)}"
+              target="_blank" style="text-decoration: none; color: inherit;">
+              ${dato.ubicacion}
+            </a>
+          </p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <p class="mb-0"> <i class='bx bx-buildings icon-style'></i> ${dato.ciudad}</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <p class="mb-0"> <i class='bx bx-phone icon-style'></i> ${dato.telefono}</p>
+        </div>
+        <h5 class="mt-3">Materiales que acepta:</h5>
+        <ul>
+          ${dato.materiales.map(m => `<li class="btn btn-outline"><small>${m.nombre}</small></li>`).join('')}
+        </ul>
+        <div class="btn-center mt-auto">
+          <a href="/recicladoras/${dato.id}/" class="btn" style="background-color: #67AE6E; color: #fff;">
+            Ver más
+          </a>
+        </div>
+      `;
+      contenedor.appendChild(card);
+    });
+  }
+});
+
+    let map;
+
+  function initMap() {
+    const centroMexico = { lat: 23.6345, lng: -102.5528 };
+    map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 5,
+      center: centroMexico,
+    });
+
+    const puntos = JSON.parse(document.getElementById('puntos-data').textContent);
+
+    puntos.forEach(punto => {
+      const marker = new google.maps.Marker({
+        position: { lat: punto.latitud, lng: punto.longitud },
+        map: map,
+        title: punto.nombre
+      });
+
+      const infoWindow = new google.maps.InfoWindow({
+        content: `<strong>${punto.nombre}</strong><br>${punto.ubicacion}`
+      });
+
+      marker.addListener("click", () => {
+        infoWindow.open(map, marker);
+      });
+    });
+  }
+</script>
+
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=apiki&callback=initMap">
+</script>
+
+
 <style>
 .grid-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
+  margin-top: 30px;
+  padding-bottom: 80px;
 }
 
 @media (max-width: 992px) {
@@ -154,6 +269,10 @@ input {
 
 .full-height-card ul {
   margin-bottom: auto; /* Para que el espacio se use arriba del botón */
+}
+
+.busqueda{
+  margin-top: 30px;
 }
 </style>
 {% endblock %}

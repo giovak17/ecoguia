@@ -103,41 +103,28 @@ WSGI_APPLICATION = "project.wsgi.application"
 #     }
 # }
 
-#no lo borren el toño y yo no le supimos a lo otro jajajajjajajajajjaja
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "ecoguia",
-#         "USER": "postgres",
-#         "PASSWORD": "chela",
-#         "HOST": "127.0.0.1",
-#         "PORT": "5432",
-#     }
-# }
-
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "Ecoguia",
-#         "USER": "postgres",
-#         "PASSWORD": "1234",
-#         "HOST": "127.0.0.1",
-#         "PORT": "5432",
-#     }
-# }
-
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("DB_NAME"),
-        "USER": os.getenv("DB_USER"),
-        "PASSWORD": os.getenv("DB_PASSWORD"),
-        "HOST": os.getenv("DB_HOST"),
-        "PORT": os.getenv("DB_PORT"),
+        "NAME": "Ecoguia",
+        "USER": "postgres",
+        "PASSWORD": "1234",
+        "HOST": "127.0.0.1",
+        "PORT": "5432",
     }
 }
+
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": os.getenv("DB_NAME"),
+#         "USER": os.getenv("DB_USER"),
+#         "PASSWORD": os.getenv("DB_PASSWORD"),
+#         "HOST": os.getenv("DB_HOST"),
+#         "PORT": os.getenv("DB_PORT"),
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -165,6 +152,7 @@ LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
 
+<<<<<<< HEAD
 # #Conexion del toño
 # DATABASES = {
 #     "default": {
@@ -176,6 +164,19 @@ TIME_ZONE = "UTC"
 #         "PORT": "5432",
 #     }
 # }
+=======
+#Conexion del toño
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "Ecoguia",
+        "USER": "postgres",
+        "PASSWORD": "1234",
+        "HOST": "127.0.0.1",
+        "PORT": "5432",
+    }
+}
+>>>>>>> 981e6d1bbe5fa8fb17ea2bfd74fa533e456708b4
 
 USE_I18N = True
 

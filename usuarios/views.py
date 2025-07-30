@@ -61,14 +61,15 @@ def perfil_usuario(request):
         'usuario': usuario,
         'modo_edicion': modo_edicion
     })
-
+#  manejado por America Garcia lara
+# mostrar contenido educativo
 def contenido_educativo(request):
     contenidos = ContenidoEducativo.objects.all()
     for contenido in contenidos:
         if contenido.videos:
          contenido.videos_embed = convertir_a_embed(contenido.videos)
     return render(request, 'usuarios/contenido_educativo.html', {'contenidos': contenidos})
-
+# vista para poder utilizar URLS embebidos para insertarlos
 def convertir_a_embed(url):
     # if "watch?v=" in url:
     #     return url.replace("watch?v=", "embed/")
