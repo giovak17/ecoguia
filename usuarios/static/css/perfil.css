@@ -1,54 +1,70 @@
   @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
   :root {
-      --primary-color: #67AE6E;
-      --primary-color-light: #E1EEBC;
-      --primary-color-dark: #328E6E;
-      --text-dark: #18181b;
-      --text-light: #6b7280;
+      --poppins: 'Poppins', sans-serif;
+      --lato: 'Lato', sans-serif;
+
+      --light: #f5f5f5;
+      --grey: #e5e7eb;
+      --medium-grey: #d1d5db;
+      --dark-grey: #4b5563;
+      --text-dark: #1f2937;
       --white: #ffffff;
-      --max-width: 1200px;
+
+      --accent: #67AE6E;
+      /* Verde suave */
+      --accent-light: #e3f1e5;
+      --accent-muted: #c5e1cc;
+  }
+
+  body {
+      font-family: var(--poppins);
+      background-color: var(--light);
+      color: var(--text-dark);
+      margin: 0;
+      padding: 0;
   }
 
   .profile-container {
-      max-width: 800px;
+      max-width: 820px;
       margin: 6rem auto;
-      padding: 3rem 2rem;
-      background-color: var(--white);
-      border-radius: 0.75rem;
-      /* box-shadow: 0 4px 25px rgba(0, 0, 0, 0.06); */
-      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
-      font-family: 'Poppins', sans-serif;
       margin-top: 8rem;
+      background-color: var(--white);
+      padding: 3rem 2.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
   }
 
   .profile-header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      margin-bottom: 2rem;
-      border-bottom: 1px solid #eee;
+      align-items: center;
+      border-bottom: 1px solid var(--grey);
       padding-bottom: 1rem;
+      margin-bottom: 2.5rem;
   }
 
   .profile-header h2 {
       font-size: 2rem;
-      color: var(--primary-color-dark);
-      margin: 0;
+      font-weight: 600;
+      color: var(--dark-grey);
   }
 
   .icon-button {
-      font-size: 1.25rem;
-      background: none;
-      border: none;
+      background-color: transparent;
+      color: var(--accent);
+      border: 2px solid var(--accent);
+      border-radius: 0.4rem;
+      padding: 0.4rem 0.7rem;
+      font-size: 1rem;
       cursor: pointer;
-      color: var(--primary-color);
-      transition: color 0.3s ease;
-      padding: 0.25rem;
+      transition: all 0.3s ease;
   }
 
   .icon-button:hover {
-      color: var(--primary-color-dark);
+      background-color: var(--accent-light);
+      color: var(--text-dark);
+      border-color: var(--accent-muted);
   }
 
   form {
@@ -63,28 +79,71 @@
   }
 
   label {
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-      color: var(--text-light);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      margin-bottom: 0.4rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--dark-grey);
   }
 
   input[type="text"],
   input[type="email"],
   input[type="password"],
   input[type="date"] {
-      padding: 0.75rem;
+      padding: 0.7rem 1rem;
       font-size: 1rem;
-      border: 1px solid #ccc;
+      border: 1px solid var(--medium-grey);
       border-radius: 0.5rem;
-      background-color: #f9f9f9;
+      background-color: var(--light);
   }
 
   input[readonly] {
-      background-color: #f0f0f0;
-      color: var(--text-light);
+      background-color: var(--grey);
+      color: var(--dark-grey);
+      border-style: dashed;
+  }
+
+  .profile-stats {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--grey);
+  }
+
+  .profile-stats h3 {
+      font-size: 1.25rem;
+      color: var(--dark-grey);
+      font-weight: 600;
+      margin-bottom: 1rem;
+  }
+
+  .puntos-count {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: var(--grey);
+      border-left: 4px solid var(--accent);
+      border-radius: 0.5rem;
+      font-weight: 600;
+      color: var(--text-dark);
+  }
+
+  .recompensa-lista {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 1.5rem;
+  }
+
+  .recompensa-lista li {
+      background-color: var(--light);
+      border: 1px solid var(--medium-grey);
+      border-left: 4px solid var(--accent);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+      border-radius: 0.5rem;
+  }
+
+  .descripcion-recompensa {
+      font-size: 0.9rem;
+      color: var(--dark-grey);
+      margin-top: 0.3rem;
   }
 
   @media (max-width: 768px) {

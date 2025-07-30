@@ -5,7 +5,7 @@ create table roles (
  Descripcion TEXT
  );
 
-/*  */
+/* Kevin Giovanni Barraza Andalon  */
  CREATE TABLE usuarios (
   id_usuario Serial PRIMARY KEY,
   nombre VARCHAR(50),
@@ -34,6 +34,7 @@ create table roles (
     nombre VARCHAR(30),
     descripcion TEXT,
     clave_reto INTEGER,
+    puntos_requeridos INTEGER DEFAULT 50,
     FOREIGN KEY (clave_reto) REFERENCES retos(codigo)
  );
 
@@ -141,7 +142,7 @@ CREATE TABLE material_aceptado (
     FOREIGN KEY (id_tipo_material) REFERENCES tipo_material_reciclable(id_tmr)
 );
 
-/*  */
+/* Kevin Giovanni Barraza Andalon */
 CREATE TABLE entregas(
 	id_entrega SERIAL PRIMARY KEY,
 	fecha_entrega TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -162,6 +163,82 @@ CREATE TABLE entrega_material_reciclado(
 	FOREIGN KEY (id_entrega) REFERENCES entregas(id_entrega),  
 	FOREIGN KEY (id_material) REFERENCES material_reciclable(id_material)
 );
+
+-- FUNCIONES
+CREATE OR REPLACE FUNCTION sumar_puntos_entrega()
+RETURNS TRIGGER AS $$
+DECLARE
+    usuario_id INTEGER;
+    puntos_actuales INTEGER;
+    recompensa RECORD;
+BEGIN
+    -- Obtener el ID del usuario que hizo la entrega
+    SELECT id_usuario_e INTO usuario_id
+    FROM entregas
+    WHERE id_entrega = NEW.id_entrega;
+
+    -- Sumar los puntos entregados al usuario
+    UPDATE usuarios
+    SET puntos = COALESCE(puntos, 0) + COALESCE(NEW.cantidad, 0)
+    WHERE id_usuario = usuario_id;
+
+    -- Obtener el total actualizado de puntos
+    SELECT puntos INTO puntos_actuales
+    FROM usuarios
+    WHERE id_usuario = usuario_id;
+
+    -- Buscar recompensas alcanzables que el usuario aún no tiene
+    FOR recompensa IN
+        SELECT codigo
+        FROM recompensas r
+        WHERE r.puntos_requeridos <= puntos_actuales
+          AND NOT EXISTS (
+              SELECT 1
+              FROM usuarios_recompensas ur
+              WHERE ur.id_usuario = usuario_id
+                AND ur.id_recompensa = r.codigo
+          )
+    LOOP
+        -- Insertar la recompensa alcanzada
+        INSERT INTO usuarios_recompensas (id_usuario, id_recompensa, fecha_canjeo)
+        VALUES (usuario_id, recompensa.codigo, CURRENT_DATE);
+    END LOOP;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+---
+CREATE OR REPLACE FUNCTION restar_puntos_entrega()
+RETURNS TRIGGER AS $$
+DECLARE
+    usuario_id INTEGER;
+BEGIN
+    -- Obtener el ID del usuario que hizo la entrega
+    SELECT id_usuario_e INTO usuario_id
+    FROM entregas
+    WHERE id_entrega = OLD.id_entrega;
+
+    -- Restar la cantidad entregada de los puntos del usuario
+    UPDATE usuarios
+    SET puntos = GREATEST(0, COALESCE(puntos, 0) - COALESCE(OLD.cantidad, 0))
+    WHERE id_usuario = usuario_id;
+
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+-- TRIGGERS
+CREATE TRIGGER trg_sumar_puntos
+AFTER INSERT ON entrega_material_reciclado
+FOR EACH ROW
+EXECUTE FUNCTION sumar_puntos_entrega();
+
+---
+CREATE TRIGGER trg_restar_puntos
+BEFORE DELETE ON entrega_material_reciclado
+FOR EACH ROW
+EXECUTE FUNCTION restar_puntos_entrega();
 
 --roles
 INSERT INTO roles (nombre, descripcion) VALUES 
@@ -205,6 +282,12 @@ INSERT INTO recompensas (nombre, descripcion, clave_reto) VALUES
 ('Descuento 10%', '10% en productos ecológicos', 1),
 ('EcoPuntos', 'Puntos acumulables para premios', 2),
 ('Bolsa reutilizable', 'Bolsa con diseño ecológico', 3);
+
+-- Recompensas con puntos
+INSERT INTO recompensas (nombre, descripcion, clave_reto, puntos_requeridos) VALUES 
+('Medalla Bronce', 'Medalla por alcanzar 100 puntos reciclando.', NULL, 100),
+('Medalla Plata', 'Medalla por alcanzar 200 puntos reciclando.', NULL, 200),
+('Medalla Oro', 'Medalla por alcanzar 300 puntos reciclando.', NULL, 300);
 
 --contenido educativo
 INSERT INTO contenido_educativo (titulo, descripcion, id_usuario_ce, imagen, videos, video_local) VALUES
@@ -390,14 +473,20 @@ INSERT INTO entregas (id_usuario_e, punto_entrega, confirmada)
 VALUES 
 (16, 1, true),
 (17, 2, true),
-(18, 3, true);
+(18, 3, true),
+(13, 4, true);
 
 --material_entregado
 INSERT INTO entrega_material_reciclado (id_entrega, id_material, cantidad, condiciones_entrega)
 VALUES 
 (1, 1, 5, 'Botellas limpias y sin etiquetas.'),
+(1, 1, 25, 'Botellas con etiquetas.'),
 (2, 2, 1, 'Celular quebrado y sin bateria.'),
-(3, 3, 3, 'Cartón seco y sin grasa.');
+(2, 1, 15, 'Botellas con tapa.'),
+(3, 3, 3, 'Cartón seco y sin grasa.'),
+(4, 1, 35, 'Botellas limpias y sin etiquetas.'),
+(4, 3, 80, 'Cartón seco y sin grasa.'),
+(4, 2, 5, 'Celular sin pantalla y sin bateria.');
 
 --usuarios retos
 INSERT INTO usuarios_retos (id_usuario, id_reto, fecha_inicio, fecha_fin)

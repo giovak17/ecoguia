@@ -1,6 +1,6 @@
 from django.http import HttpRequest, HttpResponseForbidden
 from django.shortcuts import redirect, render, get_object_or_404
-from core.models import Usuarios,Entregas
+from core.models import Recompensas, Usuarios,Entregas
 from django.shortcuts import redirect, render
 from core.models import Usuarios,Entregas, PuntosReciclaje,ContenidoEducativo,EntregaMaterialReciclado,TipoMaterialReciclable, MaterialAceptado
 from django.utils.timezone import now
@@ -46,6 +46,25 @@ def logout(request: HttpRequest):
     return redirect('usuarios:login')
 
 @login_required(role="usuario")
+# def perfil_usuario(request):
+#     usuario = get_object_or_404(Usuarios, pk=request.user.id_usuario)
+#     modo_edicion = request.GET.get("editar") == "1"
+
+#     if request.method == 'POST':
+#         usuario.nombre = request.POST.get('nombre')
+#         usuario.ap_paterno = request.POST.get('ap_paterno')
+#         usuario.ap_materno = request.POST.get('ap_materno')
+#         usuario.correo = request.POST.get('correo')
+#         usuario.contrasena = request.POST.get('contrasena')
+#         usuario.fecha_nacimiento = request.POST.get('fecha_nacimiento')
+#         usuario.save()
+#         return redirect('usuarios:perfil_usuario')
+
+#     return render(request, 'usuarios/perfil.html', {
+#         'usuario': usuario,
+#         'modo_edicion': modo_edicion
+#     })
+
 def perfil_usuario(request):
     usuario = get_object_or_404(Usuarios, pk=request.user.id_usuario)
     modo_edicion = request.GET.get("editar") == "1"
@@ -60,10 +79,21 @@ def perfil_usuario(request):
         usuario.save()
         return redirect('usuarios:perfil_usuario')
 
+    # Obtener recompensas del usuario
+    recompensas = Recompensas.objects.filter(
+        usuariosrecompensas__id_usuario=usuario.id_usuario
+    )
+
     return render(request, 'usuarios/perfil.html', {
         'usuario': usuario,
-        'modo_edicion': modo_edicion
+        'modo_edicion': modo_edicion,
+        'recompensas': recompensas
     })
+
+def ranking_usuarios(request):
+    usuarios = Usuarios.objects.filter(puntos__isnull=False).order_by('-puntos')[:50]  # top 50
+    return render(request, 'usuarios/ranking.html', {'usuarios': usuarios})
+
 
 def contenido_educativo(request):
     contenidos = ContenidoEducativo.objects.all()

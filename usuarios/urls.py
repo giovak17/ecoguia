@@ -11,6 +11,7 @@ urlpatterns = [
     path("logout/", views.logout, name="logout"),
     path("info/", views.info, name="info"),
     path("perfil/", views.perfil_usuario, name="perfil_usuario"),
+    path("ranking/", views.ranking_usuarios, name="ranking_usuarios"),
     path('contenido-educativo/', views.contenido_educativo, name='contenido_educativo'),
     path('Entregas/', views.lista_entregas, name='lista_entregas'),
     path('Entregas/<int:clave>/', views.confirmar_entrega, name='confirmar_entrega'),

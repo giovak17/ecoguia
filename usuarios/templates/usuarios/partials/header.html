@@ -28,9 +28,13 @@
            <li>
             <a class="{% if request.resolver_match.url_name == 'index' %}active{% endif %}" href="{% url 'usuarios:mostrarentregas' %}">Historial de reciclaje</a>
           </li> 
-          <li class="nav-item">
+          <li>
               <a class="nav-link active" href="{% url 'usuarios:clasificacion_materiales' %}">Clasificacion de materiales</a>
           </li>
+           <li>
+            <a class="{% if request.resolver_match.url_name == 'ranking' %}active{% endif %}" href="{% url 'usuarios:ranking_usuarios' %}">Ranking de usuarios</a>
+          </li> 
+
         </ul>
       </div>
 
