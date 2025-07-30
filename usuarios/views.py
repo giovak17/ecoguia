@@ -2,13 +2,14 @@ from django.http import HttpRequest, HttpResponseForbidden
 from django.shortcuts import redirect, render, get_object_or_404
 from core.models import Usuarios,Entregas
 from django.shortcuts import redirect, render
-from core.models import Usuarios,Entregas, PuntosReciclaje,ContenidoEducativo,EntregaMaterialReciclado
+from core.models import Usuarios,Entregas, PuntosReciclaje,ContenidoEducativo,EntregaMaterialReciclado,TipoMaterialReciclable, MaterialAceptado
 from django.utils.timezone import now
 from django.urls import reverse
 from core.auth import login_required
 from django.db import connection
+from django.http import JsonResponse
 # usuarios/views.py
-from recicladoras.views import clasificacion
+
 from django.contrib import messages
 from django.utils.timezone import now
 
@@ -133,7 +134,7 @@ def map_user_rol(user: Usuarios):
             return redirect(preserve_request=True, to="administradores:index")
         # Usuario
         case 2:
-            return redirect(preserve_request=True, to="usuarios:index")
+            return redirect(preserve_request=True, to="usuarios:mapa_puntos")
         # Recicladora
         case 3:
             return redirect(preserve_request=True, to="recicladoras:index")
@@ -207,11 +208,11 @@ def usuariosregistro(request):
     return render(request, "usuarios/registro.html")
 
 
-def mapa_puntos_google(request):
-    puntos = list(PuntosReciclaje.objects.values(
-        'nombre', 'latitud', 'longitud', 'ubicacion', 'ciudad'
-    ))
-    return render(request, 'usuarios/mapa_google.html', {'puntos': puntos})
+# def mapa_puntos_google(request):
+#     puntos = list(PuntosReciclaje.objects.values(
+#         'nombre', 'latitud', 'longitud', 'ubicacion', 'ciudad'
+#     ))
+#     return render(request, 'usuarios/mapa_google.html', {'puntos': puntos})
 
 def usuarios_delete(request, pk):
     usuarios = get_object_or_404(Usuarios, pk=pk)
@@ -222,12 +223,6 @@ def usuarios_delete(request, pk):
 
     # Si es GET, renderiza la plantilla de confirmación
     return render(request, "usuarios:usuarios_delete.html", {"object": usuarios})
-
-from django.db import connection
-from django.shortcuts import render
-
-from django.db import connection
-from django.shortcuts import render, redirect
 
 def mostrarentregas(request):
     user_id = request.session.get("user_id")
@@ -302,3 +297,102 @@ def mostrarentregas(request):
 })
     #return render(request, "usuarios/registro.html")
 
+def mapa_google(request):
+    material_filtro = request.GET.get('material')
+    ubicacion_filtro = request.GET.get('ubicacion')
+
+    # Consulta base
+    puntos_qs = PuntosReciclaje.objects.all()
+
+    # Filtro por ciudad o ubicación
+    if ubicacion_filtro:
+        puntos_qs = puntos_qs.filter(ciudad__icontains=ubicacion_filtro)
+
+    # Filtro por tipo de material (a través de recicladora → materialreciclable)
+    if material_filtro:
+        puntos_qs = puntos_qs.filter(
+            id_recicladora__materialreciclable__tipo_reciclaje__nombre__icontains=material_filtro
+        ).distinct()
+
+    # Convertir a lista de dict para usar en el template con json_script
+    puntos = list(puntos_qs.values(
+        'nombre', 'latitud', 'longitud', 'ubicacion', 'ciudad'
+    ))
+
+    tipos_materiales = TipoMaterialReciclable.objects.all()
+
+    return render(request, 'usuarios/mapa_google.html', {
+        'puntos': puntos,
+        'tipos_materiales': tipos_materiales
+    })
+    
+def vista_json_recicladoras_con_materiales(request):
+    datos = []
+
+    puntos = PuntosReciclaje.objects.all()
+
+    for punto in puntos:
+        materiales = MaterialAceptado.objects.filter(id_punto=punto).select_related('id_tipo_material')
+
+        datos.append({
+            'id': punto.id_punto,
+            'nombre': punto.nombre,
+            'ciudad': punto.ciudad,
+            'ubicacion': punto.ubicacion,
+            'telefono': punto.telefono,
+            'materiales': [
+                {
+                    'id': m.id_tipo_material.id_tmr,
+                    'nombre': m.id_tipo_material.nombre,
+                    'descripcion': m.id_tipo_material.descripcion,
+                    'tiempo_descomposicion': m.id_tipo_material.tiempo_descomposicion,
+                    'imagen': m.id_tipo_material.imagen.url if m.id_tipo_material.imagen else None
+                }
+                for m in materiales
+            ]
+        })
+
+    return JsonResponse({'puntos_reciclaje': datos})
+
+def vista_html_recicladoras_con_materiales(request):
+    puntos = PuntosReciclaje.objects.all()
+    contexto = []
+
+    for punto in puntos:
+        materiales = MaterialAceptado.objects.filter(id_punto=punto).select_related('id_tipo_material')
+        contexto.append({
+            'punto': punto,
+            'materiales': [m.id_tipo_material for m in materiales]
+        })
+
+    return render(request, 'usuarios/recicladoras_materiales.html', {'datos': contexto})
+
+def detalle_punto_reciclaje(request, id_punto):
+    punto = get_object_or_404(PuntosReciclaje, id_punto=id_punto)
+    materiales = MaterialAceptado.objects.filter(id_punto=punto).select_related('id_tipo_material')
+
+    datos = {
+        'id': punto.id_punto,
+        'nombre': punto.nombre,
+        'ciudad': punto.ciudad,
+        'ubicacion': punto.ubicacion,
+        'telefono': punto.telefono,
+        'descripcion': punto.descripcion,
+        'horario_entrada': punto.horario_entrada,
+        'horario_salida': punto.horario_salida,
+        'materiales': [
+            {
+                'id': m.id_tipo_material.id_tmr,
+                'nombre': m.id_tipo_material.nombre,
+                'descripcion': m.id_tipo_material.descripcion,
+                'tiempo_descomposicion': m.id_tipo_material.tiempo_descomposicion,
+                'imagen': m.id_tipo_material.imagen.url if m.id_tipo_material.imagen else None
+            }
+            for m in materiales
+        ]
+    }
+
+    return render(request, 'usuarios/punto_detalle.html', {'punto': datos})
+def clasificacion(request):
+    clasificacion = TipoMaterialReciclable.objects.all()
+    return render(request, "usuarios/clasificacion_materiales.html", {"clasificacion": clasificacion})

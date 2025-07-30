@@ -13,7 +13,7 @@ class ContenidoEducativo(models.Model):
     codigo = models.AutoField(primary_key=True)
     titulo = models.CharField(max_length=25, blank=True, null=True)
     descripcion = models.TextField(blank=True, null=True)
-    id_usuario_ce = models.ForeignKey('Usuarios', models.DO_NOTHING, db_column='id_usuario_ce', blank=True, null=True)
+    id_usuario_ce = models.ForeignKey('Usuarios', models.SET_NULL, db_column='id_usuario_ce', blank=True, null=True)
     # son campos para cargar media
     imagen = models.ImageField(upload_to='contenido/imagenes/', blank=True, null=True)
     videos= models.URLField(blank=True, null=True)
@@ -46,7 +46,7 @@ class EntregaMaterialReciclado(models.Model):
 class Entregas(models.Model):
     id_entrega = models.AutoField(primary_key=True)
     fecha_entrega = models.DateTimeField(blank=True, null=True)
-    id_usuario_e = models.ForeignKey('Usuarios', models.DO_NOTHING, db_column='id_usuario_e', blank=True, null=True)
+    id_usuario_e = models.ForeignKey('Usuarios', models.SET_NULL, db_column='id_usuario_e', blank=True, null=True)
     punto_entrega = models.ForeignKey('PuntosReciclaje', models.DO_NOTHING, db_column='punto_entrega', blank=True, null=True)
     confirmada = models.BooleanField(blank=True, null=True)
 
@@ -70,7 +70,7 @@ class Publicaciones(models.Model):
     clave_publicacion = models.AutoField(primary_key=True)
     titulo = models.CharField(max_length=30, blank=True, null=True)
     contenido = models.TextField(blank=True, null=True)
-    id_usuario_p = models.ForeignKey('Usuarios', models.DO_NOTHING, db_column='id_usuario_p', blank=True, null=True)
+    id_usuario_p = models.ForeignKey('Usuarios', models.SET_NULL, db_column='id_usuario_p', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -85,6 +85,7 @@ class PuntosReciclaje(models.Model):
     horario_entrada = models.TimeField(blank=True, null=True)
     horario_salida = models.TimeField(blank=True, null=True)
     id_recicladora = models.ForeignKey('Recicladoras', models.DO_NOTHING, db_column='id_recicladora', blank=True, null=True)
+    ciudad = models.CharField(max_length=50, blank=True, null=True)
     #se usaran para que funcione google maps 
     extras = models.TextField(blank=True, null=True)
     latitud = models.FloatField(blank=True, null=True)
@@ -172,27 +173,27 @@ class Usuarios(models.Model):
         db_table = 'usuarios'
 
 
-# class UsuariosRecompensas(models.Model):
-#     pk = models.CompositePrimaryKey('id_usuario', 'id_recompensa')
-#     id_usuario = models.ForeignKey(Usuarios, models.DO_NOTHING, db_column='id_usuario')
-#     id_recompensa = models.ForeignKey(Recompensas, models.DO_NOTHING, db_column='id_recompensa')
-#     fecha_canjeo = models.DateField(blank=True, null=True)
+class UsuariosRecompensas(models.Model):
+    pk = models.CompositePrimaryKey('id_usuario', 'id_recompensa')
+    id_usuario = models.ForeignKey(Usuarios, models.DO_NOTHING, db_column='id_usuario')
+    id_recompensa = models.ForeignKey(Recompensas, models.DO_NOTHING, db_column='id_recompensa')
+    fecha_canjeo = models.DateField(blank=True, null=True)
 
-#     class Meta:
-#         managed = False
-#         db_table = 'usuarios_recompensas'
+    class Meta:
+        managed = False
+        db_table = 'usuarios_recompensas'
 
 
-# class UsuariosRetos(models.Model):
-#     pk = models.CompositePrimaryKey('id_usuario', 'id_reto')
-#     id_usuario = models.ForeignKey(Usuarios, models.DO_NOTHING, db_column='id_usuario')
-#     id_reto = models.ForeignKey(Retos, models.DO_NOTHING, db_column='id_reto')
-#     fecha_inicio = models.DateField(blank=True, null=True)
-#     fecha_fin = models.DateField(blank=True, null=True)
+class UsuariosRetos(models.Model):
+    pk = models.CompositePrimaryKey('id_usuario', 'id_reto')
+    id_usuario = models.ForeignKey(Usuarios, models.DO_NOTHING, db_column='id_usuario')
+    id_reto = models.ForeignKey(Retos, models.DO_NOTHING, db_column='id_reto')
+    fecha_inicio = models.DateField(blank=True, null=True)
+    fecha_fin = models.DateField(blank=True, null=True)
 
-#     class Meta:
-#         managed = False
-#         db_table = 'usuarios_retos'
+    class Meta:
+        managed = False
+        db_table = 'usuarios_retos'
 
 class SolicitudRegistro(models.Model):
     nombre_establecimiento = models.CharField(max_length=100)
@@ -201,3 +202,12 @@ class SolicitudRegistro(models.Model):
     telefono_contacto = models.CharField(max_length=20)
     materiales_aceptados = models.TextField()
     aprobado = models.BooleanField(default=False)
+    
+class MaterialAceptado(models.Model):
+    id_ma = models.AutoField(primary_key=True)
+    id_punto = models.ForeignKey('PuntosReciclaje', on_delete=models.CASCADE, db_column='id_punto')
+    id_tipo_material = models.ForeignKey('TipoMaterialReciclable', on_delete=models.CASCADE, db_column='id_tipo_material')
+
+    class Meta:
+        managed = False
+        db_table = 'material_aceptado'

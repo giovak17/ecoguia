@@ -3,17 +3,44 @@
 {% block title %}Usuarios{% endblock %}
 
 {% block content %}
-    <h1>¿Eliminar usuario {{ usuario.nombre }}?</h1>
-    <p>Rol asignado:
-        {% if usuario.id_rol %}
-            {{ usuario.id_rol.nombre }}
-        {% else %}
-            Sin rol
-        {% endif %}
-    </p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Sí, eliminar</button>
-        <a href="{% url 'administradores:listar_usuarios' %}">Cancelar</a>
-    </form>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm section-card">
+                <div class="card-body">
+                    <h4 class="card-title text-danger mb-4">¿Eliminar usuario {{ usuario.nombre }}?</h4>
+                    <p class="card-text">
+                        <strong>Rol asignado:</strong>
+                        {% if usuario.id_rol %}
+                            {{ usuario.id_rol.nombre }}
+                        {% else %}
+                            Sin rol
+                        {% endif %}
+                    </p>
+                    <hr>
+                    <form method="post" class="d-flex justify-content-end gap-3 mt-4">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" style="border-radius: 30px;">Sí, eliminar</button>
+                        <a href="{% url 'administradores:listar_usuarios' %}" class="btn btn-secondary" style="border-radius: 30px;">Cancelar</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.section-card {
+    padding: 1rem;
+    border: none;
+    border-radius: 15px;
+    background: #f8f9fa;
+    box-shadow: 0 6px 15px rgba(100, 100, 100, 0.05);
+    transition: box-shadow 0.3s ease;
+}
+
+.section-card:hover {
+    box-shadow: 0 8px 25px rgba(100, 100, 100, 0.1);
+}
+</style>
 {% endblock %}

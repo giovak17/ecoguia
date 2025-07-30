@@ -2,23 +2,34 @@
 {% block title %}Gestión de Backups y Restauraciones{% endblock %}
 
 {% block content %}
+
 <div class="head-title">
-    <div class="left">
-      <h1>Gestión de Backups y Restauraciones</h1>
-      <ul class="breadcrumb">
-        <li><a  href="{% url 'administradores:index' %}" >Administrador</a></li>
-        <li><i class='bx bx-chevron-right'></i></li>
-        <li><a class="active"  href="{% url 'administradores:index' %}" >Gestión B y R </a></li>
-		  </ul>
-    </div>
+  <div class="left">
+  
+    <h1>Gestión de Backups y Restauraciones</h1>
+    <ul class="breadcrumb">
+      <li><a href="{% url 'administradores:index' %}">Administrador</a></li>
+      <li><i class='bx bx-chevron-right'></i></li>
+      <li><a class="active" href="{% url 'administradores:index' %}">Gestión B y R</a></li>
+    </ul>
   </div>
+</div>
+
 <div class="container my-5" style="max-width: 1200px;">
-  {% if error_message %}
-    <div class="alert alert-danger shadow-sm">{{ error_message }}</div>
-  {% endif %}
+
   {% if success_message %}
-    <div class="alert alert-success shadow-sm">{{ success_message }}</div>
-  {% endif %}
+  <div class="alert alert-success shadow-sm alert-dismissible fade show" role="alert">
+    {{ success_message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{% endif %}
+
+{% if error_message %}
+  <div class="alert alert-danger shadow-sm alert-dismissible fade show" role="alert">
+    {{ error_message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{% endif %}
 
   <div class="grid-container">
     <!-- SECCIÓN 1 -->
@@ -44,32 +55,28 @@
       </div>
     </section>
 
-    <!-- SECCIÓN 2 -->
-    <section class="section-card section-danger">
-      <div class="card border-danger shadow-sm rounded-4">
-        <div class="card-header rounded-top-4 d-flex align-items-center" style="color: #67AE6E;">
-          <i class="bi bi-arrow-clockwise me-2 fs-4"></i>
-          <strong>Restaurar Base Completa</strong>
+<!-- SECCIÓN 2 -->
+<section class="section-card section-info">
+  <div class="card border-info shadow-sm rounded-4">
+    <div class="card-header rounded-top-4 d-flex align-items-center" style="color: #0dcaf0;">
+      <i class="bi bi-arrow-counterclockwise me-2 fs-4"></i>
+      <strong>Restaurar Base al Estado Original</strong>
+    </div>
+    <div class="card-body bg-light rounded-bottom-4">
+      <p class="text-muted mb-4">Restaura la base de datos a un respaldo predeterminado almacenado en el servidor.</p>
+      <form action="{% url 'administradores:restaurar_bd' %}" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Contraseña de la base de datos:</label>
+          <input type="password" name="db_password" class="form-control" placeholder="Ingrese su contraseña" required>
         </div>
-        <div class="card-body bg-light rounded-bottom-4">
-          <p class="text-muted mb-4">Selecciona un archivo <strong>.backup</strong> previamente generado para restaurar toda la base de datos.</p>
-          <form action="{% url 'administradores:restaurar_bd' %}" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Contraseña de la base de datos:</label>
-              <input type="password" name="db_password" class="form-control" placeholder="Ingrese su contraseña" required>
-            </div>
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Archivo de respaldo (.backup):</label>
-              <input type="file" name="backup_file" class="form-control" accept=".backup" required>
-            </div>
-            <button type="submit" class="btn btn-danger w-100 fw-semibold" style="background-color: #67AE6E; border-color: #67AE6E; color: #ffff;">
-              Restaurar base de datos
-            </button>
-          </form>
-        </div>
-      </div>
-    </section>
+        <button type="submit" class="btn btn-info w-100 fw-semibold" style="background-color: #0dcaf0; border-color: #0dcaf0; color: #fff;">
+          Restaurar base a estado original
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
 
     <!-- SECCIÓN 3 -->
     <section class="section-card section-primary">
@@ -79,7 +86,7 @@
           <strong>Respaldo de Tabla</strong>
         </div>
         <div class="card-body bg-light rounded-bottom-4">
-          <p class="text-muted mb-4">Especifica el nombre de la tabla que deseas respaldar. Se generará un archivo <strong>.backup</strong>.</p>
+          <p class="text-muted mb-4">Selecciona la tabla que deseas respaldar. Se generará un archivo <strong>.sql</strong>.</p>
           <form action="{% url 'administradores:restaurar_tabla_archivo' %}" method="post">
             {% csrf_token %}
             <div class="mb-3">
@@ -87,8 +94,13 @@
               <input type="password" name="db_password" class="form-control" placeholder="Ingrese su contraseña" required>
             </div>
             <div class="mb-3">
-              <label class="form-label fw-semibold">Nombre de la tabla:</label>
-              <input type="text" name="table_name" class="form-control" placeholder="Ejemplo: entrega_material" required>
+              <label class="form-label fw-semibold">Selecciona la tabla:</label>
+              <select name="table_name" class="form-select" required>
+                <option value="" selected disabled>Seleccione una tabla</option>
+                {% for tabla in tablas %}
+                  <option value="{{ tabla }}">{{ tabla }}</option>
+                {% endfor %}
+              </select>
             </div>
             <button type="submit" class="btn btn-primary w-100 fw-semibold" style="background-color: #7FB414; border-color: #7FB414; color: #ffff;">
               Generar respaldo de tabla
@@ -106,7 +118,7 @@
           <strong>Restaurar Tabla Específica</strong>
         </div>
         <div class="card-body bg-light rounded-bottom-4">
-          <p class="text-muted mb-4">Sube un archivo <strong>.backup</strong> para restaurar una tabla específica.</p>
+          <p class="text-muted mb-4">Sube un archivo <strong>.sql</strong> para restaurar una tabla específica.</p>
           <form action="{% url 'administradores:restaurar_tabla_especifica' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="mb-3">
@@ -114,12 +126,17 @@
               <input type="password" name="db_password" class="form-control" placeholder="Ingrese su contraseña" required>
             </div>
             <div class="mb-3">
-              <label class="form-label fw-semibold">Nombre de la tabla:</label>
-              <input type="text" name="table_name" class="form-control" placeholder="Ejemplo: entrega_material" required>
+              <label class="form-label fw-semibold">Selecciona la tabla:</label>
+              <select name="table_name" class="form-select" required>
+                <option value="" selected disabled>Seleccione una tabla</option>
+                {% for tabla in tablas %}
+                  <option value="{{ tabla }}">{{ tabla }}</option>
+                {% endfor %}
+              </select>
             </div>
             <div class="mb-3">
-              <label class="form-label fw-semibold">Archivo de respaldo (.backup):</label>
-              <input type="file" name="backup_file" class="form-control" accept=".backup" required>
+              <label class="form-label fw-semibold">Archivo de respaldo (.sql):</label>
+              <input type="file" name="backup_file" class="form-control" accept=".sql" required>
             </div>
             <button type="submit" class="btn btn-warning text-dark w-100 fw-semibold" style="background-color: #328E6E; border-color: #328E6E; color: #ffff">
               Restaurar tabla
@@ -128,6 +145,39 @@
         </div>
       </div>
     </section>
+
+<section class="section-card section-secondary"> 
+      <div class="card border-secondary shadow-sm rounded-4">
+        <div class="card-header rounded-top-4 d-flex align-items-center" style="color: #6c757d;"> 
+          <i class="bi bi-file-earmark-spreadsheet me-2 fs-4"></i> 
+          <strong>Descargar Tabla a CSV</strong>
+        </div>
+        <div class="card-body bg-light rounded-bottom-4">
+          <p class="text-muted mb-4">Exporta los datos de una tabla seleccionada a un archivo <strong>.csv</strong>.</p>
+          <form action="{% url 'administradores:descargar_tabla_csv' %}" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Contraseña de la Base de Datos:</label>
+              <input type="password" name="db_password" class="form-control" placeholder="Ingrese su contraseña" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Selecciona la tabla a descargar:</label>
+              <select name="table_name" class="form-select" required>
+                <option value="" selected disabled>Seleccione una tabla</option>
+                {% for tabla in tablas %}
+                  <option value="{{ tabla }}">{{ tabla }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <button type="submit" class="btn btn-secondary w-100 fw-semibold" style="background-color: #6c757d; border-color: #6c757d; color: #fff;">
+              Descargar CSV
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+
   </div>
 </div>
 
@@ -217,6 +267,5 @@ input {
   border-radius: 6px;
   font-size: 1rem;
 }
-
 </style>
 {% endblock %}

@@ -1,10 +1,26 @@
 {% extends "administradores/base.html" %}
-
 {% block title %}Usuarios{% endblock %}
 
 {% block content %}
-    <h1>Usuarios registrados</h1>
-    <table border="1">
+<div class="head-title">
+  <div class="left">
+    <h1>Gestión de usuarios</h1>
+    <ul class="breadcrumb">
+      <li><a  href="{% url 'administradores:index' %}" >Administrador</a></li>
+      <li><i class='bx bx-chevron-right'></i></li>
+      <li><a class="active"  href="{% url 'administradores:index' %}" >Usuarios</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="table-data">
+  <div class="order">
+    <div class="head">
+      <h3>Usuarios Registrados</h3>
+      <i class='bx bx-search'></i>
+      <i class='bx bx-filter'></i>
+    </div>
+    <table>
         <thead>
             <tr>
                 <th>ID</th>
@@ -30,11 +46,18 @@
                     {% endif %}
                 </td>
                 <td>
-                    <a href="{% url 'administradores:editar_usuario' usuario.id_usuario %}">Editar</a> |
-                    <a href="{% url 'administradores:eliminar_usuario' usuario.id_usuario %}">Eliminar</a>
+                    <a href="{% url 'administradores:editar_usuario' usuario.id_usuario %}"><i class='bx bxs-edit-alt' style="color: #67AE6E;"></i></a> |
+                    <a href="{% url 'administradores:eliminar_usuario' usuario.id_usuario %}"><i class='bx bxs-trash-alt' style="color: #67AE6E;"></i></a>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    </div>
+</div>
+<style>
+table{
+  margin-top: 30px;
+}
+</style>
 {% endblock %}
