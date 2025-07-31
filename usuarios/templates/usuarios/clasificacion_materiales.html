@@ -1,18 +1,19 @@
 {% extends "usuarios/base.html" %}
 {% load static %}
-<title>{% block title %} Clasificación de Materiales - EcoGuia {% endblock %}</title>
+
+{% block title %}Clasificación de Materiales - EcoGuia{% endblock %}
+
 {% block content %}
 
 <div class="cards-container">
-  <h2>Material Reciclables</h2>
+  <h2>Materiales Reciclables</h2>
   <p>Selecciona el residuo que quieres conocer</p>
 
   <div class="cards-grid">
     {% for material in clasificacion %}
-      {# Tarjeta por cada material reciclable: nombre, imagen o texto "No hay imagen" #}
       <div class="card-material" id="card{{ forloop.counter }}" onclick="resaltar(this); openModal('modal{{ forloop.counter }}')">
         <h5>{{ material.nombre }}</h5>
-        {% if material.imagen and material.imagen.name %}
+        {% if material.imagen and material.imagen.url %}
           <img src="{{ material.imagen.url }}" alt="Imagen del material" />
         {% else %}
           <div class="no-image">No hay imagen</div>
@@ -21,18 +22,14 @@
 
       <!-- Modal asociado a cada tarjeta (oculto por defecto) -->
       <div class="modal-overlay" id="modal{{ forloop.counter }}">
-        <div class="modal modal-lg modal-dialog-centered" role="dialog" aria-modal="true">
+        <div class="modal" role="dialog" aria-modal="true">
 
-          <!-- Cabecera del modal con nombre y botón cerrar -->
           <div class="modal-custom-header">
             <h5 class="modal-title">{{ material.nombre }}</h5>
             <button type="button" class="modal-close-btn" onclick="closeModal('modal{{ forloop.counter }}')">✖</button>
           </div>
 
-          <!-- Cuerpo del modal: texto y/o imagen -->
           <div class="modal-body modal-flex-body">
-
-            <!-- Sección de texto con descripción y tiempo de descomposición -->
             <div class="modal-text-content">
               {% if material.descripcion %}
                 <p class="modal-description">{{ material.descripcion }}</p>
@@ -42,101 +39,53 @@
               {% endif %}
             </div>
           </div>
-
-    <div class="cards-grid">
-        {% for material in clasificacion %}
-        <div class="card-material" id="card{{ forloop.counter }}" onclick="resaltar(this); openModal('modal{{ forloop.counter }}')">
-            <h5>{{ material.nombre }}</h5>
-            {% if material.imagen and material.imagen.url %} {# Usar .url para ImageField #}
-                <img src="{{ material.imagen.url }}" alt="Imagen del material" />
-            {% else %}
-                <div class="no-image">No hay imagen</div>
-            {% endif %}
         </div>
-
-        <div class="modal-overlay" id="modal{{ forloop.counter }}">
-            <div class="modal" role="dialog" aria-modal="true"> {# Eliminado modal-lg y modal-dialog-centered (eran de Bootstrap) #}
-
-                <div class="modal-custom-header">
-                    <h5 class="modal-title">{{ material.nombre }}</h5>
-                    <button type="button" class="modal-close-btn" onclick="closeModal('modal{{ forloop.counter }}')">✖</button>
-                </div>
-
-                <div class="modal-body modal-flex-body">
-
-
-                    <div class="modal-text-content">
-                        {% if material.descripcion %}
-                            <p class="modal-description">{{ material.descripcion }}</p>
-                        {% endif %}
-                        {% if material.tiempo_descomposicion %}
-                            <p class="modal-time"><strong>Tiempo de descomposición:</strong> {{ material.tiempo_descomposicion }}</p>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
+      </div>
+    {% endfor %}
+  </div>
 </div>
-{% endblock %}
-<script>
-  /* Función para resaltar la tarjeta seleccionada */
-  function resaltar(card) {
-    // Quita la clase en todas, usa 'bg-light-green' según CSS
-    document.querySelectorAll('.card-material').forEach(c => c.classList.remove('bg-dark-green'));
-    card.classList.add('bg-light-green');
-  }
 
- // Función para abrir modal
+<script>
+// Resaltado de tarjeta seleccionada
+function resaltar(card) {
+  document.querySelectorAll('.card-material').forEach(c => c.classList.remove('bg-light-green'));
+  card.classList.add('bg-light-green');
+}
+
+// Abrir modal
 function openModal(modalId) {
   const modal = document.getElementById(modalId);
   if (modal) {
     modal.classList.add('active');
-    document.body.style.overflow = 'hidden'; // Bloquea scroll cuando modal está abierto
+    document.body.style.overflow = 'hidden';
   }
 }
 
-// Función para cerrar modal
+// Cerrar modal
 function closeModal(modalId) {
   const modal = document.getElementById(modalId);
   if (modal) {
     modal.classList.remove('active');
-    document.body.style.overflow = ''; // Restaura scroll al cerrar modal
+    document.body.style.overflow = '';
   }
 }
 
-// Agregar listener a cada overlay para cerrar modal al hacer click fuera del contenido
-document.querySelectorAll('.modal-overlay').forEach(modal => {
-  modal.addEventListener('click', function(event) {
-    // Verifica que el clic fue en el overlay (no en el contenido interno)
-    if (event && event.target === modal) {
+// Cerrar modal al hacer click fuera del contenido
+document.addEventListener('click', function(event){
+  const modals = document.querySelectorAll('.modal-overlay.active');
+  modals.forEach(modal => {
+    if (event.target === modal) {
       closeModal(modal.id);
     }
   });
 });
-
-
-// Escuchar click en overlay para cerrar modal al clic fuera del contenido
-document.querySelectorAll('.modal-overlay').forEach(modal => {
-  modal.addEventListener('click', function(event) {
-    if (event && event.target === modal) {
-      closeModal(modal.id);
-    }
-  });
-});
-
-console.log('clic en', event.target);
-
 </script>
 
 <style>
-/* Estilo general para evitar que el body quede muy pegado arriba */
 body {
   padding-top: 60px;
 }
 
-/* Variables CSS con colores y fuente principal */
 :root {
   --poppins: 'Poppins', sans-serif;
   --light: #F9F9F9;
@@ -148,7 +97,6 @@ body {
   --light-verde: #67AE6E;
 }
 
-/* Contenedor principal de tarjetas */
 .cards-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -157,7 +105,6 @@ body {
   text-align: center;
 }
 
-/* Grid para colocar las tarjetas con espacios y tamaño adaptable */
 .cards-grid {
   display: grid;
   gap: 1.5rem;
@@ -165,7 +112,6 @@ body {
   margin-bottom: 3rem;
 }
 
-/* Estilo individual de cada tarjeta de material */
 .card-material {
   background: var(--light-brillante);
   border-radius: 1rem;
@@ -175,22 +121,41 @@ body {
   flex-direction: column;
   align-items: center;
   padding: 1rem;
-  max-width: 240px; /* Limita el ancho para que no sea muy grande */
+  max-width: 240px;
   margin: 0 auto;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  position: relative; /* necesario para ::before */
+  position: relative;
 }
 
-/* Hover y estado activo: cambio de color, sombra y zoom ligeramente la tarjeta */
-.card-material:hover, 
+.card-material:hover,
 .card-material.bg-light-green {
-  background: var(--light-verde);
-  box-shadow: 0 8px 24px rgba(103,174,110,0.3);
-  transform: scale(1.05);
-  z-index: 10;
+  background: var(--light-blue);
+  box-shadow: 0 8px 32px rgba(103,174,110,0.27);
+  transform: scale(1.03) translateY(-4px) rotate(-2deg);
+  z-index: 2;
 }
 
-/* Título dentro de tarjeta centrado y con estilo */
+.card-material::before {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: -8px;
+  transform: translateX(-50%);
+  width: 62px;
+  height: 8px;
+  border-radius: 0 0 24px 24px;
+  background: var(--blue);
+  opacity: 0;
+  transition: opacity .25s;
+  z-index: 3;
+}
+
+.card-material:hover::before,
+.card-material.bg-light-green::before {
+  opacity: 1;
+}
+
 .card-material h5 {
   color: var(--dark);
   font-weight: 700;
@@ -200,7 +165,6 @@ body {
   width: 100%;
 }
 
-/* Imagen dentro de la tarjeta con tamaño fijo y efectos suaves */
 .card-material img {
   width: 180px;
   height: 180px;
@@ -211,19 +175,16 @@ body {
   transition: transform 0.25s ease;
 }
 
-/* Efecto hover para la imagen: escalado y pequeña rotación */
 .card-material img:hover {
   transform: scale(1.07) rotate(-1.5deg);
 }
 
-/* Texto que indica que no hay imagen disponible */
 .card-material .no-image {
   color: var(--dark-grey);
   font-style: italic;
   margin-bottom: 1rem;
 }
 
-/* Estilos responsivos para dispositivos pequeños: tarjetas en columna, imágenes flexibles */
 @media (max-width: 600px) {
   .cards-grid {
     grid-template-columns: 1fr;
@@ -250,43 +211,6 @@ body {
   }
 }
 
-/* Cambios de hover para versión móvil con menor rotación */
-.card-material img:hover {
-  transform: scale(1.06) rotate(-1deg);
-}
-
-/* Cambios alternativos en hover y estado activo para tarjetas */
-.card-material:hover, .card-material.bg-light-green {
-  background: var(--light-blue);
-  box-shadow: 0 8px 32px rgba(103,174,110,0.27);
-  transform: scale(1.03) translateY(-4px) rotate(-2deg);
-  z-index: 2;
-}
-
-/* Decoración visual extra en top de la tarjeta con animación de opacidad */
-.card-material::before {
-  content: '';
-  display: block;
-  position: absolute;
-  left: 50%;
-  top: -8px;
-  transform: translateX(-50%);
-  width: 62px;
-  height: 8px;
-  border-radius: 0 0 24px 24px;
-  background: var(--blue);
-  opacity: 0;
-  transition: opacity .25s;
-  z-index: 3;
-}
-
-/* Mostrar la decoración cuando la tarjeta está hover o activa */
-.card-material:hover::before,
-.card-material.bg-light-green::before {
-  opacity: 1;
-}
-
-/* Estilos base para el modal (fondo semi-transparente que ocupa pantalla completa) */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -297,15 +221,14 @@ body {
   display: none;
   justify-content: center;
   align-items: center;
-  z-index: 999; /* Siempre encima del resto */
+  z-index: 999;
+  overflow-y: auto;
 }
 
-/* Mostrar el modal al tener la clase active */
 .modal-overlay.active {
   display: flex;
 }
 
-/* Caja del modal con fondo claro, bordes redondeados y sombra */
 .modal {
   background: var(--light);
   border-radius: 1rem;
@@ -315,10 +238,11 @@ body {
   overflow-y: auto;
   box-shadow: 0 4px 28px rgba(103,174,110,0.18);
   position: relative;
-  padding: 1rem 1.5rem 2rem 1.5rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Cabecera del modal con fondo azul, texto blanco y botón cerrar */
 .modal-custom-header {
   display: flex;
   flex-direction: column;
@@ -328,13 +252,18 @@ body {
   background: var(--blue);
   color: var(--light);
   border-radius: 1rem 1rem 0 0;
-  padding: 1rem 0 1rem 0;
+  padding: 2rem 1rem 2.5rem 1rem;
   font-weight: 700;
   font-size: 1.3rem;
   text-align: center;
 }
 
-/* Botón para cerrar modal, ubicado arriba a la derecha */
+.modal-title {
+  margin: 0;
+  width: 100%;
+  text-align: center;
+}
+
 .modal-close-btn {
   position: absolute;
   top: 1rem;
@@ -346,31 +275,6 @@ body {
   cursor: pointer;
 }
 
-/* Cuerpo del modal con padding, texto centrado y color oscuro */
-.modal-body {
-  padding: 1rem 0 0 0;
-  text-align: center;
-  color: var(--dark);
-}
-
-/* Margen para párrafos dentro del modal */
-.modal-body p {
-  margin-top: 1rem;
-}
-
-/* Media queries para adaptar imágenes y grid a dispositivos pequeños */
-@media (max-width: 600px) {
-  .cards-grid {
-    grid-template-columns: 1fr;
-  }
-  .card-material img,
-  .modal-body img {
-    width: 90vw;
-    height: auto;
-  }
-}
-
-/* Modal cuerpo con diseño flex para texto e imagen lado a lado */
 .modal-body.modal-flex-body {
   display: flex;
   gap: 1.5rem;
@@ -378,29 +282,11 @@ body {
   align-items: flex-start;
   flex-wrap: wrap;
   justify-content: center;
+  flex-grow: 1;
 }
 
-/* Contenedor para imagen del modal con ancho fijo y centrado */
-.modal-image-container {
-  flex: 0 0 300px; /* ancho fijo */
-  max-width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Imagen grande dentro del modal */
-.modal-image {
-  width: 300px;
-  height: 300px;
-  object-fit: cover;
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-/* Contenedor para el texto del modal con flex para centro y orden */
 .modal-text-content {
-  flex: 1 1 300px; /* ocupa el espacio restante */
+  flex: 1 1 300px;
   color: var(--dark);
   display: flex;
   flex-direction: column;
@@ -409,34 +295,27 @@ body {
   line-height: 1.5;
 }
 
-/* Margen inferior para descripción */
 .modal-description {
   margin-bottom: 1rem;
 }
 
-/* Estilo del tiempo resaltado (color y peso) */
 .modal-time {
   font-weight: 600;
   color: var(--blue);
 }
 
-/* Ajustes responsive para el cuerpo modal en pantallas pequeñas */
 @media (max-width: 650px) {
   .modal-body.modal-flex-body {
     flex-direction: column;
     align-items: center;
+    padding: 1rem;
   }
-  .modal-image-container,
   .modal-text-content {
     flex: none;
     width: 100%;
     max-width: 100%;
   }
-  .modal-image {
-    width: 90vw;
-    height: auto;
-  }
 }
 </style>
 
-
+{% endblock %}
