@@ -7,6 +7,7 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 
 class ContenidoEducativo(models.Model):
@@ -71,6 +72,8 @@ class Publicaciones(models.Model):
     titulo = models.CharField(max_length=30, blank=True, null=True)
     contenido = models.TextField(blank=True, null=True)
     id_usuario_p = models.ForeignKey('Usuarios', models.SET_NULL, db_column='id_usuario_p', blank=True, null=True)
+    fecha_publicacion = models.DateTimeField(default=timezone.now)  # <-- Nuevo campo
+
 
     class Meta:
         managed = False
@@ -213,3 +216,16 @@ class MaterialAceptado(models.Model):
     class Meta:
         managed = False
         db_table = 'material_aceptado'
+
+
+###########################################
+class Comentarios(models.Model):
+    id = models.AutoField(primary_key=True)  
+    contenido = models.TextField()
+    fecha_creacion = models.DateTimeField(blank=True, null=True)
+    id_publicacion = models.ForeignKey('Publicaciones', models.DO_NOTHING, db_column='id_publicacion')
+    id_usuario = models.ForeignKey('Usuarios', models.DO_NOTHING, db_column='id_usuario')
+
+    class Meta:
+        managed = False
+        db_table = 'comentarios'

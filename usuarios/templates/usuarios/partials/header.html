@@ -31,8 +31,11 @@
           <li>
               <a class="nav-link active" href="{% url 'usuarios:clasificacion_materiales' %}">Clasificacion de materiales</a>
           </li>
-           <li>
+          <li>
             <a class="{% if request.resolver_match.url_name == 'ranking' %}active{% endif %}" href="{% url 'usuarios:ranking_usuarios' %}">Ranking de usuarios</a>
+          </li> 
+           <li>
+            <a class="{% if request.resolver_match.url_name == 'publicaciones' %}active{% endif %}" href="{% url 'usuarios:publicaciones' %}">Reseñas</a>
           </li> 
 
         </ul>

@@ -3,62 +3,6 @@
 
 {% block content %}
 
-<<<<<<< HEAD
-<!-- Manejado por America Garcia Lara 
-      Muestra todos los contenidos Educativos -->
-<div class="contenedor">
-  <h1 class="titulo">Contenido Educativo</h1>
-  <div class="grid-contenido">
-    {% for item in contenidos %}
-      <div class="tarjeta" onclick="abrirModal('modal{{ forloop.counter }}')">
-        <div class="tarjeta-cuerpo">
-          <h5 class="tarjeta-titulo">{{ item.titulo }}</h5>
-          <p class="tarjeta-texto">{{ item.descripcion }}</p>
-
-          {% if item.imagen %}
-          <!-- permite mostrar imagen -->
-            <img src="{{ item.imagen.url }}" class="imagen" alt="{{ item.titulo }}">
-          
-          {% elif item.videos %}
-            {% if "youtube.com" in item.videos or "youtu.be" in item.videos %}
-              <div class="video-container">
-                <iframe src="{{ item.videos_embed }}" allowfullscreen></iframe>
-              </div>
-            {% else %}
-             <!-- permite mostrar video-->
-              <div class="video-container">
-                <video controls>
-                  <source src="{{ item.videos.url }}" type="video/mp4">
-                  Tu navegador no soporta videos.
-                </video>
-              </div>
-            {% endif %}
-          {% endif %}
-        </div>
-      </div>
-
-      <!-- Modal -->
-      <div id="modal{{ forloop.counter }}" class="modal">
-        <div class="modal-contenido">
-          <span class="cerrar" onclick="cerrarModal('modal{{ forloop.counter }}')">&times;</span>
-          <h5>{{ item.titulo }}</h5>
-          {% if item.imagen %}
-            <img src="{{ item.imagen.url }}" class="imagen-modal" alt="{{ item.titulo }}">
-          {% elif item.videos %}
-            {% if "youtube.com" in item.videos or "youtu.be" in item.videos %}
-              <div class="video-container">
-                <iframe src="{{ item.videos_embed }}" allowfullscreen></iframe>
-              </div>
-            {% else %}
-              <video controls class="video-modal">
-                <source src="{{ item.videos.url }}" type="video/mp4">
-                Tu navegador no soporta videos.
-              </video>
-            {% endif %}
-          {% endif %}
-          <p>{{ item.descripcion }}</p>
-          <small class="fecha">Fecha de publicación: {{ item.fecha|date:"d/m/Y" }}</small>
-=======
 <div class="container-custom"> {# Usamos una clase custom ya que .container de Bootstrap no está #}
   <h1 class="title-custom">📚 Contenido Educativo sobre Reciclaje</h1> {# Título personalizado #}
   <div class="row-custom"> {# Usamos una clase custom ya que .row de Bootstrap no está #}
@@ -121,177 +65,12 @@
               <small class="modal-date-custom">Publicado: {{ item.fecha|date:"d/m/Y" }}</small>
             </div>
           </div>
->>>>>>> eafef8411908a67f6427f25b468f3321552beb62
         </div>
       </div>
     {% endfor %}
   </div>
 </div>
 
-<<<<<<< HEAD
-<script>
-  function abrirModal(id) {
-    document.getElementById(id).style.display = 'block';
-  }
-
-  function cerrarModal(id) {
-    document.getElementById(id).style.display = 'none';
-  }
-
-  window.onclick = function(event) {
-    if (event.target.classList.contains('modal')) {
-      event.target.style.display = "none";
-    }
-  }
-</script>
-
-<!-- Estilos para darle diseño a la estructura -->
-<style>
-  /* Estructura general */
-  .contenedor {
-    max-width: 1200px;
-    margin: auto;
-    padding: 20px;
-  }
-  
-  .titulo {
-    text-align: center;
-    margin-bottom: 30px;
-  }
-  
-  /* Grid */
-  .grid-contenido {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-  }
-  
-  /* Tarjeta */
-  .tarjeta {
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-    background-color: #fff;
-    height: 350px; /* Tamaño fijo */
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .tarjeta:hover {
-    transform: scale(1.02);
-  }
-  
-  .tarjeta-cuerpo {
-    padding: 15px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-  }
-  
-  .tarjeta-titulo {
-    margin: 0;
-    font-size: 18px;
-    font-weight: bold;
-  }
-  
-  .tarjeta-texto {
-    font-size: 14px;
-    color: #444;
-    margin-bottom: 10px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3; /* máximo 3 líneas */
-    -webkit-box-orient: vertical;
-  }
-  
-  /* Imagen dentro de tarjeta: recortada */
-  .imagen {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-top: 10px;
-  }
-  
-  /* Video dentro de tarjeta: recortado */
-  .video-container {
-    position: relative;
-    padding-bottom: 56.25%;
-    height: 0;
-    overflow: hidden;
-    border-radius: 8px;
-    margin-top: 10px;
-  }
-  
-  .video-container iframe,
-  .video-container video {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    border: none;
-  }
-  
-  /* Modal */
-  .modal {
-    display: none;
-    position: fixed;
-    z-index: 999;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.6);
-  }
-  
-  .modal-contenido {
-    background-color: #fff;
-    margin: 5% auto;
-    padding: 20px;
-    max-width: 800px;
-    border-radius: 10px;
-    position: relative;
-    text-align: center;
-  }
-  
-  .cerrar {
-    position: absolute;
-    top: 10px; right: 15px;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    color: #999;
-  }
-  
-  .cerrar:hover {
-    color: #333;
-  }
-  
-  /* Imagen en modal: completa */
-  .imagen-modal {
-    width: 100%;
-    max-height: 500px;
-    object-fit: contain;
-    border-radius: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .video-modal {
-    width: 100%;
-    border-radius: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .fecha {
-    color: #777;
-    font-size: 13px;
-  }
-  </style>
-=======
 {# --- Estilos CSS INCRUSTADOS AQUÍ --- #}
 <style>
     /* Reset básicos y variables si es necesario */
@@ -639,5 +418,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
->>>>>>> eafef8411908a67f6427f25b468f3321552beb62
 {% endblock %}

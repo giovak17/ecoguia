@@ -2,8 +2,9 @@ from django.http import HttpRequest, HttpResponseForbidden
 from django.shortcuts import redirect, render, get_object_or_404
 from core.models import Recompensas, Usuarios,Entregas
 from django.shortcuts import redirect, render
-from core.models import Usuarios,Entregas, PuntosReciclaje,ContenidoEducativo,EntregaMaterialReciclado,TipoMaterialReciclable, MaterialAceptado
+from core.models import Usuarios,Entregas, PuntosReciclaje,ContenidoEducativo,EntregaMaterialReciclado,TipoMaterialReciclable, MaterialAceptado, Publicaciones, Comentarios
 from django.utils.timezone import now
+from django.utils import timezone
 from django.urls import reverse
 from core.auth import login_required
 from django.db import connection
@@ -393,3 +394,55 @@ def detalle_punto_reciclaje(request, id_punto):
 def clasificacion(request):
     clasificacion = TipoMaterialReciclable.objects.all()
     return render(request, "usuarios/clasificacion_materiales.html", {"clasificacion": clasificacion})
+
+###################################################################################
+def publicaciones(request):
+    publicaciones = Publicaciones.objects.all().order_by('-fecha_publicacion')
+    context = {
+        'publicaciones': publicaciones
+    }
+    return render(request, 'usuarios/publicaciones.html', context)
+
+def ver_publicaciones(request):
+    publicaciones = Publicaciones.objects.all().order_by('-fecha_publicacion')
+    usuario_actual = request.user 
+    return render(request, 'tu_app/publicaciones.html', {
+        'publicaciones': publicaciones,
+        'usuario_actual': usuario_actual,
+    })
+def crear_comentario(request):
+    if request.method == "POST":
+        post_id = request.POST.get('post_id')
+        contenido = request.POST.get('contenido')
+        user_id = request.session.get("user_id")
+
+        if post_id and contenido and user_id:
+            publicacion = get_object_or_404(Publicaciones, clave_publicacion=post_id)
+            usuario = get_object_or_404(Usuarios, id_usuario=user_id)
+
+            Comentarios.objects.create(
+                id_publicacion=publicacion,
+                id_usuario=usuario,
+                contenido=contenido,
+                fecha_creacion=timezone.now()
+            )
+
+    return redirect('usuarios:publicaciones')
+
+def crear_publicacion(request):
+    if request.method == "POST":
+        titulo = request.POST.get("titulo")
+        contenido = request.POST.get("contenido")
+
+        if titulo or contenido:
+            Publicaciones.objects.create(
+                titulo=titulo,
+                contenido=contenido,
+                id_usuario_p=request.user,
+                fecha_publicacion=timezone.now()
+            )
+
+        return redirect('usuarios:publicaciones')
+
+    return redirect('usuarios:publicaciones')
+##############################################################################

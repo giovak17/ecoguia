@@ -90,6 +90,7 @@ CREATE TABLE publicaciones (
 	titulo VARCHAR(30),
 	contenido TEXT,
 	id_usuario_p INTEGER,
+    fecha_publicacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY (id_usuario_p) REFERENCES usuarios(id_usuario)
 );
 /* Arath Ramses Porcayo Mercado */
@@ -174,6 +175,18 @@ CREATE TABLE entrega_material_reciclado(
 	FOREIGN KEY (id_entrega) REFERENCES entregas(id_entrega),  
 	FOREIGN KEY (id_material) REFERENCES material_reciclable(id_material)
 );
+
+CREATE TABLE comentarios (
+    id SERIAL PRIMARY KEY,
+    contenido TEXT NOT NULL,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    id_publicacion INT NOT NULL,
+    id_usuario INT NOT NULL,
+    FOREIGN KEY (id_publicacion) REFERENCES publicaciones(clave_publicacion), 
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+);
+
+
 
 -- FUNCIONES
 CREATE OR REPLACE FUNCTION sumar_puntos_entrega()
