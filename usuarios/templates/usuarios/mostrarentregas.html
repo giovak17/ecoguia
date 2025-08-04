@@ -4,27 +4,26 @@
 
 {% block content %}
 
+<div class="container-custom">
 
-<div class="container-custom"> {# Reemplaza .container #}
-
-  <h3 class="section-title">Historial de Entregas</h3> {# Reemplaza .text-success .mb-4 #}
+  <h3 class="section-title">Historial de Entregas</h3>
   {% if entregas %}
-    <div class="row-custom"> {# Reemplaza .row .row-cols-1 .row-cols-md-2 .g-3 .mb-5 #}
+    <div class="row-custom">
       {% for entrega in entregas %}
-        <div class="col-custom"> {# Reemplaza .col #}
-          <div class="card-custom"> {# Reemplaza .card .border-success .shadow-sm .h-100 #}
-            <div class="card-header-custom"> {# Reemplaza .card-header .bg-success .text-white .py-2 #}
+        <div class="col-custom">
+          <div class="card-custom">
+            <div class="card-header-custom">
               Entrega #{{ entrega.id_entrega }}
             </div>
-            <div class="card-body-custom"> {# Reemplaza .card-body .py-2 #}
-              <p><strong>Fecha:</strong> {{ entrega.fecha_entrega|date:"d/m/Y" }}</p> {# .mb-1 #}
-              <p><strong>Punto de Entrega:</strong> {{ entrega.punto_entrega }}</p> {# .mb-2 #}
-              <p class="fw-semibold">Materiales:</p> {# .mb-1 .fw-semibold .text-success #}
-              <ul class="list-group-custom"> {# Reemplaza .list-group .list-group-flush #}
+            <div class="card-body-custom">
+              <p><strong>Fecha:</strong> {{ entrega.fecha_entrega|date:"d/m/Y" }}</p>
+              <p><strong>Punto de Entrega:</strong> {{ entrega.punto_entrega }}</p>
+              <p class="fw-semibold">Materiales:</p>
+              <ul class="list-group-custom">
                 {% for material in entrega.materiales %}
-                  <li class="list-group-item-custom"> {# Reemplaza .list-group-item .d-flex .justify-content-between .align-items-center .p-1 #}
+                  <li class="list-group-item-custom">
                     {{ material.nombre_material }}
-                    <span class="badge-custom">{{ material.cantidad }}</span> {# Reemplaza .badge .bg-success .rounded-pill #}
+                    <span class="badge-custom">{{ material.cantidad }}</span>
                   </li>
                 {% endfor %}
               </ul>
@@ -34,204 +33,186 @@
       {% endfor %}
     </div>
   {% else %}
-    <div class="alert-info-custom"> {# Reemplaza .alert .alert-info .text-center .mb-5 #}
+    <div class="alert-info-custom">
       No hay entregas registradas.
     </div>
   {% endif %}
 
-  <h3 class="section-title">Historial de Retos Cumplidos</h3> {# Reemplaza .text-success .mb-4 #}
+  <h3 class="section-title">Historial de Retos Cumplidos</h3>
   {% if retos %}
-  <div class="row-custom"> {# Reemplaza .row .row-cols-1 .row-cols-md-2 .g-4 #}
-    {% for reto in retos %}
-      <div class="col-custom"> {# Reemplaza .col #}
-        <div class="card-custom"> {# Reemplaza .card .border-success .shadow-sm .h-100 #}
-          <div class="card-header-custom"> {# Reemplaza .card-header .bg-success .text-white .py-2 #}
-            {{ reto.titulo }}
-          </div>
-          <div class="card-body-custom"> {# Reemplaza .card-body .py-2 #}
-            <p><strong>Fecha de Finalización:</strong> {{ reto.fecha_fin|date:"d/m/Y" }}</p>
-            <hr class="hr-custom" /> {# Reemplaza .my-2 #}
-            <p><strong>Descripción:</strong></p>
-            <p>{{ reto.descripcion }}</p>
+    <div class="row-custom">
+      {% for reto in retos %}
+        <div class="col-custom">
+          <div class="card-custom">
+            <div class="card-header-custom">
+              {{ reto.titulo }}
+            </div>
+            <div class="card-body-custom">
+              <p><strong>Fecha de Finalización:</strong> {{ reto.fecha_fin|date:"d/m/Y" }}</p>
+              <hr class="hr-custom" />
+              <p><strong>Descripción:</strong></p>
+              <p>{{ reto.descripcion }}</p>
+            </div>
           </div>
         </div>
-      </div>
-    {% endfor %}
-  </div>
-{% else %}
-  <p class="no-retos-message">No has completado retos todavía.</p> {# Reemplaza .p #}
-{% endif %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="no-retos-message">No has completado retos todavía.</p>
+  {% endif %}
 </div>
+
 <style>
-    /* Reset básicos y variables si es necesario */
-    :root {
-        --primary-green: #28a745;
-        --secondary-green: #218838; /* Un verde más oscuro para hover */
-        --light-gray: #f8f9fa;
-        --medium-gray: #6c757d;
-        --dark-gray: #343a40;
-        --info-blue: #17a2b8;
-        --border-color: #dee2e6;
-        --shadow-color: rgba(0, 0, 0, 0.075);
-    }
+  :root {
+    --primary-green: #3a8d44; /* Verde formal, menos saturado */
+    --secondary-green: #2e6b33;
+    --light-gray: #f9fafb;
+    --medium-gray: #6c757d;
+    --dark-gray: #222222;
+    --border-color: #d1d7dc;
+    --shadow-color: rgba(0, 0, 0, 0.08);
+  }
 
-    /* ************************************************************ */
-    /* *** AJUSTES ESPECÍFICOS PARA EL ESPACIADO DEL HEADER/FOOTER *** */
-    /* ************************************************************ */
-    /* Ajusta estos valores según la altura real de tu header y footer para evitar superposiciones */
-    body {
-        padding-top: 80px; /* Espacio para el header fijo/alto */
-        padding-bottom: 60px; /* Espacio para el footer */
-        box-sizing: border-box; /* Asegura que padding y border no aumenten el tamaño total */
-    }
+  body {
+    padding-top: 80px;
+    padding-bottom: 60px;
+    box-sizing: border-box;
+    background-color: var(--light-gray);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
 
-    /* Contenedor principal */
-    .container-custom {
-        max-width: 960px; /* Ancho similar al container de Bootstrap */
-        margin: 40px auto; /* Centrar y dar espacio superior/inferior */
-        padding: 0 15px; /* Espacio a los lados */
-    }
+  .container-custom {
+    max-width: 960px;
+    margin: 50px auto;
+    padding: 0 15px;
+  }
 
-    /* Títulos de sección */
-    .section-title {
-        color: var(--primary-green);
-        margin-bottom: 30px;
-        font-size: 1.8rem;
-        font-weight: 600;
-        text-align: center;
-    }
+  .section-title {
+    color: var(--primary-green);
+    margin-bottom: 30px;
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    border-bottom: 3px solid var(--secondary-green);
+    padding-bottom: 10px;
+  }
 
-    /* Contenedor de la rejilla (grid) */
-    .row-custom {
-        display: flex;
-        flex-wrap: wrap;
-        margin-left: -15px; /* Compensa el padding de las columnas */
-        margin-right: -15px; /* Compensa el padding de las columnas */
-        margin-bottom: 50px; /* Espacio entre secciones */
-    }
+  .row-custom {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px 50px -15px;
+  }
 
-    /* Columna de la rejilla */
+  .col-custom {
+    flex: 0 0 auto;
+    width: 100%;
+    padding: 0 15px 30px 15px;
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 768px) {
     .col-custom {
-        flex: 0 0 auto;
-        width: 100%; /* Por defecto, una columna para móviles */
-        padding-left: 15px; /* Espacio entre columnas */
-        padding-right: 15px; /* Espacio entre columnas */
-        padding-bottom: 30px; /* Espacio entre filas de tarjetas */
-        box-sizing: border-box;
+      width: 50%;
     }
+  }
 
-    /* Media queries para responsive (simulando col-md-2) */
-    @media (min-width: 768px) { /* md */
-        .col-custom {
-            width: 50%; /* Dos columnas en pantallas medianas y grandes */
-        }
-    }
+  .card-custom {
+    background-color: white;
+    border: 1.5px solid var(--primary-green);
+    border-radius: 12px;
+    box-shadow: 0 3px 8px var(--shadow-color);
+    height: 100%;
+    font-size: 0.95rem;
+    transition: box-shadow 0.3s ease;
+  }
+  .card-custom:hover {
+    box-shadow: 0 6px 16px rgba(58, 141, 68, 0.4);
+  }
 
-    /* Estilos de la tarjeta */
-    .card-custom {
-        background-color: white;
-        border: 1px solid var(--primary-green); /* Borde verde */
-        border-radius: 8px;
-        box-shadow: 0 0.125rem 0.25rem var(--shadow-color); /* Sombra suave */
-        height: 100%; /* Ocupa toda la altura disponible en su columna */
-        font-size: 0.9rem;
-        overflow: hidden; /* Asegura que los bordes redondeados se respeten */
-    }
+  .card-header-custom {
+    background-color: var(--primary-green);
+    color: white;
+    padding: 12px 20px;
+    font-weight: 700;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    font-size: 1.1rem;
+    letter-spacing: 0.03em;
+  }
 
-    .card-header-custom {
-        background-color: var(--primary-green);
-        color: white;
-        padding: 8px 15px; /* py-2 */
-        font-weight: 600;
-        border-bottom: 1px solid var(--primary-green); /* Borde para el header */
-        border-top-left-radius: 7px; /* Para que el radio se vea bien */
-        border-top-right-radius: 7px;
-    }
+  .card-body-custom {
+    padding: 20px;
+    color: var(--dark-gray);
+  }
+  .card-body-custom p {
+    margin-bottom: 8px;
+    line-height: 1.5;
+  }
+  .card-body-custom p strong {
+    color: var(--secondary-green);
+  }
+  .card-body-custom p.fw-semibold {
+    font-weight: 700;
+    color: var(--primary-green);
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
 
-    .card-body-custom {
-        padding: 15px; /* py-2 */
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1; /* Permite que el cuerpo crezca */
-    }
+  .list-group-custom {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid var(--border-color);
+  }
 
-    .card-body-custom p {
-        margin-bottom: 5px; /* Menor margen entre párrafos */
-        line-height: 1.4;
-        color: var(--dark-gray);
-    }
-    .card-body-custom p strong {
-        color: var(--primary-green);
-    }
-    .card-body-custom p.fw-semibold {
-        font-weight: 600;
-        color: var(--primary-green);
-        margin-top: 10px; /* Espacio antes del título de Materiales */
-    }
+  .list-group-item-custom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.9rem;
+    color: var(--medium-gray);
+  }
+  .list-group-item-custom:last-child {
+    border-bottom: none;
+  }
 
-    /* Lista de materiales/elementos */
-    .list-group-custom {
-        list-style: none; /* Quitar viñetas */
-        padding: 0;
-        margin: 0;
-        border-top: 1px solid var(--border-color); /* Borde superior para la lista */
-    }
+  .badge-custom {
+    background-color: var(--primary-green);
+    color: white;
+    padding: 0.4em 0.75em;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+  }
 
-    .list-group-item-custom {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px 15px; /* p-1 */
-        border-bottom: 1px solid var(--border-color); /* Separador entre ítems */
-        font-size: 0.85rem;
-        color: var(--medium-gray);
-    }
-    .list-group-item-custom:last-child {
-        border-bottom: none; /* No hay borde en el último ítem */
-    }
+  .hr-custom {
+    border: 0;
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 15px 0;
+  }
 
-    /* Badge para cantidad */
-    .badge-custom {
-        background-color: var(--primary-green);
-        color: white;
-        padding: 0.35em 0.65em;
-        border-radius: 50rem; /* pill-shaped */
-        font-size: 0.75em;
-        font-weight: 700;
-        line-height: 1;
-        text-align: center;
-        white-space: nowrap;
-    }
+  .alert-info-custom {
+    background-color: #d9edf7;
+    color: #31708f;
+    border: 1px solid #bce8f1;
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 3rem;
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
 
-    /* Línea divisoria para retos */
-    .hr-custom {
-        border: 0;
-        height: 1px;
-        background-color: var(--border-color);
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
-
-    /* Estilos para el mensaje de "No hay entregas" */
-    .alert-info-custom {
-        background-color: #d1ecf1; /* Color de fondo claro */
-        color: #0c5460; /* Color del texto oscuro */
-        border: 1px solid #bee5eb; /* Borde */
-        border-radius: 0.25rem;
-        padding: 1rem;
-        margin-bottom: 3rem; /* mb-5 */
-        text-align: center;
-        font-size: 1rem;
-        line-height: 1.5;
-    }
-
-    /* Estilos para el mensaje de "No has completado retos" */
-    .no-retos-message {
-        color: var(--medium-gray);
-        text-align: center;
-        font-size: 1rem;
-        padding: 20px 0;
-    }
-
+  .no-retos-message {
+    color: var(--medium-gray);
+    text-align: center;
+    font-size: 1.1rem;
+    padding: 25px 0;
+  }
 </style>
 {% endblock %}

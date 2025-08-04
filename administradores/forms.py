@@ -1,8 +1,9 @@
 from django import forms
-from core.models import Usuarios, Roles, TipoMaterialReciclable
+from core.models import Usuarios, Roles, TipoMaterialReciclable, Retos, Recompensas
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 import os
+from django.forms import inlineformset_factory
 
 
 class UsuarioForm(forms.ModelForm):
@@ -62,3 +63,13 @@ class TipoMaterialReciclableForm(forms.ModelForm):
                 raise forms.ValidationError("La imagen no debe superar los 10MB.")
         return imagen
 
+
+class RetoForm(forms.ModelForm):
+    class Meta:
+        model = Retos
+        fields = ['titulo', 'descripcion']
+
+class RecompensaForm(forms.ModelForm):
+    class Meta:
+        model = Recompensas
+        exclude = ['clave_reto']  #no se va a usar, se dejara en null

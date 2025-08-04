@@ -1,0 +1,132 @@
+{% extends "administradores/base.html" %}
+{% block title %}Nuevo Reto{% endblock %}
+
+{% block content %}
+<div class="form-container">
+  <h2>Agregar Nuevo Reto</h2>
+  <form method="POST" novalidate id="form-reto">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label for="id_titulo">Título</label>
+      {{ form.titulo }}
+      <div class="error-msg" id="error-titulo"></div>
+      {% if form.titulo.errors %}
+        <div class="error-msg">{{ form.titulo.errors }}</div>
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      <label for="id_descripcion">Descripción</label>
+      {{ form.descripcion }}
+      {% if form.descripcion.errors %}
+        <div class="error-msg">{{ form.descripcion.errors }}</div>
+      {% endif %}
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Guardar</button>
+      <a href="{% url 'administradores:RetosYRecompensas' %}" class="btn btn-secondary">Cancelar</a>
+    </div>
+  </form>
+</div>
+
+<style>
+  /* (igual que antes, pon el CSS que te di para diseño formal) */
+  .form-container {
+    max-width: 500px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgb(0 0 0 / 0.1);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+  .form-container h2 {
+    margin-bottom: 25px;
+    color: #333;
+    font-weight: 700;
+    text-align: center;
+  }
+  .form-group {
+    margin-bottom: 20px;
+  }
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #444;
+  }
+  input[type="text"],
+  textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.8px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    font-family: inherit;
+  }
+  input[type="text"]:focus,
+  textarea:focus {
+    border-color: #0056b3;
+    outline: none;
+    box-shadow: 0 0 6px #0056b3aa;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+  .error-msg {
+    color: #b00020;
+    font-size: 0.9rem;
+    margin-top: 4px;
+  }
+  .form-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+  }
+  .btn {
+    padding: 10px 22px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    font-size: 1rem;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  .btn-primary {
+    background-color: #0056b3;
+    color: white;
+    box-shadow: 0 3px 8px rgb(0 86 179 / 0.3);
+  }
+  .btn-primary:hover {
+    background-color: #003d80;
+  }
+  .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+  }
+  .btn-secondary:hover {
+    background-color: #565e64;
+  }
+</style>
+
+<script>
+  document.getElementById('form-reto').addEventListener('submit', function(e) {
+    const tituloInput = document.getElementById('id_titulo');
+    const errorDiv = document.getElementById('error-titulo');
+    errorDiv.textContent = '';
+
+    if(tituloInput.value.length > 30) {
+      e.preventDefault();
+      errorDiv.textContent = 'El título no puede tener más de 30 caracteres.';
+      tituloInput.focus();
+    }
+  });
+</script>
+{% endblock %}

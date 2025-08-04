@@ -53,6 +53,11 @@
 					<i class='bx bx-recycle'></i><span class="text">Agregar nuevos materiales reciclables</span>
 				</a>
 			</li>
+			<li class="{% if request.resolver_match.url_name == 'RetosYRecompensas' %}active{% endif %}">
+				<a href="{% url 'administradores:RetosYRecompensas' %}">
+					<i class='bx bx-recycle'></i><span class="text">Retos y recompensas</span>
+				</a>
+			</li>
 			<li class="{% if request.resolver_match.url_name == 'backupscreen' %}active{% endif %}">
 				<a href="{% url 'administradores:backupscreen' %}">
 					<i class='bx bxs-user-minus'></i><span class="text">Respaldar datos</span>

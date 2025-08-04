@@ -2,7 +2,7 @@ from django.http import HttpRequest, HttpResponseForbidden
 from django.shortcuts import redirect, render, get_object_or_404
 from core.models import Recompensas, Usuarios,Entregas
 from django.shortcuts import redirect, render
-from core.models import Usuarios,Entregas, PuntosReciclaje,ContenidoEducativo,EntregaMaterialReciclado,TipoMaterialReciclable, MaterialAceptado, Publicaciones, Comentarios
+from core.models import Usuarios,Entregas, PuntosReciclaje,ContenidoEducativo,EntregaMaterialReciclado,TipoMaterialReciclable, MaterialAceptado, Publicaciones, Comentarios, Retos, Recompensas
 from django.utils.timezone import now
 from django.utils import timezone
 from django.urls import reverse
@@ -94,7 +94,6 @@ def perfil_usuario(request):
 def ranking_usuarios(request):
     usuarios = Usuarios.objects.filter(puntos__isnull=False).order_by('-puntos')[:50]  # top 50
     return render(request, 'usuarios/ranking.html', {'usuarios': usuarios})
-
 
 def contenido_educativo(request):
     contenidos = ContenidoEducativo.objects.all()
@@ -196,8 +195,6 @@ def verify_crendentials(email, password) -> tuple[bool, str, Usuarios]:
         return False, "Contrasena incorrecta.", Usuarios()
     
 
-
-
 def usuariosregistro(request):
     if request.method == "POST":
         nombre = request.POST.get("nombre")
@@ -250,6 +247,14 @@ def usuarios_delete(request, pk):
 
     # Si es GET, renderiza la plantilla de confirmación
     return render(request, "usuarios:usuarios_delete.html", {"object": usuarios})
+
+def RetosYRecompensas(request):
+    retos = Retos.objects.all()
+    recompensas = Recompensas.objects.all()
+    return render(request, 'usuarios/RetosYRecompensasU.html', {
+        'retos': retos,
+        'recompensas': recompensas
+    })
 
 def mostrarentregas(request):
     user_id = request.session.get("user_id")

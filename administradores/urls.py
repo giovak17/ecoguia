@@ -27,6 +27,13 @@ urlpatterns = [
     path('contenido/<int:pk>/editar/', views.contenido_editar, name='contenido_editar'),
     path('contenido/<int:pk>/borrar/', views.contenido_borrar, name='contenido_borrar'),
 
+    #retos y recompensas
+    path('RetosYRecompensas/', views.RetosYRecompensas, name='RetosYRecompensas'),
+    path('agregar_reto/', views.agregar_reto, name='agregar_reto'),  
+    path('agregar_recompensa/', views.agregar_recompensa, name='agregar_recompensa'),
+
+
+    #respaldos
     path('backup/', views.backup, name='backup'),
     path('restaurar-bd/', views.restaurar_toda_db, name='restaurar_bd'),
     path('backupscreen/', views.backupscreen, name='backupscreen'),
