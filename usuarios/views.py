@@ -397,6 +397,9 @@ def clasificacion(request):
 
 ###################################################################################
 def publicaciones(request):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return redirect('usuarios:login')
     publicaciones = Publicaciones.objects.all().order_by('-fecha_publicacion')
     context = {
         'publicaciones': publicaciones
