@@ -9,60 +9,37 @@ use la tabla tipo y material reciclable*/
 {% block content %}
 <div class="head-title">
 	<div class="left">
-		<h2 class="mb-4" style="font-weight: bold; color: #2c3e50; font-family: 'Poppins', sans-serif;">
-    Tipos de Material Reciclable
-  </h2>
+		<h1>Material reciclable</h1>
 		<ul class="breadcrumb">
 			<li><a  href="{% url 'administradores:index' %}" >Administrador</a></li>
 			<li><i class='bx bx-chevron-right'></i></li>
-			<li><a  class="active"  href="{% url 'administradores:index' %}" >Tipo de material</a></li>
+			<li><a class="active"  href="{% url 'administradores:index' %}" >Tipos de material</a></li>
+		</ul>
 	</div>
+	<a  href="{% url 'administradores:tipomaterial_registro' %}" class="btn-download">
+		<i class='bx bxs-cloud-download'></i>
+		<span class="text">Registrar material</span>
+	</a>
 </div>
+
 <div class="container py-4" style="max-width: 1200px; margin: 0 auto;">
-  <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
-  <a href="{% url 'administradores:tipomaterial_registro' %}"
-     style="
-       background-color: #67AE6E;
-       color: #fff;
-       font-size: 0.95rem;
-       padding: 10px 20px;
-       border-radius: 6px;
-       border: none;
-       font-weight: 600;
-       cursor: pointer;
-       display: inline-block;
-       text-decoration: none;
-       user-select: none;
-       font-family: 'Poppins', sans-serif;
-       transition: background-color 0.2s;
-     ">
-    Crear Nuevo
-  </a>
-</div>
-  <div class="table-responsive">
+  <div class="table-data">
+    <div class="order">
+      <div class="head">
+        <h3>Material registrado</h3>
+        <!-- <i class='bx bx-search'></i>
+        <i class='bx bx-filter'></i> -->
+      </div>
     {# Contenedor para hacer la tabla responsiva (scroll horizontal si es necesario) #}
-
-    <table
-      style="
-        height:1100px;
-        width:1200px;
-        border-collapse: collapse;
-        font-family: 'Poppins', sans-serif;
-        background-color: #fff;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        font-size: 1rem;
-      ">
+      <table>
       {# Tabla con estilo inline que controla dimensiones, fuente, colores y sombra #}
-
       <thead>
-        <tr style="background-color: #fdfafaff;">
-          <th style="padding: 8px;">Nombre</th>
-          <th style="padding: 8px; ">Descripción</th>
-          <th style="padding: 8px; ">Descomposición (días)</th>
-          <th style="padding: 8px; ">Imagen</th>
-          <th style="padding: 8px;">Acciones</th>
+        <tr>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Descomposición (días)</th>
+          <th>Imagen</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       {# Cabecera de la tabla con columnas especificadas, cada celda con padding para separación #}
@@ -94,56 +71,10 @@ use la tabla tipo y material reciclable*/
             {% endif %}
           </td>
           {# Muestra la imagen del material reciclable si existe, sino muestra texto en gris e cursiva #}
-
           <td style="padding: 8px;">
-            <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-start; align-items: center;">
-              {# Contenedor flex para mantener los botones alineados con espacio entre ellos y ajuste responsivo #}
-
-              <a href="{% url 'administradores:tipomaterial_actualizar' tipo.pk %}"
-                  style="
-                  background-color: #67AE6E;
-                  color: #fff;
-                  border: none;
-                  border-radius: 30px;
-                  padding: 6px 18px;
-                  font-weight: 500;
-                  cursor: pointer;
-                  text-align: center;
-                  display: inline-block;
-                  min-width: 80px;
-                  user-select: none;
-                  text-decoration: none;
-                  transition: background 0.2s;"
-                  onmouseover="this.style.backgroundColor='#549a5e';"
-                  onmouseout="this.style.backgroundColor='#67AE6E';"
-              >
-                Editar
-              </a>
-              {# Botón verde para editar el tipo de material, cambia a un verde más oscuro al pasar el mouse #}
-
-              <a href="{% url 'administradores:tipomaterial_delete' tipo.pk %}"
-                 style="
-                   background-color: #328E6E;;
-                   color: #fff;
-                   border: none;
-                   border-radius: 30px;
-                   padding: 6px 18px;
-                   font-weight: 500;
-                   cursor: pointer;
-                   text-align: center;
-                   display: inline-block;
-                   min-width: 80px;
-                   user-select: none;
-                   text-decoration: none;
-                   transition: background 0.2s;"
-                 onmouseover="this.style.backgroundColor='#b53a34';"
-                 onmouseout="this.style.backgroundColor='#67AE6E';"
-                 onclick="return confirm('¿Estás seguro de eliminar este material?');"
-              >
-                Eliminar
-              </a>
-              {# Botón para eliminar, con confirmación previa y cambio de color al pasar el mouse #}
-            </div>
+            <a href="{% url 'administradores:tipomaterial_actualizar' tipo.pk %}"><i class='bx bxs-edit-alt' style="color: #67AE6E;"></i></a> |
+            <a href="{% url 'administradores:tipomaterial_delete' tipo.pk %}"><i class='bx bxs-trash-alt' style="color: #67AE6E;"></i></a>
+            {# Botón verde para editar el tipo de material, cambia a un verde más oscuro al pasar el mouse #}
           </td>
         </tr>
         {% empty %}
@@ -156,6 +87,7 @@ use la tabla tipo y material reciclable*/
         {# Mensaje que se muestra si no hay registros en la lista #}
       </tbody>
     </table>
+    </div>
   </div>
 </div>
 {% endblock %}

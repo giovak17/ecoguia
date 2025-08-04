@@ -3,7 +3,16 @@
 
 <!-- Contentido apartir de aqui sera insertado en base.html -->
 {% block content %}
-<h1 class="text-center fw-bold p-4">Solicitudes de recicladoras</h1>
+<div class="head-title">
+	<div class="left">
+		<h1>Solicitudes de recicladoras</h1>
+		<ul class="breadcrumb">
+			<li><a  href="{% url 'administradores:index' %}" >Administrador</a></li>
+			<li><i class='bx bx-chevron-right'></i></li>
+			<li><a class="active"  href="{% url 'administradores:index' %}" >Solicitudes</a></li>
+		</ul>
+	</div>
+</div>
 
 {% if success %}
     <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
@@ -12,46 +21,52 @@
     </div>
 {%endif %}
 
-<table class="table table-hover">
-  <thead>
-    <tr>
-      <th scope="col">Codigo</th>
-      <th scope="col">Nombre</th>
-      <th scope="col">Propietario</th>
-      <th scope="col">Direccion</th>
-      <th scope="col">Numero telefonico</th>
-      <th scope="col">Aprobación</th>
-    </tr>
-  </thead>
-  <tbody>
+<div class="table-data">
+  <div class="order">
+    <div class="head">
+      <h3>Solicitudes</h3>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Codigo</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Propietario</th>
+          <th scope="col">Direccion</th>
+          <th scope="col">Numero telefonico</th>
+          <th scope="col">Aprobación</th>
+        </tr>
+      </thead>
+      <tbody>
 
-    <form id="approval-form" action={% url "administradores:aprobar_recicladoras" %} method="post">
-        {% csrf_token %}
-        {% for rec in recicladoras %}
-            <tr>
-                <th scope="row">{{ rec.codigo_recicladora }}</th>
-                <td>{{ rec.nombre }}</td>
-                <td>{{ rec.propietario.nombre }} {{ rec.propietario.ap_paterno }}</td>
-                <td>{{ rec.ciudad }}, {{ rec.codigo_postal }}, {{ rec.calle }}, {{ rec.colonia }}, {{ rec.numero_int }} </td>
-                <td>{{ rec.numero_telefonico }}</td>
-                <td>
-                        <select class="form-select" name="{{ rec.codigo_recicladora }}" selected="{{rec.aprobada}}">
-                            {% if rec.aprobada %}
-                            <option value="False">Rechazada</option>
-                            <option value="True" selected>Confirmada</option>
-                            {% else %}
-                            <option value="False" selected>Rechazada</option>
-                            <option value="True">Confirmada</option>
+        <form id="approval-form" action={% url "administradores:aprobar_recicladoras" %} method="post">
+            {% csrf_token %}
+            {% for rec in recicladoras %}
+                <tr>
+                    <th scope="row">{{ rec.codigo_recicladora }}</th>
+                    <td>{{ rec.nombre }}</td>
+                    <td>{{ rec.propietario.nombre }} {{ rec.propietario.ap_paterno }}</td>
+                    <td>{{ rec.ciudad }}, {{ rec.codigo_postal }}, {{ rec.calle }}, {{ rec.colonia }}, {{ rec.numero_int }} </td>
+                    <td>{{ rec.numero_telefonico }}</td>
+                    <td>
+                            <select class="form-select" name="{{ rec.codigo_recicladora }}" selected="{{rec.aprobada}}">
+                                {% if rec.aprobada %}
+                                <option value="False">Rechazada</option>
+                                <option value="True" selected>Confirmada</option>
+                                {% else %}
+                                <option value="False" selected>Rechazada</option>
+                                <option value="True">Confirmada</option>
 
-                            {% endif %}
-                        </select>
-                </td>
-            <tr>
-        {% endfor %}
-    </form>
-  </tbody>
-</table>
-
+                                {% endif %}
+                            </select>
+                    </td>
+                <tr>
+            {% endfor %}
+        </form>
+      </tbody>
+    </table>
+  </div>
+</div>
 <div class="text-end">
   <button form="approval-form" type="submit" class="btn btn-success my-2 fw-bold">Aplicar</button>
 <div>

@@ -1,15 +1,23 @@
 {% extends 'administradores/base.html' %}
 {% load static %}
 {% block content %}
+<div class="head-title">
+	<div class="left">
+		<h1>Contenido educativo</h1>
+		<ul class="breadcrumb">
+			<li><a  href="{% url 'administradores:index' %}" >Administrador</a></li>
+			<li><i class='bx bx-chevron-right'></i></li>
+			<li><a class="active"  href="{% url 'administradores:index' %}" >Contenido educativo</a></li>
+		</ul>
+	</div>
+	<a href="{% url 'administradores:contenido_crear' %}" class="btn-download">
+		<i class='bx bxs-cloud-download'></i>
+		<span class="text">Agregar contenido</span>
+	</a>
+</div>
 <!-- Manejado por America Garcia Lara
  Muestra todos los contenidos educativos y permite realizar acciones como Editar, crear y eliminar   -->
-<div class="container">
-  <h1 class="mt-4 mb-4">Contenido Educativo - Administración</h1>
-  <div class="d-flex justify-content-end mb-3">
-  <a href="{% url 'administradores:contenido_crear' %}" class="btn btn-success">
-    <i class="bi bi-plus-lg"></i> Agregar Nuevo Contenido <!--  Boton de agregar   -->
-  </a>
-</div>  
+<div class="container">  
 <!-- Permite mostrar todos los contenidos educativos existentes -->
   <div class="row g-4">
     {% for item in contenidos %}
