@@ -55,16 +55,9 @@
       <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ usuario.fecha_nacimiento|date:'Y-m-d' }}"{% if not modo_edicion %} readonly{% endif %}>
     </div>
   </form>
-  
-  <a href="{% url 'usuarios:recicladora_crear' %}" class="btn-nueva-recicladora">
-		<i class='bx bx-plus'></i>
-		<span class="text-prim">Nueva recicladora</span>
-	</a>
-
-  {% comment %} <hr style="margin: 2rem 0;"> {% endcomment %}
 
   <div class="profile-stats">
-    <h3><i class="fas fa-star"></i> Puntos acumulados: 
+    <h3><i class="fas fa-star"></i> Puntos acumulados:
       <span class="puntos-count">{{ usuario.puntos|default:0 }}</span>
     </h3>
 
@@ -88,5 +81,20 @@
       <p style="color: var(--text-light); font-style: italic;">Aún no has obtenido recompensas.</p>
     {% endif %}
   </div>
+
+  <div class="recicladora-info-box">
+    <i class="fas fa-recycle icon-info"></i>
+    <p>
+      ¿Cuentas con una empresa de reciclaje y te gustaría crear tus propios puntos? Envía una solicitud para registrar tu propia recicladora. ¡Es rápido y fácil!
+    </p>
+    <br></br>
+  </div>
+  <div style="text-align: center; margin-bottom: 2rem;">
+    <a href="{% url 'usuarios:recicladora_crear' %}" class="btn-nueva-recicladora">
+      <i class='bx bx-plus'></i>
+      <span class="text-prim">Registrar recicladora</span>
+    </a>
+  </div>
+
 </div>
 {% endblock %}

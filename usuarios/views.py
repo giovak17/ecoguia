@@ -92,6 +92,7 @@ def perfil_usuario(request):
     })
 
 def recicladora_crear(request):
+    user_id = request.session.get("user_id")
     errores = {}
     recicladora_data = {}
     reciclador_rol = Roles.objects.get(nombre='Recicladora')
@@ -101,13 +102,15 @@ def recicladora_crear(request):
 
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
-        propietario_id = None
+        propietario_id = user_id
         calle = request.POST.get('calle')
         colonia = request.POST.get('colonia')
         ciudad = request.POST.get('ciudad')
         codigo_postal = request.POST.get('codigo_postal')
         numero_int = request.POST.get('numero_int')
         telefono = request.POST.get('numero_telefonico')
+        aprobada=False
+        detalles = request.POST.get('detalles')
 
         recicladora_data = {
             'nombre': nombre,
@@ -118,6 +121,8 @@ def recicladora_crear(request):
             'codigo_postal': codigo_postal,
             'numero_int': numero_int,
             'numero_telefonico': telefono,
+            'aprobada':aprobada,
+            'detalles':detalles,
         }
 
         if not nombre:
@@ -134,7 +139,9 @@ def recicladora_crear(request):
                 ciudad=ciudad,
                 codigo_postal=codigo_postal or None,
                 numero_int=numero_int or None,
-                numero_telefonico=telefono
+                numero_telefonico=telefono,
+                aprobada=aprobada,
+                detalles=detalles
             )
             return redirect('usuarios:perfil_usuario')
 

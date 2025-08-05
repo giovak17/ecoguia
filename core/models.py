@@ -110,6 +110,7 @@ class Recicladoras(models.Model):
     ciudad = models.CharField(max_length=30, blank=True, null=True)
     numero_telefonico = models.CharField(max_length=20, blank=True, null=True)
     aprobada = models.BooleanField(blank=True, null=True)
+    detalles = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
