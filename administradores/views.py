@@ -30,7 +30,19 @@ from django.db import transaction,  IntegrityError
 
 @login_required(role="administrador")
 def index(request):
-    return render(request, "administradores/index.html")
+    solicitudes_pendientes = Recicladoras.objects.filter(aprobada=False).count()
+    usuarios_registrados = Usuarios.objects.count()
+    recicladoras_activas = Recicladoras.objects.filter(aprobada=True).count()
+
+    recicladoras_pendientes = Recicladoras.objects.filter(aprobada=False)
+
+    return render(request, "administradores/index.html", {
+        'solicitudes_pendientes': solicitudes_pendientes,
+        'usuarios_registrados': usuarios_registrados,
+        'recicladoras_activas': recicladoras_activas,
+        'recicladoras_pendientes': recicladoras_pendientes,
+    })
+
 # manejado por America Lara 
 # vista para mostrar recicladoras
 def ver_recicladoras(request):

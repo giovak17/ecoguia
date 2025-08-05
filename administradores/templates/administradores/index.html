@@ -20,9 +20,12 @@
 </div>
 
 <ul class="box-info">
-	<li><i class='bx bxs-building-house'></i><span class="text"><h3>12</h3><p>Solicitudes Pendientes</p></span></li>
-	<li><i class='bx bxs-user'></i><span class="text"><h3>150</h3><p>Usuarios Registrados</p></span></li>
-	<li><i class='bx bxs-factory'></i><span class="text"><h3>27</h3><p>Recicladoras Activas</p></span></li>
+	<li><i class='bx bxs-building-house'></i><span class="text">
+		<h3>{{solicitudes_pendientes}}</h3>
+		<p>Solicitudes Pendientes</p></span>
+	</li>
+	<li><i class='bx bxs-user'></i><span class="text"><h3>{{usuarios_registrados}}</h3><p>Usuarios Registrados</p></span></li>
+	<li><i class='bx bxs-factory'></i><span class="text"><h3>{{recicladoras_activas}}</h3><p>Recicladoras Activas</p></span></li>
 </ul>
 
 <div class="table-data">
@@ -34,12 +37,24 @@
 		</div>
 		<table>
 			<thead>
-				<tr><th>Nombre</th><th>Fecha de Solicitud</th><th>Estado</th></tr>
+				<tr>
+					<th>Nombre</th>
+					<th>Fecha de Solicitud</th>
+					<th>Estado</th>
+				</tr>
 			</thead>
 			<tbody>
-				<tr><td><p>EcoRecy S.A.</p></td><td>10-07-2025</td><td><span class="status pending">Pendiente</span></td></tr>
-				<tr><td><p>VerdeVida</p></td><td>08-07-2025</td><td><span class="status completed">Aprobada</span></td></tr>
-				<tr><td><p>ReciMex</p></td><td>05-07-2025</td><td><span class="status rejected">Rechazada</span></td></tr>
+				{% for recicladora in recicladoras_pendientes %}
+				<tr>
+					<td>{{ recicladora.nombre }}</td>
+					<td>No disponible</td>  <!-- O agregar un campo fecha en el modelo -->
+					<td>Pendiente</td>
+				</tr>
+				{% empty %}
+				<tr>
+					<td colspan="3" class="text-center">No hay solicitudes pendientes</td>
+				</tr>
+				{% endfor %}
 			</tbody>
 		</table>
 	</div>
@@ -51,9 +66,8 @@
 			<i class='bx bx-filter'></i>
 		</div>
 		<ul class="todo-list">
-			<li class="not-completed"><p>Revisar solicitudes pendientes</p><i class='bx bx-dots-vertical-rounded'></i></li>
+			<li class="not-completed"><a href="{% url 'administradores:aprobar_recicladoras' %}"><p>Revisar solicitudes pendientes</p></a><i class='bx bx-dots-vertical-rounded'></i></li>
 			<li class="not-completed"><a href="{% url 'administradores:listar_usuarios' %}"><p>Eliminar cuentas inactivas</p></a><i class='bx bx-dots-vertical-rounded'></i></li>
-			<li class="completed"><p>Ver estadísticas de uso</p><i class='bx bx-dots-vertical-rounded'></i></li>
 		</ul>
 	</div>
 </div>
