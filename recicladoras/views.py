@@ -2,7 +2,7 @@ import os
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404, redirect
 import traceback
-from core.models import Entregas, Recicladoras, PuntosReciclaje, EntregaMaterialReciclado, TipoMaterialReciclable, Usuarios, MaterialAceptado, MaterialReciclable
+from core.models import Entregas, Recicladoras, PuntosReciclaje, EntregaMaterialReciclado, TipoMaterialReciclable, Usuarios, MaterialAceptado, MaterialReciclable, Retos, UsuariosRetos
 from core.auth import login_required
 from django.contrib import messages
 from django.utils import timezone
@@ -13,57 +13,6 @@ from django.http import JsonResponse
 @login_required(role="recicladora")
 def index(request):
     return render(request, "recicladoras/index.html")
-
-@login_required(role="recicladora")
-# def confirmar_entregas(request):
-#     user_id = request.user.id_usuario
-#     success = False
-
-#     if request.method == 'POST':
-#         for key, value in request.POST.items():
-#             if key.startswith('confirmada_'):
-#                 entrega_id = key.split('_')[1]
-#                 try:
-#                     entrega = Entregas.objects.get(pk=entrega_id)
-#                     if entrega.punto_entrega and entrega.punto_entrega.id_recicladora.propietario.id_usuario == user_id:
-#                         entrega.confirmada = True if value == 'true' else False
-#                         entrega.save()
-#                 except Entregas.DoesNotExist:
-#                     continue
-#         success = True
-
-#     entregas_queryset = Entregas.objects.select_related(
-#         'id_usuario_e',
-#         'punto_entrega',
-#         'punto_entrega__id_recicladora'
-#     ).filter(
-#         punto_entrega__id_recicladora__propietario__id_usuario=user_id
-#     )
-
-#     entregas = []
-#     for entrega in entregas_queryset:
-#         materiales_entregados = EntregaMaterialReciclado.objects.filter(id_entrega=entrega).select_related('id_material')
-
-#         materiales = [
-#             {
-#                 'nombre': m.id_material.nombre,
-#                 'cantidad': m.cantidad,
-#                 'condiciones': m.condiciones_entrega
-#             }
-#             for m in materiales_entregados
-#         ]
-
-#         entregas.append({
-#             'entrega': entrega,
-#             'correo': entrega.id_usuario_e.correo,
-#             'materiales': materiales
-#         })
-
-#     return render(request, 'recicladoras/confirmar_entregas.html', {
-#         'entregas': entregas,
-#         'success': success
-#     })
-
 def confirmar_entregas(request):
     try:
         recicladora = Recicladoras.objects.get(propietario_id=request.user.id_usuario)
@@ -72,10 +21,12 @@ def confirmar_entregas(request):
         return redirect('recicladoras:index')
 
     puntos = PuntosReciclaje.objects.filter(id_recicladora=recicladora.codigo_recicladora)
+    retos = Retos.objects.all()
 
     if request.method == 'POST':
         correo = request.POST.get('correo')
         punto_entrega_id = request.POST.get('punto_entrega')
+        reto_id = request.POST.get('reto_id')
 
         materiales_ids = request.POST.getlist('material[]')
         cantidades = request.POST.getlist('cantidad[]')
@@ -91,7 +42,7 @@ def confirmar_entregas(request):
             messages.error(request, "Correo no encontrado.")
             return redirect('recicladoras:confirmar_entregas')
 
-        # Crear una sola entrega
+        # Lógica para crear la entrega y los materiales
         entrega = Entregas.objects.create(
             fecha_entrega=timezone.now(),
             id_usuario_e=usuario,
@@ -99,7 +50,6 @@ def confirmar_entregas(request):
             confirmada=False
         )
 
-        # Iterar sobre cada material y registrar
         for i in range(len(materiales_ids)):
             EntregaMaterialReciclado.objects.create(
                 id_entrega=entrega,
@@ -107,16 +57,42 @@ def confirmar_entregas(request):
                 cantidad=cantidades[i],
                 condiciones_entrega=condiciones_list[i]
             )
+        
+        # Lógica para manejar el reto seleccionado (incluye la validación)
+        if reto_id:
+            try:
+                reto_seleccionado = Retos.objects.get(codigo=reto_id)
+                
+                # VERIFICACIÓN DE DUPLICADOS: Si el usuario ya completó el reto
+                if UsuariosRetos.objects.filter(id_usuario=usuario, id_reto=reto_seleccionado).exists():
+                    messages.warning(request, f"¡Atención! Este usuario ya ha completado el reto '{reto_seleccionado.titulo}'.")
+                    # No se hace el INSERT ni se suman puntos
+                    return redirect('recicladoras:confirmar_entregas')
 
-        messages.success(request, "Entrega registrada correctamente.")
+                # Si no se ha completado, se realiza el INSERT y se suman los puntos
+                UsuariosRetos.objects.create(
+                    id_usuario=usuario,
+                    id_reto=reto_seleccionado,
+                    fecha_inicio=timezone.now(),
+                    fecha_fin=timezone.now()
+                )
+                
+                usuario.puntos += reto_seleccionado.puntos_obtenidos
+                usuario.save()
+                
+                messages.success(request, f"Entrega registrada y reto '{reto_seleccionado.titulo}' completado. ¡Se han agregado {reto_seleccionado.puntos_obtenidos} puntos!")
+                
+            except Retos.DoesNotExist:
+                messages.warning(request, "El reto seleccionado no es válido.")
+        else:
+            messages.success(request, "Entrega registrada correctamente.")
+
         return redirect('recicladoras:confirmar_entregas')
 
     return render(request, 'recicladoras/confirmar_entregas.html', {
-        'puntos': puntos
+        'puntos': puntos,
+        'retos': retos
     })
-
-
-
 
 def get_materiales_aceptados(request, punto_id):
     materiales_ids = MaterialAceptado.objects.filter(id_punto=punto_id).values_list('id_tipo_material', flat=True)

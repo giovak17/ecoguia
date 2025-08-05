@@ -1,3 +1,4 @@
+-- SQLBook: Code
 -- Active: 1753760136444@@127.0.0.1@5432@ecoguias
 -- SQLBook: Code
 /*  martinez gonzalez jesus antonio */
@@ -27,7 +28,8 @@ create table roles (
  CREATE TABLE retos(
 	codigo SERIAL PRIMARY KEY,
 	Titulo VARCHAR(30),
-	descripcion TEXT
+	descripcion TEXT,
+    puntos_obtenidos integer
  );
  
  /* tambien modificada en caso de que este mal la modifican y avisan */
@@ -71,19 +73,19 @@ CREATE TABLE contenido_educativo (
     titulo VARCHAR(100),
     descripcion TEXT,
     id_usuario_ce INTEGER,
-    imagen VARCHAR(100),
+    imagen VARCHAR(1000),
     videos VARCHAR(200),
-    video_local VARCHAR(100),
+    video_local VARCHAR(1000),
     FOREIGN KEY (id_usuario_ce) REFERENCES usuarios(id_usuario) ON DELETE SET NULL
 );
---------Campos nuevos a la tabla Contenido_educativo
-ALTER TABLE contenido_educativo
-ADD COLUMN imagen VARCHAR(1000);--------Se guarda solo la ruta del archivo, por eso usamos VARCHAR(
-ALTER TABLE contenido_educativo
-ADD COLUMN videos VARCHAR(200);
+-- --------Campos nuevos a la tabla Contenido_educativo
+-- ALTER TABLE contenido_educativo
+-- ADD COLUMN imagen VARCHAR(1000);--------Se guarda solo la ruta del archivo, por eso usamos VARCHAR(
+-- ALTER TABLE contenido_educativo
+-- ADD COLUMN videos VARCHAR(200);
 
-ALTER TABLE contenido_educativo
-ADD COLUMN video_local VARCHAR(1000);
+-- ALTER TABLE contenido_educativo
+-- ADD COLUMN video_local VARCHAR(1000);
 
 /* Martinez GonzaLez Jesus Antonio  */
 CREATE TABLE publicaciones (
@@ -299,22 +301,24 @@ INSERT INTO usuarios (nombre, ap_paterno, ap_materno, correo, contrasena, fecha_
 
 
 --retos
-INSERT INTO retos (titulo, descripcion) VALUES 
-('Recicla 5 botellas de plástico', 'Participa entregando al menos 5 botellas PET.'),
-('Limpieza de parques', 'Entrega residuos recolectados en parques locales.'),
-('Recicla vidrio', 'Lleva al menos 3 frascos de vidrio a un punto de reciclaje.');
+INSERT INTO retos (titulo, descripcion, puntos_obtenidos) VALUES 
+('Recicla 5 botellas de plástico', 'Participa entregando al menos 5 botellas PET.',10),
+('Mucho plastico!', 'LLeva la menos 100 botellas de plasticoa algun punto de reciclaje.',10),
+('Recicla vidrio', 'Lleva al menos 3 frascos de vidrio a un punto de reciclaje.',10);
 
---Recompensas
-INSERT INTO recompensas (nombre, descripcion, clave_reto) VALUES 
-('Descuento 10%', '10% en productos ecológicos', 1),
-('EcoPuntos', 'Puntos acumulables para premios', 2),
-('Bolsa reutilizable', 'Bolsa con diseño ecológico', 3);
+-- --Recompensas
+-- INSERT INTO recompensas (nombre, descripcion, clave_reto) VALUES 
+-- ('Medalla Bronce', 'Medalla por alcanzar 100 puntos reciclando.', null),
+-- ('Medalla Plata', 'Medalla por alcanzar 200 puntos reciclando.', null),
+-- ('Medalla Oro', 'Medalla por alcanzar 200 puntos reciclando.', null);
+-- ('Medalla Diamante', 'Medalla por alcanzar 1000 puntos reciclando.', null);
 
 -- Recompensas con puntos
 INSERT INTO recompensas (nombre, descripcion, clave_reto, puntos_requeridos) VALUES 
 ('Medalla Bronce', 'Medalla por alcanzar 100 puntos reciclando.', NULL, 100),
 ('Medalla Plata', 'Medalla por alcanzar 200 puntos reciclando.', NULL, 200),
-('Medalla Oro', 'Medalla por alcanzar 300 puntos reciclando.', NULL, 300);
+('Medalla Oro', 'Medalla por alcanzar 300 puntos reciclando.', NULL, 300),
+('Medalla Diamante', 'Medalla por alcanzar 1000 puntos reciclando.', null,1000);
 
 --contenido educativo
 INSERT INTO contenido_educativo (titulo, descripcion, id_usuario_ce, imagen, videos, video_local) VALUES
@@ -349,10 +353,10 @@ INSERT INTO contenido_educativo (titulo, descripcion, id_usuario_ce, imagen, vid
  null);
 
 --publicaciones
-INSERT INTO publicaciones (titulo, contenido, id_usuario_p) VALUES 
-('Mi primer entrega', 'Entregué mis primeras 5 botellas y me siento genial.', 16),
-('Limpieza en mi casa', 'Hice limpieza profunda en mi casa y decidi llevarlo a un lugar donde pueda servir más.', 17),
-('Reciclar es fácil', 'Solo necesitas separar tus residuos y llevarlos al punto más cercano.', 18);
+INSERT INTO publicaciones (titulo, contenido, id_usuario_p,fecha_publicacion) VALUES 
+('Mi primer entrega', 'Entregué mis primeras 5 botellas y me siento genial.', 16,'2025-08-03 21:56:49.892362'),
+('Limpieza en mi casa', 'Hice limpieza profunda en mi casa y decidi llevarlo a un lugar donde pueda servir más.', 17,'2025-08-03 21:56:49.892362'),
+('Reciclar es fácil', 'Solo necesitas separar tus residuos y llevarlos al punto más cercano.', 18, '2025-08-03 21:56:49.892362');
 
 --tipo material
 INSERT INTO tipo_material_reciclable (nombre, descripcion, tiempo_descomposicion, imagen) VALUES

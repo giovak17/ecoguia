@@ -1,4 +1,3 @@
-
 {% extends "recicladoras/base.html" %}
 {% load static %}
 {% block title %}Confirmar Entregas - EcoGuia{% endblock %}
@@ -32,9 +31,17 @@
                 {% endfor %}
             </select>
 
-            <div id="materiales-container" class="entrega-materiales">
-                <!-- Aquí se agregan los materiales dinámicamente -->
+            <div class="entrega-reto">
+                <label class="entrega-label">¿El usuario cumple un reto?</label>
+                <select name="reto_id" class="entrega-select">
+                    <option value="">-- No aplica --</option>
+                    {% for retos in retos %}
+                        <option value="{{ retos.codigo }}">{{ retos.titulo }} - {{ retos.descripcion }}</option>
+                    {% endfor %}
+                </select>
             </div>
+            <div id="materiales-container" class="entrega-materiales">
+                </div>
 
             <button type="button" onclick="agregarMaterial()" class="entrega-button">+ Agregar Material</button>
             <button type="submit" class="entrega-button">Registrar Entrega</button>

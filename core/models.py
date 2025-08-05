@@ -133,6 +133,7 @@ class Retos(models.Model):
     codigo = models.AutoField(primary_key=True)
     titulo = models.CharField(max_length=30, blank=True, null=True)
     descripcion = models.TextField(blank=True, null=True)
+    puntos_obtenidos = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
