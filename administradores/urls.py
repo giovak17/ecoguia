@@ -7,7 +7,7 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("recicladoras/aprobar/", views.aprobar_recicladoras, name="aprobar_recicladoras"),
     path('administradores/recicladoras/', views.ver_recicladoras, name='ver_recicladoras'),
-    path('recicladoras/crear/', views.recicladora_crear, name='recicladora_crear'),
+    # path('recicladoras/crear/', views.recicladora_crear, name='recicladora_crear'),
     path('recicladoras/editar/<int:pk>/', views.recicladora_editar, name='recicladora_editar'),
     path('recicladoras/eliminar/<int:pk>/', views.recicladora_eliminar, name='recicladora_eliminar'),
 

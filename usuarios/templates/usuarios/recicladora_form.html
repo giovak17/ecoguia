@@ -1,0 +1,411 @@
+{% extends 'usuarios/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="head-title">
+    <div>
+        <h1>{{ titulo }}</h1>
+    </div>
+</div>
+
+<div class="form-card-container">
+    <div class="form-card">
+        <p class="form-description">
+            Ingresa los siguientes datos sobre tu recicladora, los administradores de la página se van a encargar de revisar los datos.
+        </p>
+        <form id="recicladora-form" method="post" action="{% url 'usuarios:recicladora_crear' %}" novalidate>
+            {% csrf_token %}
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" name="nombre" class="form-inputs" required
+                        value="{{ recicladora.nombre|default_if_none:'' }}"
+                        pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"
+                        title="Solo letras y espacios permitidos" />
+                </div>
+
+                <div class="form-group">
+                    <label for="calle">Calle</label>
+                    <input type="text" id="calle" name="calle" class="form-inputs"
+                        value="{{ recicladora.calle|default_if_none:'' }}"
+                        pattern=".{3,100}"
+                        title="La calle debe tener al menos 3 caracteres" />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="colonia">Colonia</label>
+                    <input type="text" id="colonia" name="colonia" class="form-inputs"
+                        value="{{ recicladora.colonia|default_if_none:'' }}"
+                        pattern=".{3,100}"
+                        title="La colonia debe tener al menos 3 caracteres" />
+                </div>
+
+                <div class="form-group">
+                    <label for="ciudad">Ciudad</label>
+                    <input type="text" id="ciudad" name="ciudad" class="form-inputs" required
+                        value="{{ recicladora.ciudad|default_if_none:'' }}"
+                        pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"
+                        title="Solo letras y espacios permitidos" />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group-sm">
+                    <label for="codigo_postal">Código Postal</label>
+                    <input type="number" id="codigo_postal" name="codigo_postal" class="form-inputs"
+                        value="{{ recicladora.codigo_postal|default_if_none:'' }}"
+                        min="10000" max="99999"
+                        title="Debe ser un número de 5 dígitos" />
+                </div>
+
+                <div class="form-group-sm">
+                    <label for="numero_int">Número Interior</label>
+                    <input type="number" id="numero_int" name="numero_int" class="form-inputs"
+                        value="{{ recicladora.numero_int|default_if_none:'' }}"
+                        min="1"
+                        title="Solo números mayores a 0" />
+                </div>
+
+                <div class="form-group-lg">
+                    <label for="numero_telefonico">Teléfono</label>
+                    <input type="text" id="numero_telefonico" name="numero_telefonico" class="form-inputs"
+                        value="{{ recicladora.numero_telefonico|default_if_none:'' }}"
+                        pattern="[0-9]{10}" maxlength="10"
+                        title="El número debe contener 10 dígitos" />
+                </div>
+            </div>
+
+            <div class="form-group-full">
+                <label for="detalles">Detalles</label>
+                <textarea id="detalles" name="detalles" class="form-inputs" rows="4"
+                    placeholder="Describe los detalles de tu recicladora o cualquier otra información relevante.">{{ recicladora.detalles|default_if_none:'' }}</textarea>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-guardar">Guardar cambios</button>
+                <a href="{% url 'usuarios:perfil_usuario' %}" class="btn-cancelar">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal de Confirmación -->
+<div id="successModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">¡Registro Exitoso!</h3>
+        </div>
+        <div class="modal-body">
+            <p>
+                Registro entregado con éxito, los administradores revisarán tu solicitud. Espera a que la solicitud sea aceptada y podrás crear tus propios puntos de reciclaje.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a href="{% url 'usuarios:perfil_usuario' %}" class="btn-modal-aceptar">Aceptar</a>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    :root {
+        --light: #f5f5f5;
+        --grey: #e5e7eb;
+        --medium-grey: #d1d5db;
+        --dark-grey: #4b5563;
+        --text-dark: #1f2937;
+        --white: #ffffff;
+        --accent: #67AE6E;
+        --accent-light: #e3f1e5;
+        --accent-muted: #c5e1cc;
+        --red-cancel: #dc3545;
+        --red-cancel-hover: #c82333;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: var(--light);
+        color: var(--text-dark);
+    }
+
+    .head-title {
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    .head-title h1 {
+        font-size: 2rem;
+        font-weight: 600;
+        color: var(--dark-grey);
+    }
+
+    .form-card-container {
+        display: flex;
+        justify-content: center;
+        padding: 2rem;
+    }
+
+    .form-card {
+        background-color: var(--white);
+        padding: 3rem 2.5rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        max-width: 900px;
+        width: 100%;
+    }
+
+    .form-description {
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 1rem;
+        color: var(--dark-grey);
+        line-height: 1.5;
+        padding: 0 1rem;
+    }
+
+    .form-row {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+    }
+
+    .form-group {
+        flex: 1 1 45%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group-sm {
+        flex: 1 1 20%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group-lg {
+        flex: 1 1 45%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group-full {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1rem;
+    }
+
+    label {
+        margin-bottom: 0.4rem;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--dark-grey);
+    }
+
+    .form-inputs {
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        border: 1px solid var(--medium-grey);
+        border-radius: 0.5rem;
+        background-color: var(--light);
+        color: var(--text-dark);
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .form-inputs:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(103, 174, 110, 0.2);
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 1.5rem;
+    }
+
+    .btn-guardar,
+    .btn-cancelar {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        transition: background-color 0.2s ease-in-out;
+        cursor: pointer;
+    }
+
+    .btn-guardar {
+        background-color: var(--accent);
+        color: var(--white);
+        border: none;
+    }
+
+    .btn-guardar:hover {
+        background-color: #589b5f;
+    }
+
+    .btn-cancelar {
+        background-color: transparent;
+        color: var(--dark-grey);
+        border: 1px solid var(--medium-grey);
+    }
+
+    .btn-cancelar:hover {
+        background-color: var(--grey);
+    }
+
+    /* Estilos del Modal */
+    .modal-overlay {
+        display: none; /* Oculto por defecto */
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background-color: var(--white);
+        border-radius: 1rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        max-width: 500px;
+        width: 90%;
+        padding: 2rem;
+        text-align: center;
+        transform: scale(0.9);
+        opacity: 0;
+        transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    }
+
+    .modal-overlay.show .modal-content {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    .modal-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .modal-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--accent);
+    }
+
+    .modal-body p {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: var(--dark-grey);
+    }
+
+    .modal-footer {
+        margin-top: 2rem;
+    }
+
+    .btn-modal-aceptar {
+        display: inline-block;
+        padding: 0.75rem 2rem;
+        background-color: var(--accent);
+        color: var(--white);
+        border: none;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: background-color 0.2s ease-in-out;
+    }
+
+    .btn-modal-aceptar:hover {
+        background-color: #589b5f;
+    }
+
+    @media (max-width: 768px) {
+        .form-row {
+            flex-direction: column;
+        }
+
+        .form-group, .form-group-sm, .form-group-lg {
+            flex: 1 1 100%;
+        }
+
+        .form-actions {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .btn-guardar, .btn-cancelar {
+            width: 100%;
+            text-align: center;
+        }
+
+        .form-description {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('recicladora-form');
+        const modal = document.getElementById('successModal');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault(); // Evita la recarga de la página por defecto
+
+            // Validar el formulario antes de enviarlo
+            if (!form.checkValidity()) {
+                e.stopPropagation();
+                form.classList.add('was-validated');
+                return;
+            }
+
+            // Crear un objeto FormData con los datos del formulario
+            const formData = new FormData(form);
+            const csrfToken = formData.get('csrfmiddlewaretoken');
+
+            // URL del endpoint para guardar los datos (usa el atributo action del formulario)
+            const formAction = form.action;
+
+            try {
+                // Realizar la petición POST con fetch
+                const response = await fetch(formAction, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                    },
+                });
+
+                // Verificar si la respuesta es exitosa (código 200)
+                if (response.ok) {
+                    // Mostrar el modal de éxito si el registro fue exitoso
+                    modal.style.display = 'flex';
+                    setTimeout(() => {
+                        modal.classList.add('show');
+                    }, 50);
+                } else {
+                    // Manejar errores si la respuesta no es 200
+                    console.error('Error al enviar el formulario:', response.statusText);
+                    // Aquí podrías mostrar un modal de error o un mensaje en la página
+                    const errorData = await response.json();
+                    console.error('Detalles del error:', errorData);
+                }
+
+            } catch (error) {
+                console.error('Error en la conexión:', error);
+                // Aquí podrías mostrar un mensaje para errores de red
+            }
+        });
+    });
+</script>
+{% endblock %}

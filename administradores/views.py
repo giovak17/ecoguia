@@ -1,3 +1,4 @@
+import traceback
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from core.models import Recicladoras, Retos, Recompensas
@@ -239,20 +240,31 @@ def aprobar_recicladoras(request: HttpRequest):
         post_data = request.POST.copy().dict()
         post_data.pop('csrfmiddlewaretoken', None)
 
-        # Por cada una de las recicladoras, actualizar el estado de "aprobado" al estado recibido por el formulario
         for key, val in post_data.items():
             rec = Recicladoras.objects.get(pk=int(key))
+            nueva_aprobacion = (val == "True")
 
-            if val == "True":
-                rec.aprobada = True
-            else:
-                rec.aprobada = False
-            rec.save()
-            success = True
+            if rec.aprobada != nueva_aprobacion:
+                rec.aprobada = nueva_aprobacion
+                rec.save()
 
-    recicladoras = Recicladoras.objects.select_related("propietario").order_by("-codigo_recicladora");
+                # Actualizar id_rol en tabla usuarios si se aprobó
+                if nueva_aprobacion:
+                    usuario = rec.propietario  # suponiendo que propietario es instancia Usuarios
+                    usuario.id_rol_id = 3  # asignamos el id del rol directamente
+                    usuario.save()
 
-    return render(request, "administradores/aprobar_recicladoras.html", {"recicladoras":recicladoras, "success": success })
+                success = True
+
+    recicladoras = Recicladoras.objects.select_related("propietario") \
+                                       .filter(aprobada=False) \
+                                       .order_by("-codigo_recicladora")
+
+    return render(request, "administradores/aprobar_recicladoras.html", {
+        "recicladoras": recicladoras,
+        "success": success
+    })
+
 
 def validar_campos(titulo, descripcion, videos):
     errores = {}
