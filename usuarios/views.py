@@ -153,9 +153,30 @@ def recicladora_crear(request):
     })
 
 
+# def ranking_usuarios(request):
+#     usuarios = Usuarios.objects.filter(puntos__isnull=False).order_by('-puntos')[:50]  # top 50
+#     return render(request, 'usuarios/ranking.html', {'usuarios': usuarios})
+
 def ranking_usuarios(request):
-    usuarios = Usuarios.objects.filter(puntos__isnull=False).order_by('-puntos')[:50]  # top 50
-    return render(request, 'usuarios/ranking.html', {'usuarios': usuarios})
+    top_usuarios = Usuarios.objects.filter(puntos__isnull=False).order_by('-puntos')[:50]
+
+    usuarios_con_recompensa = []
+    for usuario in top_usuarios:
+        recompensa_top = (
+            Recompensas.objects
+            .filter(usuariosrecompensas__id_usuario=usuario.id_usuario)
+            .order_by('-puntos_requeridos')
+            .first()
+        )
+        usuarios_con_recompensa.append({
+            'usuario': usuario,
+            'recompensa': recompensa_top
+        })
+
+    return render(request, 'usuarios/ranking.html', {
+        'usuarios_con_recompensa': usuarios_con_recompensa
+    })
+
 
 def contenido_educativo(request):
     contenidos = ContenidoEducativo.objects.all()

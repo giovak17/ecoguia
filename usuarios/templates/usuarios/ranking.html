@@ -22,32 +22,42 @@
         </tr>
       </thead>
       <tbody>
-        {% for usuario in usuarios %}
-        <tr class="{% if forloop.first %}gold-border{% elif forloop.counter == 2 %}silver-border{% elif forloop.counter == 3 %}bronze-border{% endif %}">
-          <td class="ranking-position">{{ forloop.counter }}</td>
-          <td>
-            <div class="ranking-name">
-              {% if forloop.first %}
-                <span class="ranking-medal">🥇</span>
-              {% elif forloop.counter == 2 %}
-                <span class="ranking-medal">🥈</span>
-              {% elif forloop.counter == 3 %}
-                <span class="ranking-medal">🥉</span>
-              {% endif %}
-              <span>{{ usuario.nombre }} {{ usuario.ap_paterno }}</span>
-            </div>
-          </td>
-          <td class="ranking-points">{{ usuario.puntos }}</td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="4" class="ranking-empty">No hay usuarios registrados aún.</td>
-        </tr>
-        {% endfor %}
+
+      {% for item in usuarios_con_recompensa %}
+        {% with usuario=item.usuario recompensa=item.recompensa %}
+          <tr class="{% if forloop.first %}gold-border{% elif forloop.counter == 2 %}silver-border{% elif forloop.counter == 3 %}bronze-border{% endif %}">
+            <td class="ranking-position">{{ forloop.counter }}</td>
+            <td>
+              <div class="ranking-name">
+                {% if forloop.first %}
+                  <span class="ranking-medal">🥇</span>
+                {% elif forloop.counter == 2 %}
+                  <span class="ranking-medal">🥈</span>
+                {% elif forloop.counter == 3 %}
+                  <span class="ranking-medal">🥉</span>
+                {% endif %}
+                <span>{{ usuario.nombre }} {{ usuario.ap_paterno }}</span>
+                {% if recompensa %}
+                  {% comment %} <small class="ranking-reward">({{ recompensa.nombre }})</small> {% endcomment %}
+                  {% comment %} <span class="ranking-badge" title="Recompensa más valiosa"> {% endcomment %}
+                  <span class="ranking-badge" title="{{ recompensa.descripcion|default:'Sin descripción' }}">
+                    {{ recompensa.nombre }}
+                  </span>
+                {% endif %}
+              </div>
+            </td>
+            <td class="ranking-points">{{ usuario.puntos }}</td>
+          </tr>
+            {% endwith %}
+            {% empty %}
+          <tr>
+  <td colspan="4" class="ranking-empty">No hay usuarios registrados aún.</td>
+</tr>
+{% endfor %}
+
+
       </tbody>
     </table>
   </div>
 
 {% endblock %}
-
-

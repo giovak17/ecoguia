@@ -1,108 +1,137 @@
-    :root {
-        --poppins: 'Poppins', sans-serif;
-        --lato: 'Lato', sans-serif;
+  :root {
+      --poppins: 'Poppins', sans-serif;
+      --lato: 'Lato', sans-serif;
 
-        --light: #f9f9f9;
-        --blue: #67AE6E;
-        --light-blue: #e1eebc;
-        --grey: #eeeeee;
-        --dark-grey: #aaaaaa;
-        --dark: #342e37;
-        --red: #db504a;
-        --yellow: #7fb414;
-        --light-yellow: #e1eebc;
-        --orange: #328e6e;
-        --light-orange: #e1eebc;
+      --light: #f9f9f9;
+      --blue: #67AE6E;
+      --light-blue: #e1eebc;
+      --grey: #eeeeee;
+      --dark-grey: #aaaaaa;
+      --dark: #342e37;
+      --red: #db504a;
+      --yellow: #7fb414;
+      --light-yellow: #e1eebc;
+      --orange: #328e6e;
+      --light-orange: #e1eebc;
 
-        --gold: #FFD700;
-        --silver: #C0C0C0;
-        --bronze: #CD7F32;
-    }
+      --gold: #FFD700;
+      --silver: #C0C0C0;
+      --bronze: #CD7F32;
+  }
 
-    body {
+  body {
 
-        font-family: var(--lato);
-        color: var(--dark);
-        margin: 0;
-        padding: 0;
-    }
+      font-family: var(--lato);
+      color: var(--dark);
+      margin: 0;
+      padding: 0;
+  }
 
-    .ranking-wrapper {
-        max-width: 900px;
-        margin: 3rem auto;
-        margin-top: 7rem;
-        border-radius: 12px;
-        /* box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); */
+  .ranking-wrapper {
+      max-width: 900px;
+      margin: 3rem auto;
+      margin-top: 7rem;
+      border-radius: 12px;
+      /* box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); */
 
-    }
+  }
 
-    .ranking-title {
-        text-align: center;
-        font-family: var(--poppins);
-        font-size: 2.5rem;
-        margin-bottom: 2rem;
-    }
+  .ranking-title {
+      text-align: center;
+      font-family: var(--poppins);
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+  }
 
-    .ranking-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
+  .ranking-table {
+      width: 100%;
+      border-collapse: collapse;
+  }
 
-    .ranking-table th,
-    .ranking-table td {
-        padding: 1rem;
-        text-align: left;
-        border-bottom: 1px solid var(--grey);
-        font-size: 1rem;
-    }
+  .ranking-table th,
+  .ranking-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--grey);
+      font-size: 1rem;
+  }
 
-    .ranking-table th {
-        background-color: var(--orange);
-        color: white;
-        font-family: var(--poppins);
-        text-transform: uppercase;
-    }
+  .ranking-table th {
+      background-color: var(--orange);
+      color: white;
+      font-family: var(--poppins);
+      text-transform: uppercase;
+  }
 
-    .ranking-table tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
+  .ranking-table tr:nth-child(even) {
+      background-color: #f2f2f2;
+  }
 
-    .ranking-position {
-        font-weight: bold;
-        text-align: center;
-    }
+  .ranking-position {
+      font-weight: bold;
+      text-align: center;
+  }
 
-    .ranking-points {
-        text-align: right;
-        font-weight: bold;
-        color: var(--dark-grey);
-    }
+  .ranking-points {
+      text-align: right;
+      font-weight: bold;
+      color: var(--dark-grey);
+  }
 
-    .ranking-empty {
-        text-align: center;
-        padding: 2rem;
-        color: var(--dark-grey);
-        font-style: italic;
-    }
+  .ranking-empty {
+      text-align: center;
+      padding: 2rem;
+      color: var(--dark-grey);
+      font-style: italic;
+  }
 
-    .ranking-name {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
+  .ranking-name {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+  }
 
-    .ranking-medal {
-        font-size: 1.2rem;
-    }
+  .ranking-medal {
+      font-size: 1.2rem;
+  }
 
-    .gold-border {
-        border-left: 6px solid var(--gold);
-    }
+  .gold-border {
+      border-left: 6px solid var(--gold);
+  }
 
-    .silver-border {
-        border-left: 6px solid var(--silver);
-    }
+  .silver-border {
+      border-left: 6px solid var(--silver);
+  }
 
-    .bronze-border {
-        border-left: 6px solid var(--bronze);
-    }
+  .bronze-border {
+      border-left: 6px solid var(--bronze);
+  }
+
+  .ranking-reward {
+      font-size: 0.85rem;
+      color: var(--dark-grey);
+      background-color: var(--grey);
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      font-style: italic;
+      margin-left: 0.5rem;
+  }
+
+  .ranking-badge {
+      background-color: var(--blue);
+      color: white;
+      font-size: 0.75rem;
+      font-family: var(--poppins);
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      margin-left: 0.5rem;
+      white-space: nowrap;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease;
+  }
+
+  .ranking-badge:hover {
+      transform: scale(1.05);
+      background-color: var(--orange);
+      cursor: default;
+  }
