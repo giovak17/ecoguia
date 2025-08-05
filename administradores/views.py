@@ -470,7 +470,7 @@ def restaurar_toda_db(request):
         db_host = db_settings['HOST'] or 'localhost'
         db_port = db_settings['PORT'] or '5432'
         db_pass = request.POST.get('db_password')
-        respaldo_fijo = os.path.join(settings.BASE_DIR, "administradores", "backup", "backup_2025-07-30_04-23-41.backup")
+        respaldo_fijo = os.path.join(settings.BASE_DIR, "administradores", "backup", "backup_2025-08-05_15-36-17.backup")
         pg_restore_path = r"C:\Program Files\PostgreSQL\17\bin\pg_restore.exe"
         os.environ['PGPASSWORD'] = db_pass
         cmd = [
