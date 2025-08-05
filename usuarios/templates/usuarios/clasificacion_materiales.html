@@ -95,6 +95,9 @@ body {
   --dark: #342E37;
   --light-brillante: #e0f3e9ff;
   --light-verde: #67AE6E;
+  --primary-color: #67AE6E;
+  --primary-color-light: #E1EEBC;
+  --primary-color-dark: #328E6E;
 }
 
 .cards-container {
@@ -113,7 +116,7 @@ body {
 }
 
 .card-material {
-  background: var(--light-brillante);
+  background: var(--primary-color-light);
   border-radius: 1rem;
   box-shadow: 0 4px 15px rgba(103,174,110,0.15);
   cursor: pointer;
@@ -129,7 +132,7 @@ body {
 
 .card-material:hover,
 .card-material.bg-light-green {
-  background: var(--light-blue);
+  background: var(--primary-color);
   box-shadow: 0 8px 32px rgba(103,174,110,0.27);
   transform: scale(1.03) translateY(-4px) rotate(-2deg);
   z-index: 2;

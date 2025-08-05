@@ -48,7 +48,7 @@
       <div class="user-menu ms-auto">
         {% if request.user %}
           <div class="dropdown">
-            <button class="dropdown-toggle btn" id="userDropdown">
+            <button class="dropdown-toggle btn" id="userDropdown" style="margin-left: 10px;">
               {{ request.user.nombre }} {{ request.user.ap_paterno }}
             </button>
             <ul class="dropdown-menu" id="dropdownMenu">
