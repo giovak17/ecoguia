@@ -1,6 +1,6 @@
 from django.http import HttpRequest, HttpResponseForbidden
 from django.shortcuts import redirect, render, get_object_or_404
-from core.models import Recompensas, Usuarios,Entregas
+from core.models import Recicladoras, Recompensas, Roles, Usuarios,Entregas
 from django.shortcuts import redirect, render
 from core.models import Usuarios,Entregas, PuntosReciclaje,ContenidoEducativo,EntregaMaterialReciclado,TipoMaterialReciclable, MaterialAceptado, Publicaciones, Comentarios, Retos, Recompensas
 from django.utils.timezone import now
@@ -90,6 +90,61 @@ def perfil_usuario(request):
         'modo_edicion': modo_edicion,
         'recompensas': recompensas
     })
+
+def recicladora_crear(request):
+    errores = {}
+    recicladora_data = {}
+    reciclador_rol = Roles.objects.get(nombre='Recicladora')
+    propietarios = Usuarios.objects.filter(id_rol=reciclador_rol)
+
+
+
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        propietario_id = None
+        calle = request.POST.get('calle')
+        colonia = request.POST.get('colonia')
+        ciudad = request.POST.get('ciudad')
+        codigo_postal = request.POST.get('codigo_postal')
+        numero_int = request.POST.get('numero_int')
+        telefono = request.POST.get('numero_telefonico')
+
+        recicladora_data = {
+            'nombre': nombre,
+            'propietario_id': propietario_id,
+            'calle': calle,
+            'colonia': colonia,
+            'ciudad': ciudad,
+            'codigo_postal': codigo_postal,
+            'numero_int': numero_int,
+            'numero_telefonico': telefono,
+        }
+
+        if not nombre:
+            errores['nombre'] = 'El nombre es obligatorio'
+        if not ciudad:
+            errores['ciudad'] = 'La ciudad es obligatoria'
+
+        if not errores:
+            Recicladoras.objects.create(
+                nombre=nombre,
+                propietario_id=propietario_id or None,
+                calle=calle,
+                colonia=colonia,
+                ciudad=ciudad,
+                codigo_postal=codigo_postal or None,
+                numero_int=numero_int or None,
+                numero_telefonico=telefono
+            )
+            return redirect('usuarios:perfil_usuario')
+
+    return render(request, 'usuarios/recicladora_form.html', {
+        'errores': errores,
+        'titulo': 'Registrar Recicladora',
+        'propietarios': propietarios,
+        'recicladora': recicladora_data
+    })
+
 
 def ranking_usuarios(request):
     usuarios = Usuarios.objects.filter(puntos__isnull=False).order_by('-puntos')[:50]  # top 50

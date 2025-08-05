@@ -24,6 +24,7 @@ urlpatterns = [
     path('api/recicladoras-materiales/', views.vista_json_recicladoras_con_materiales, name='api_recicladoras_materiales'),
     path('recicladoras-materiales/', views.vista_html_recicladoras_con_materiales, name='html_recicladoras_materiales'),
     path('recicladoras/<int:id_punto>/', views.detalle_punto_reciclaje, name='punto_detalle'),
+    path('recicladoras/crear/', views.recicladora_crear, name='recicladora_crear'),
 
     path('RetosYRecompensas/', views.RetosYRecompensas, name='RetosYRecompensas'),
 

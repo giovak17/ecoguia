@@ -1,3 +1,4 @@
+-- Active: 1753760136444@@127.0.0.1@5432@ecoguias
 -- SQLBook: Code
 /*  martinez gonzalez jesus antonio */
 create table roles (
@@ -293,7 +294,9 @@ INSERT INTO usuarios (nombre, ap_paterno, ap_materno, correo, contrasena, fecha_
 ('Leticia', 'Carrillo', 'Bautista', 'leticia@correo.com', 'let789', '1990-06-12', 0, 2),
 ('Samuel', 'Cortés', 'Valdez', 'samuel@correo.com', 'sam654', '1988-02-25', 0, 2),
 ('Daniela', 'Ramos', 'Molina', 'daniela@correo.com', 'dan111', '1993-09-18', 0, 2),
-('Ernesto', 'Blanco', 'Esquivel', 'ernesto@correo.com', 'ern789', '1987-01-15', 0, 2);
+('Ernesto', 'Blanco', 'Esquivel', 'ernesto@correo.com', 'ern789', '1987-01-15', 0, 2),
+('Porcayo', 'Mercado', 'Arath', 'arath@correo.com', 'arath', '1987-01-15', 0, 3);
+
 
 --retos
 INSERT INTO retos (titulo, descripcion) VALUES 

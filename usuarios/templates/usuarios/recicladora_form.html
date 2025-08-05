@@ -1,0 +1,84 @@
+{% extends 'usuarios/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="head-title">
+    <div >
+        <h1>{{ titulo }}</h1>
+</div>
+</div>
+
+
+<div class="container-principal" style="max-width: 900px; margin-top: 1.5rem;">
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="form-principal" style="display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 1rem;">
+            <div style="flex: 1 1 45%;">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" class="form-inputs" required
+                    value="{{ recicladora.nombre|default_if_none:'' }}"
+                    pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"
+                    title="Solo letras y espacios permitidos" />
+            </div>
+
+            <div style="flex: 1 1 45%;">
+                <label for="calle">Calle</label>
+                <input type="text" id="calle" name="calle" class="form-inputs"
+                    value="{{ recicladora.calle|default_if_none:'' }}"
+                    pattern=".{3,100}"
+                    title="La calle debe tener al menos 3 caracteres" />
+            </div>
+        </div>
+
+        <div class="form-principal" style="display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 1rem;">
+            <div style="flex: 1 1 45%;">
+                <label for="colonia">Colonia</label>
+                <input type="text" id="colonia" name="colonia" class="form-inputs"
+                    value="{{ recicladora.colonia|default_if_none:'' }}"
+                    pattern=".{3,100}"
+                    title="La colonia debe tener al menos 3 caracteres" />
+            </div>
+
+            <div style="flex: 1 1 45%;">
+                <label for="ciudad">Ciudad</label>
+                <input type="text" id="ciudad" name="ciudad" class="form-inputs" required
+                    value="{{ recicladora.ciudad|default_if_none:'' }}"
+                    pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"
+                    title="Solo letras y espacios permitidos" />
+            </div>
+        </div>
+
+        <div class="form-principal" style="display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 1rem; align-items: flex-end;">
+            <div style="flex: 1 1 20%;">
+                <label for="codigo_postal">Código Postal</label>
+                <input type="number" id="codigo_postal" name="codigo_postal" class="form-inputs"
+                    value="{{ recicladora.codigo_postal|default_if_none:'' }}"
+                    min="10000" max="99999"
+                    title="Debe ser un número de 5 dígitos" />
+            </div>
+
+            <div style="flex: 1 1 20%;">
+                <label for="numero_int">Número Interior</label>
+                <input type="number" id="numero_int" name="numero_int" class="form-inputs"
+                    value="{{ recicladora.numero_int|default_if_none:'' }}"
+                    min="1"
+                    title="Solo números mayores a 0" />
+            </div>
+
+            <div style="flex: 1 1 45%;">
+                <label for="numero_telefonico">Teléfono</label>
+                <input type="text" id="numero_telefonico" name="numero_telefonico" class="form-inputs"
+                    value="{{ recicladora.numero_telefonico|default_if_none:'' }}"
+                    pattern="[0-9]{10}" maxlength="10"
+                    title="El número debe contener 10 dígitos" />
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 1.5rem;">
+            <button type="submit" class="btn-guardar">Guardar cambios</button>
+            <a href="{% url 'usuarios:recicladora_crear' %}" class="btn btn-outline-cancelar">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

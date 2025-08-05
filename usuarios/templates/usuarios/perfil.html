@@ -55,6 +55,11 @@
       <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ usuario.fecha_nacimiento|date:'Y-m-d' }}"{% if not modo_edicion %} readonly{% endif %}>
     </div>
   </form>
+  
+  <a href="{% url 'usuarios:recicladora_crear' %}" class="btn-nueva-recicladora">
+		<i class='bx bx-plus'></i>
+		<span class="text-prim">Nueva recicladora</span>
+	</a>
 
   {% comment %} <hr style="margin: 2rem 0;"> {% endcomment %}
 
