@@ -440,18 +440,45 @@ def vista_json_recicladoras_con_materiales(request):
 
     return JsonResponse({'puntos_reciclaje': datos})
 
+# def vista_html_recicladoras_con_materiales(request):
+#     puntos = PuntosReciclaje.objects.all()
+#     contexto = []
+
+#     for punto in puntos:
+#         materiales = MaterialAceptado.objects.filter(id_punto=punto).select_related('id_tipo_material')
+#         contexto.append({
+#             'punto': punto,
+#             'materiales': [m.id_tipo_material for m in materiales]
+#         })
+
+#     return render(request, 'usuarios/recicladoras_materiales.html', {'datos': contexto})
+
 def vista_html_recicladoras_con_materiales(request):
     puntos = PuntosReciclaje.objects.all()
     contexto = []
 
+    puntos_mapa = []  # <- este se usará para el mapa
+
     for punto in puntos:
         materiales = MaterialAceptado.objects.filter(id_punto=punto).select_related('id_tipo_material')
+        
         contexto.append({
             'punto': punto,
             'materiales': [m.id_tipo_material for m in materiales]
         })
 
-    return render(request, 'usuarios/recicladoras_materiales.html', {'datos': contexto})
+        # Este es el JSON para el mapa (lat, lng, etc.)
+        puntos_mapa.append({
+            'nombre': punto.nombre,
+            'latitud': punto.latitud,
+            'longitud': punto.longitud,
+            'ubicacion': punto.ubicacion,
+        })
+
+    return render(request, 'usuarios/recicladoras_materiales.html', {
+        'datos': contexto,
+        'puntos_mapa': puntos_mapa,  # <-- ¡importante!
+    })
 
 def detalle_punto_reciclaje(request, id_punto):
     punto = get_object_or_404(PuntosReciclaje, id_punto=id_punto)
