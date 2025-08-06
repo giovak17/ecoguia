@@ -488,9 +488,24 @@ def publicaciones(request):
     user_id = request.session.get("user_id")
     if not user_id:
         return redirect('usuarios:login')
-    publicaciones = Publicaciones.objects.all().order_by('-fecha_publicacion')
+
+    publicaciones_qs = Publicaciones.objects.select_related('id_usuario_p').order_by('-fecha_publicacion')
+
+    publicaciones_con_recompensa = []
+    for pub in publicaciones_qs:
+        recompensa_top = (
+            Recompensas.objects
+            .filter(usuariosrecompensas__id_usuario=pub.id_usuario_p.id_usuario)
+            .order_by('-puntos_requeridos')
+            .first()
+        )
+        publicaciones_con_recompensa.append({
+            'publicacion': pub,
+            'recompensa': recompensa_top
+        })
+
     context = {
-        'publicaciones': publicaciones
+        'publicaciones_con_recompensa': publicaciones_con_recompensa
     }
     return render(request, 'usuarios/publicaciones.html', context)
 

@@ -14,14 +14,21 @@
     </div>
 
     <div class="posts-list">
-        {% for post in publicaciones %}
+        {% for item in publicaciones_con_recompensa %}
+            {% with post=item.publicacion recompensa=item.recompensa %}
             <div class="post-card" onclick="openModal('postModal{{ post.clave_publicacion }}')">
                 <div class="post-meta">
                     <div class="author-info">
                         <i class="fas fa-user-circle author-avatar"></i>
                         <div class="author-details">
-                            <span class="author-name">{{ post.id_usuario_p.nombre }}</span>
-                            <!-- No tienes fecha_publicacion en el modelo? Si no, quita esta línea o agrega -->
+                            <span class="author-name">
+                                {{ post.id_usuario_p.nombre }}
+                                {% if recompensa %}
+                                    <span class="ranking-badge" title="{{ recompensa.descripcion|default:'Sin descripción' }}">
+                                        {{ recompensa.nombre }}
+                                    </span>
+                                {% endif %}
+                            </span>
                             <span class="post-date">{{ post.fecha_publicacion|date:"d M, Y" }}</span>
                         </div>
                     </div>
@@ -48,7 +55,14 @@
                             <div class="post-details-header">
                                 <i class="fas fa-user-circle author-avatar-lg"></i>
                                 <div class="author-details-modal">
-                                    <span class="author-name">{{ post.id_usuario_p.nombre }}</span>
+                                    <span class="author-name">
+                                        {{ post.id_usuario_p.nombre }}
+                                        {% if recompensa %}
+                                            <span class="ranking-badge" title="{{ recompensa.descripcion|default:'Sin descripción' }}">
+                                                {{ recompensa.nombre }}
+                                            </span>
+                                        {% endif %}
+                                    </span>
                                     <span class="post-date">{{ post.fecha_publicacion|date:"d M, Y" }}</span>
                                 </div>
                             </div>
@@ -90,6 +104,7 @@
                     </div>
                 </div>
             </div>
+            {% endwith %}
         {% empty %}
             <p class="no-posts-message">Aún no hay publicaciones. ¡Sé el primero en compartir!</p>
         {% endfor %}
@@ -103,18 +118,18 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-                    <form class="modal-form" id="postForm" method="post" action="{% url 'usuarios:crear_publicacion' %}">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <label for="postTitle">Título</label>
-                            <input type="text" id="postTitle" name="titulo" required placeholder="Escribe un título claro">
-                        </div>
-                        <div class="form-group">
-                            <label for="postContent">Contenido</label>
-                            <textarea id="postContent" name="contenido" rows="6" required placeholder="Comparte tus ideas o preguntas aquí..."></textarea>
-                        </div>
-                        <button type="submit" class="submit-form-btn">Publicar</button>
-                    </form>
+            <form class="modal-form" id="postForm" method="post" action="{% url 'usuarios:crear_publicacion' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="postTitle">Título</label>
+                    <input type="text" id="postTitle" name="titulo" required placeholder="Escribe un título claro">
+                </div>
+                <div class="form-group">
+                    <label for="postContent">Contenido</label>
+                    <textarea id="postContent" name="contenido" rows="6" required placeholder="Comparte tus ideas o preguntas aquí..."></textarea>
+                </div>
+                <button type="submit" class="submit-form-btn">Publicar</button>
+            </form>
         </div>
     </div>
 </div>
@@ -147,466 +162,495 @@
 </script>
 
 <style>
-    :root {
-        --primary-color: #67AE6E;
-        --secondary-color: #E1EEBC;
-        --text-dark: #342E37;
-        --text-light: #AAAAAA;
-        --bg-color: #F9F9F9;
-        --white: #FFFFFF;
-        --shadow-subtle: 0 4px 15px rgba(0, 0, 0, 0.08);
-        --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
-        --border-radius-card: 12px; /* un poco menos */
-        --border-radius-btn: 40px;  /* un poco menos */
-        --font-family: 'Poppins', sans-serif;
-    }
+/* Puedes reutilizar o copiar el estilo .ranking-badge del ranking */
 
-    body {
-        padding-top: 90px; /* menos espacio arriba */
-        font-family: var(--font-family);
-        background-color: var(--bg-color);
-        margin: 0;
-        font-size: 14px; /* tamaño base menor */
-    }
+  :root {
+      --poppins: 'Poppins', sans-serif;
+      --lato: 'Lato', sans-serif;
 
-    .main-content-wrapper {
-        padding: 0 1.5rem 3rem;
-        max-width: 900px; /* menos ancho */
-        margin: 0 auto;
-    }
+      --light: #f9f9f9;
+      --blue: #67AE6E;
+      --light-blue: #e1eebc;
+      --grey: #eeeeee;
+      --dark-grey: #aaaaaa;
+      --dark: #342e37;
+      --red: #db504a;
+      --yellow: #7fb414;
+      --light-yellow: #e1eebc;
+      --orange: #328e6e;
+      --light-orange: #e1eebc;
 
-    .page-header {
-        text-align: center;
-        margin-bottom: 2rem;
-    }
+      --gold: #FFD700;
+      --silver: #C0C0C0;
+      --bronze: #CD7F32;
+  }
 
-    .page-header h1 {
-        color: var(--primary-color);
-        font-size: 2rem; /* más pequeño */
-        margin-bottom: 0.3rem;
-    }
+  .ranking-badge {
+      background-color: var(--blue);
+      color: white;
+      font-size: 0.75rem;
+      font-family: var(--poppins);
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      margin-left: 0.5rem;
+      white-space: nowrap;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease;
+  }
 
-    .page-header p {
-        color: var(--text-light);
-        font-size: 0.9rem;
-        margin-bottom: 1.5rem;
-    }
+  .ranking-badge:hover {
+      transform: scale(1.05);
+      background-color: var(--orange);
+      cursor: default;
+  }
 
-    .create-post-btn {
-        background-color: var(--primary-color);
-        color: var(--white);
-        border: none;
-        border-radius: var(--border-radius-btn);
-        padding: 0.5rem 1.5rem; /* menos padding */
-        font-size: 0.9rem;
-        font-weight: 600;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        box-shadow: var(--shadow-subtle);
-        transition: all 0.3s ease;
-    }
 
-    .create-post-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-hover);
-    }
+body {
+    padding-top: 90px; /* menos espacio arriba */
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    margin: 0;
+    font-size: 14px; /* tamaño base menor */
+}
 
-    .posts-list {
-        display: grid;
-        gap: 1.2rem;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    }
+.main-content-wrapper {
+    padding: 0 1.5rem 3rem;
+    max-width: 900px; /* menos ancho */
+    margin: 0 auto;
+}
 
-    .no-posts-message {
-        grid-column: 1 / -1;
-        text-align: center;
-        font-size: 1rem;
-        color: var(--text-light);
-        padding: 2.5rem;
-        background-color: var(--white);
-        border-radius: var(--border-radius-card);
-        box-shadow: var(--shadow-subtle);
-    }
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
 
-    .post-card {
-        background: var(--white);
-        border-radius: var(--border-radius-card);
-        box-shadow: var(--shadow-subtle);
-        padding: 1rem; /* menos padding */
-        cursor: pointer;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
+.page-header h1 {
+    color: var(--primary-color);
+    font-size: 2rem; /* más pequeño */
+    margin-bottom: 0.3rem;
+}
 
-    .post-card:hover {
-        transform: translateY(-3px);
-        box-shadow: var(--shadow-hover);
-    }
+.page-header p {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
 
-    .post-meta {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 1rem;
-        padding-bottom: 0.7rem;
-        border-bottom: 1px dashed var(--secondary-color);
-    }
+.create-post-btn {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: var(--border-radius-btn);
+    padding: 0.5rem 1.5rem; /* menos padding */
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: var(--shadow-subtle);
+    transition: all 0.3s ease;
+}
 
-    .author-info {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
+.create-post-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
 
-    .author-avatar {
-        font-size: 1.8rem; /* más pequeño */
-        color: var(--primary-color);
-    }
+.posts-list {
+    display: grid;
+    gap: 1.2rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
 
-    .author-details {
-        display: flex;
-        flex-direction: column;
-        text-align: left;
-    }
+.no-posts-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 1rem;
+    color: var(--text-light);
+    padding: 2.5rem;
+    background-color: var(--white);
+    border-radius: var(--border-radius-card);
+    box-shadow: var(--shadow-subtle);
+}
 
-    .author-name {
-        font-weight: 600;
-        color: var(--text-dark);
-        font-size: 0.9rem;
-    }
+.post-card {
+    background: var(--white);
+    border-radius: var(--border-radius-card);
+    box-shadow: var(--shadow-subtle);
+    padding: 1rem; /* menos padding */
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
 
-    .post-date {
-        font-size: 0.7rem;
-        color: var(--text-light);
-    }
+.post-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+}
 
-    .action-badge {
-        font-size: 0.85rem;
-        font-weight: 700;
-        color: var(--primary-color);
-        display: flex;
-        align-items: center;
-        gap: 4px;
-    }
+.post-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 1px dashed var(--secondary-color);
+}
 
-    .post-body {
-        flex-grow: 1;
-    }
+.author-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
-    .post-title {
-        font-weight: 600;
-        font-size: 1.2rem;
-        margin-bottom: 0.7rem;
-        color: var(--text-dark);
-    }
+.author-avatar {
+    font-size: 1.8rem; /* más pequeño */
+    color: var(--primary-color);
+}
 
-    .post-excerpt {
-        font-size: 0.9rem;
-        line-height: 1.3;
-        color: var(--text-light);
-        margin-bottom: 0.8rem;
-    }
+.author-details {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
 
-    .post-image-thumb {
-        width: 100%;
-        height: auto;
-        border-radius: 8px;
-        object-fit: cover;
-        margin-top: 0.3rem;
-    }
+.author-name {
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 0.9rem;
+}
 
-    /* Modal base styles */
-    .modal-overlay {
-        position: fixed;
-        top: 30px; /* menos margen */
-        left: 0;
-        width: 100vw;
-        height: 90vh;
-        background-color: rgba(0, 0, 0, 0.7);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        padding: 1rem;
-        z-index: 999;
-        overflow-y: auto;
-    }
+.post-date {
+    font-size: 0.7rem;
+    color: var(--text-light);
+}
 
-    .modal-overlay.active {
-        display: flex;
-    }
+.action-badge {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
 
-    .modal-content {
-        background-color: var(--white);
-        border-radius: 12px;
-        padding: 1rem 1.5rem;
-        max-width: 540px; /* menos ancho */
-        width: 100%;
-        max-height: 85vh;
-        overflow-y: auto;
-        box-shadow: var(--shadow-hover);
-        position: relative;
-        font-size: 0.9rem;
-    }
+.post-body {
+    flex-grow: 1;
+}
 
+.post-title {
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 0.7rem;
+    color: var(--text-dark);
+}
+
+.post-excerpt {
+    font-size: 0.9rem;
+    line-height: 1.3;
+    color: var(--text-light);
+    margin-bottom: 0.8rem;
+}
+
+.post-image-thumb {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-top: 0.3rem;
+}
+
+/* Modal base styles */
+.modal-overlay {
+    position: fixed;
+    top: 30px; /* menos margen */
+    left: 0;
+    width: 100vw;
+    height: 90vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    z-index: 999;
+    overflow-y: auto;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-content {
+    background-color: var(--white);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    max-width: 540px; /* menos ancho */
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-hover);
+    position: relative;
+    font-size: 0.9rem;
+}
+
+.modal-lg {
+    max-width: 750px; /* menos ancho */
+    display: flex;
+    gap: 1rem;
+}
+
+.modal-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.modal-close:hover {
+    color: var(--primary-color);
+}
+
+/* Post & Comments Container */
+.post-and-comments-container {
+    display: flex;
+    width: 100%;
+    gap: 1rem;
+    flex-wrap: wrap;
+    max-height: 75vh;
+}
+
+.post-details-section {
+    flex: 1 1 50%;
+    overflow-y: auto;
+    padding-right: 0.8rem;
+    border-right: 1px solid var(--secondary-color);
+    font-size: 0.9rem;
+}
+
+.post-details-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0.7rem;
+}
+
+.author-avatar-lg {
+    font-size: 2.6rem; /* más pequeño */
+    color: var(--primary-color);
+}
+
+.author-details-modal {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9rem;
+}
+
+.post-full-title {
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-bottom: 0.8rem;
+    color: var(--text-dark);
+}
+
+.post-full-text {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: var(--text-light);
+    margin-bottom: 1.2rem;
+}
+
+.post-full-image {
+    width: 100%;
+    max-height: 220px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+/* Comments Section */
+.comments-section {
+    flex: 1 1 45%;
+    display: flex;
+    flex-direction: column;
+    max-height: 75vh;
+    font-size: 0.9rem;
+}
+
+.comments-title {
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+    color: var(--primary-color);
+}
+
+.comments-list {
+    flex-grow: 1;
+    overflow-y: auto;
+    border: 1px solid var(--secondary-color);
+    border-radius: 12px;
+    padding: 0.8rem;
+    background-color: var(--bg-color);
+    margin-bottom: 0.8rem;
+}
+
+.comment-item {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 0.8rem;
+}
+
+.comment-avatar {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.comment-content {
+    background-color: var(--white);
+    padding: 0.5rem 0.8rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow-subtle);
+    flex-grow: 1;
+}
+
+.comment-author {
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 0.15rem;
+    display: block;
+    font-size: 0.85rem;
+}
+
+.comment-text {
+    color: var(--text-light);
+    font-size: 0.8rem;
+    line-height: 1.2;
+}
+
+.no-comments-message {
+    text-align: center;
+    color: var(--text-light);
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+/* Comment form */
+.comment-form-container {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.my-avatar {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+}
+
+.comment-input {
+    flex-grow: 1;
+    padding: 0.4rem 0.8rem;
+    border-radius: 50px;
+    border: 1.5px solid var(--secondary-color);
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.comment-input:focus {
+    border-color: var(--primary-color);
+}
+
+.send-comment-btn {
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 50%;
+    padding: 0.4rem 0.55rem;
+    color: var(--white);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.send-comment-btn:hover {
+    background-color: #4b7f48;
+}
+
+/* New Post Modal */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.modal-title {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+}
+
+.modal-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.modal-form label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 0.85rem;
+}
+
+.modal-form input[type="text"],
+.modal-form textarea,
+.modal-form input[type="file"] {
+    width: 100%;
+    padding: 0.4rem 0.8rem;
+    border: 1.5px solid var(--secondary-color);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    outline: none;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+}
+
+.modal-form input[type="text"]:focus,
+.modal-form textarea:focus {
+    border-color: var(--primary-color);
+}
+
+.submit-form-btn {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.9rem;
+    border-radius: var(--border-radius-btn);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
     .modal-lg {
-        max-width: 750px; /* menos ancho */
-        display: flex;
-        gap: 1rem;
-    }
-
-    .modal-close {
-        position: absolute;
-        top: 8px;
-        right: 8px;
-        background: none;
-        border: none;
-        font-size: 1.2rem;
-        color: var(--text-light);
-        cursor: pointer;
-        transition: color 0.3s ease;
-    }
-
-    .modal-close:hover {
-        color: var(--primary-color);
-    }
-
-    /* Post & Comments Container */
-    .post-and-comments-container {
-        display: flex;
-        width: 100%;
-        gap: 1rem;
-        flex-wrap: wrap;
-        max-height: 75vh;
-    }
-
-    .post-details-section {
-        flex: 1 1 50%;
-        overflow-y: auto;
-        padding-right: 0.8rem;
-        border-right: 1px solid var(--secondary-color);
-        font-size: 0.9rem;
-    }
-
-    .post-details-header {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 0.7rem;
-    }
-
-    .author-avatar-lg {
-        font-size: 2.6rem; /* más pequeño */
-        color: var(--primary-color);
-    }
-
-    .author-details-modal {
-        display: flex;
         flex-direction: column;
-        font-size: 0.9rem;
     }
+    .post-details-section, .comments-section {
+        flex: 1 1 100%;
+        border-right: none;
+        max-height: none;
+    }
+}
 
-    .post-full-title {
-        font-weight: 700;
-        font-size: 1.3rem;
-        margin-bottom: 0.8rem;
-        color: var(--text-dark);
-    }
-
-    .post-full-text {
-        font-size: 0.9rem;
-        line-height: 1.4;
-        color: var(--text-light);
-        margin-bottom: 1.2rem;
-    }
-
-    .post-full-image {
-        width: 100%;
-        max-height: 220px;
-        object-fit: contain;
-        border-radius: 8px;
-    }
-
-    /* Comments Section */
-    .comments-section {
-        flex: 1 1 45%;
-        display: flex;
-        flex-direction: column;
-        max-height: 75vh;
-        font-size: 0.9rem;
-    }
-
-    .comments-title {
-        font-weight: 700;
-        font-size: 1rem;
-        margin-bottom: 0.8rem;
-        color: var(--primary-color);
-    }
-
-    .comments-list {
-        flex-grow: 1;
-        overflow-y: auto;
-        border: 1px solid var(--secondary-color);
-        border-radius: 12px;
-        padding: 0.8rem;
-        background-color: var(--bg-color);
-        margin-bottom: 0.8rem;
-    }
-
-    .comment-item {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 0.8rem;
-    }
-
-    .comment-avatar {
-        font-size: 1.5rem;
-        color: var(--primary-color);
-    }
-
-    .comment-content {
-        background-color: var(--white);
-        padding: 0.5rem 0.8rem;
-        border-radius: 12px;
-        box-shadow: var(--shadow-subtle);
-        flex-grow: 1;
-    }
-
-    .comment-author {
-        font-weight: 600;
-        color: var(--text-dark);
-        margin-bottom: 0.15rem;
-        display: block;
-        font-size: 0.85rem;
-    }
-
-    .comment-text {
-        color: var(--text-light);
-        font-size: 0.8rem;
-        line-height: 1.2;
-    }
-
-    .no-comments-message {
-        text-align: center;
-        color: var(--text-light);
-        font-style: italic;
-        font-size: 0.9rem;
-    }
-
-    /* Comment form */
-    .comment-form-container {
-        display: flex;
-        align-items: center;
-        gap: 0.7rem;
-    }
-
-    .my-avatar {
-        font-size: 1.8rem;
-        color: var(--primary-color);
-    }
-
-    .comment-input {
-        flex-grow: 1;
-        padding: 0.4rem 0.8rem;
-        border-radius: 50px;
-        border: 1.5px solid var(--secondary-color);
-        font-size: 0.9rem;
-        outline: none;
-        transition: border-color 0.3s ease;
-    }
-
-    .comment-input:focus {
-        border-color: var(--primary-color);
-    }
-
-    .send-comment-btn {
-        background-color: var(--primary-color);
-        border: none;
-        border-radius: 50%;
-        padding: 0.4rem 0.55rem;
-        color: var(--white);
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        font-size: 1rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .send-comment-btn:hover {
-        background-color: #4b7f48;
-    }
-
-    /* New Post Modal */
-    .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-        font-size: 0.9rem;
-    }
-
-    .modal-title {
-        font-weight: 700;
-        font-size: 1.2rem;
-        color: var(--primary-color);
-    }
-
-    .modal-form .form-group {
-        margin-bottom: 1rem;
-    }
-
-    .modal-form label {
-        display: block;
-        margin-bottom: 0.3rem;
-        font-weight: 600;
-        color: var(--text-dark);
-        font-size: 0.85rem;
-    }
-
-    .modal-form input[type="text"],
-    .modal-form textarea,
-    .modal-form input[type="file"] {
-        width: 100%;
-        padding: 0.4rem 0.8rem;
-        border: 1.5px solid var(--secondary-color);
-        border-radius: 6px;
-        font-size: 0.9rem;
-        outline: none;
-        resize: vertical;
-        transition: border-color 0.3s ease;
-    }
-
-    .modal-form input[type="text"]:focus,
-    .modal-form textarea:focus {
-        border-color: var(--primary-color);
-    }
-
-    .submit-form-btn {
-        background-color: var(--primary-color);
-        color: var(--white);
-        border: none;
-        padding: 0.5rem 1.5rem;
-        font-size: 0.9rem;
-        border-radius: var(--border-radius-btn);
-        cursor: not-allowed;
-        opacity: 0.7;
-    }
-
-    /* Responsive */
-    @media (max-width: 900px) {
-        .modal-lg {
-            flex-direction: column;
-        }
-        .post-details-section, .comments-section {
-            flex: 1 1 100%;
-            border-right: none;
-            max-height: none;
-        }
-    }
 </style>
-
 {% endblock %}
