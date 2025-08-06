@@ -23,6 +23,8 @@
                         value="{{ recicladora.nombre|default_if_none:'' }}"
                         pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"
                         title="Solo letras y espacios permitidos" />
+                    <!-- Espacio para mensajes de error de validación del cliente -->
+                    <div class="invalid-feedback"></div>
                 </div>
 
                 <div class="form-group">
@@ -31,6 +33,7 @@
                         value="{{ recicladora.calle|default_if_none:'' }}"
                         pattern=".{3,100}"
                         title="La calle debe tener al menos 3 caracteres" />
+                    <div class="invalid-feedback"></div>
                 </div>
             </div>
 
@@ -41,6 +44,7 @@
                         value="{{ recicladora.colonia|default_if_none:'' }}"
                         pattern=".{3,100}"
                         title="La colonia debe tener al menos 3 caracteres" />
+                    <div class="invalid-feedback"></div>
                 </div>
 
                 <div class="form-group">
@@ -49,6 +53,7 @@
                         value="{{ recicladora.ciudad|default_if_none:'' }}"
                         pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"
                         title="Solo letras y espacios permitidos" />
+                    <div class="invalid-feedback"></div>
                 </div>
             </div>
 
@@ -59,6 +64,7 @@
                         value="{{ recicladora.codigo_postal|default_if_none:'' }}"
                         min="10000" max="99999"
                         title="Debe ser un número de 5 dígitos" />
+                    <div class="invalid-feedback"></div>
                 </div>
 
                 <div class="form-group-sm">
@@ -67,6 +73,7 @@
                         value="{{ recicladora.numero_int|default_if_none:'' }}"
                         min="1"
                         title="Solo números mayores a 0" />
+                    <div class="invalid-feedback"></div>
                 </div>
 
                 <div class="form-group-lg">
@@ -75,6 +82,7 @@
                         value="{{ recicladora.numero_telefonico|default_if_none:'' }}"
                         pattern="[0-9]{10}" maxlength="10"
                         title="El número debe contener 10 dígitos" />
+                    <div class="invalid-feedback"></div>
                 </div>
             </div>
 
@@ -82,6 +90,7 @@
                 <label for="detalles">Detalles</label>
                 <textarea id="detalles" name="detalles" class="form-inputs" rows="4"
                     placeholder="Describe los detalles de tu recicladora o cualquier otra información relevante.">{{ recicladora.detalles|default_if_none:'' }}</textarea>
+                <div class="invalid-feedback"></div>
             </div>
 
             <div class="form-actions">
@@ -108,7 +117,6 @@
         </div>
     </div>
 </div>
-
 
 <style>
     :root {
@@ -221,6 +229,23 @@
         border-color: var(--accent);
         box-shadow: 0 0 0 3px rgba(103, 174, 110, 0.2);
     }
+
+    /* Estilos para validación de errores */
+    .form-inputs.is-invalid {
+        border-color: var(--red-cancel);
+    }
+
+    .invalid-feedback {
+        color: var(--red-cancel);
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: none; /* Oculto por defecto, se muestra con JS */
+    }
+
+    .form-inputs.is-invalid + .invalid-feedback {
+        display: block;
+    }
+
 
     .form-actions {
         display: flex;
@@ -362,10 +387,29 @@
         form.addEventListener('submit', async function(e) {
             e.preventDefault(); // Evita la recarga de la página por defecto
 
-            // Validar el formulario antes de enviarlo
+            // Resetear estados de validación previos
+            form.querySelectorAll('.form-inputs').forEach(input => {
+                input.classList.remove('is-invalid');
+                const feedback = input.nextElementSibling;
+                if (feedback && feedback.classList.contains('invalid-feedback')) {
+                    feedback.textContent = '';
+                }
+            });
+
+            // Validar el formulario antes de enviarlo (validación HTML5)
             if (!form.checkValidity()) {
                 e.stopPropagation();
-                form.classList.add('was-validated');
+                // Si la validación HTML5 falla, el navegador muestra los mensajes por defecto
+                // No necesitamos añadir 'was-validated' si ya estamos usando reportValidity()
+                Array.from(form.elements).forEach(input => {
+                    if (!input.checkValidity()) {
+                        input.classList.add('is-invalid');
+                        const feedback = input.nextElementSibling;
+                        if (feedback && feedback.classList.contains('invalid-feedback')) {
+                            feedback.textContent = input.validationMessage;
+                        }
+                    }
+                });
                 return;
             }
 
@@ -383,27 +427,50 @@
                     body: formData,
                     headers: {
                         'X-CSRFToken': csrfToken,
+                        // No necesitas 'Content-Type' para FormData, el navegador lo establece automáticamente
                     },
                 });
 
-                // Verificar si la respuesta es exitosa (código 200)
-                if (response.ok) {
+                // Parsear la respuesta JSON
+                const result = await response.json();
+
+                // Verificar si la respuesta es exitosa (código 2xx y 'success': true en el JSON)
+                if (response.ok && result.success) {
                     // Mostrar el modal de éxito si el registro fue exitoso
                     modal.style.display = 'flex';
                     setTimeout(() => {
                         modal.classList.add('show');
                     }, 50);
                 } else {
-                    // Manejar errores si la respuesta no es 200
-                    console.error('Error al enviar el formulario:', response.statusText);
-                    // Aquí podrías mostrar un modal de error o un mensaje en la página
-                    const errorData = await response.json();
-                    console.error('Detalles del error:', errorData);
+                    // Manejar errores si la respuesta no es 200 o 'success' es falso
+                    console.error('Error al enviar el formulario:', response.status, response.statusText);
+                    console.error('Detalles del error:', result.message || 'Error desconocido', result.errors);
+                    
+                    // Mostrar errores específicos del servidor en los campos del formulario
+                    if (result.errors) {
+                        for (const field in result.errors) {
+                            const inputElement = document.getElementById(field);
+                            if (inputElement) {
+                                inputElement.classList.add('is-invalid');
+                                let errorDiv = inputElement.nextElementSibling;
+                                if (!errorDiv || !errorDiv.classList.contains('invalid-feedback')) {
+                                    errorDiv = document.createElement('div');
+                                    errorDiv.classList.add('invalid-feedback');
+                                    inputElement.parentNode.insertBefore(errorDiv, inputElement.nextSibling);
+                                }
+                                errorDiv.textContent = result.errors[field][0]; // Muestra el primer error
+                            } else {
+                                // Si el error no está asociado a un campo específico (ej. 'general', 'propietario')
+                                console.error(`Error no asociado a campo: ${field}: ${result.errors[field]}`);
+                                // Podrías mostrar un mensaje de error general en la parte superior del formulario
+                            }
+                        }
+                    }
                 }
 
             } catch (error) {
                 console.error('Error en la conexión:', error);
-                // Aquí podrías mostrar un mensaje para errores de red
+                // Aquí podrías mostrar un mensaje para errores de red, por ejemplo, en un modal de error
             }
         });
     });

@@ -2,7 +2,7 @@ from django.http import HttpRequest, HttpResponseForbidden
 from django.shortcuts import redirect, render, get_object_or_404
 from core.models import Recicladoras, Recompensas, Roles, Usuarios,Entregas
 from django.shortcuts import redirect, render
-from core.models import Usuarios,Entregas, PuntosReciclaje,ContenidoEducativo,EntregaMaterialReciclado,TipoMaterialReciclable, MaterialAceptado, Publicaciones, Comentarios, Retos, Recompensas
+from core.models import Usuarios,Entregas, PuntosReciclaje,ContenidoEducativo,EntregaMaterialReciclado,TipoMaterialReciclable, MaterialAceptado, Publicaciones, Comentarios, Retos
 from django.utils.timezone import now
 from django.utils import timezone
 from django.urls import reverse
@@ -91,67 +91,94 @@ def perfil_usuario(request):
         'recompensas': recompensas
     })
 
+# En tu archivo: usuarios/views.py
+
+from django.views.decorators.http import require_http_methods
+
+
+@require_http_methods(["GET", "POST"])
 def recicladora_crear(request):
     user_id = request.session.get("user_id")
     errores = {}
     recicladora_data = {}
-    reciclador_rol = Roles.objects.get(nombre='Recicladora')
-    propietarios = Usuarios.objects.filter(id_rol=reciclador_rol)
+    
+    try:
+        reciclador_rol = Roles.objects.get(nombre='Recicladora')
+    except Roles.DoesNotExist:
+        print("Error: El rol 'Recicladora' no existe.")
+        return JsonResponse({'success': False, 'message': 'Configuración de rol inválida'}, status=500)
 
-
+    propietarios = Usuarios.objects.filter(id_rol=reciclador_rol) 
 
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
-        propietario_id = user_id
+        try:
+            propietario_obj = Usuarios.objects.get(id_usuario=user_id) 
+        except Usuarios.DoesNotExist:
+            errores['propietario'] = 'Usuario no encontrado.'
+            propietario_obj = None 
+
         calle = request.POST.get('calle')
         colonia = request.POST.get('colonia')
         ciudad = request.POST.get('ciudad')
         codigo_postal = request.POST.get('codigo_postal')
         numero_int = request.POST.get('numero_int')
         telefono = request.POST.get('numero_telefonico')
-        aprobada=False
+        aprobada = False 
         detalles = request.POST.get('detalles')
 
         recicladora_data = {
             'nombre': nombre,
-            'propietario_id': propietario_id,
             'calle': calle,
             'colonia': colonia,
             'ciudad': ciudad,
             'codigo_postal': codigo_postal,
             'numero_int': numero_int,
             'numero_telefonico': telefono,
-            'aprobada':aprobada,
-            'detalles':detalles,
+            'detalles': detalles,
         }
 
         if not nombre:
-            errores['nombre'] = 'El nombre es obligatorio'
+            errores['nombre'] = 'El nombre es obligatorio.'
         if not ciudad:
-            errores['ciudad'] = 'La ciudad es obligatoria'
+            errores['ciudad'] = 'La ciudad es obligatoria.'
+        if not propietario_obj: 
+            errores['propietario'] = 'No se pudo asignar la recicladora al usuario actual.'
+        if codigo_postal and (not codigo_postal.isdigit() or len(codigo_postal) != 5):
+            errores['codigo_postal'] = 'El código postal debe ser un número de 5 dígitos.'
+        if numero_int and not numero_int.isdigit():
+            errores['numero_int'] = 'El número interior debe ser un número.'
+        if telefono and (not telefono.isdigit() or len(telefono) != 10):
+            errores['numero_telefonico'] = 'El número de teléfono debe contener 10 dígitos.'
+
 
         if not errores:
-            Recicladoras.objects.create(
-                nombre=nombre,
-                propietario_id=propietario_id or None,
-                calle=calle,
-                colonia=colonia,
-                ciudad=ciudad,
-                codigo_postal=codigo_postal or None,
-                numero_int=numero_int or None,
-                numero_telefonico=telefono,
-                aprobada=aprobada,
-                detalles=detalles
-            )
-            return redirect('usuarios:perfil_usuario')
+            try:
+                Recicladoras.objects.create(
+                    nombre=nombre,
+                    propietario=propietario_obj, 
+                    calle=calle,
+                    colonia=colonia,
+                    ciudad=ciudad,
+                    codigo_postal=int(codigo_postal) if codigo_postal else None,
+                    numero_int=int(numero_int) if numero_int else None,
+                    numero_telefonico=telefono,
+                    aprobada=aprobada,
+                    detalles=detalles
+                )
+                return JsonResponse({'success': True, 'message': 'Registro entregado con éxito, los administradores revisarán tu solicitud.'})
+            except Exception as e:
+                errores['general'] = f'Error al guardar la recicladora: {str(e)}'
+                return JsonResponse({'success': False, 'errors': errores}, status=500)
+        else:
+            return JsonResponse({'success': False, 'errors': errores}, status=400)
 
     return render(request, 'usuarios/recicladora_form.html', {
         'errores': errores,
         'titulo': 'Registrar Recicladora',
-        'propietarios': propietarios,
-        'recicladora': recicladora_data
+        'propietarios': propietarios, 
+        'recicladora': recicladora_data 
     })
-
 
 # def ranking_usuarios(request):
 #     usuarios = Usuarios.objects.filter(puntos__isnull=False).order_by('-puntos')[:50]  # top 50

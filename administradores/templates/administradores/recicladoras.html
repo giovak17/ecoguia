@@ -26,9 +26,9 @@
                         {{ r.nombre }}
                         <!-- Botones para edicion y eliminar -->
                         <span>
-                            <a href="{% url 'administradores:recicladora_editar' r.codigo_recicladora %}" class="btn btn-download" style="background-color: #67AE6E; color:#ffff; border-radius: 30px">
+                            {% comment %} <a href="{% url 'administradores:recicladora_editar' r.codigo_recicladora %}" class="btn btn-download" style="background-color: #67AE6E; color:#ffff; border-radius: 30px">
                                 <i class="bi bi-pencil"></i>Editar
-                            </a>
+                            </a> {% endcomment %}
                             <a href="{% url 'administradores:recicladora_eliminar' r.codigo_recicladora %}" class="btn btn-download" style="background-color: #328E6E; color:#ffff; border-radius: 30px" onclick="return confirm('¿Estás seguro de eliminar esta recicladora?');">
                                 Eliminar
                             </a>
